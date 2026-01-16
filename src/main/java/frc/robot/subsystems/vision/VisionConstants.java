@@ -27,7 +27,7 @@ public class VisionConstants {
       };
 
   public static final AprilTagFieldLayout kTagLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
   public static class CameraInfo {
 
