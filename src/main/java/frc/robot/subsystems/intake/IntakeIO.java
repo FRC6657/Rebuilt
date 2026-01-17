@@ -13,6 +13,8 @@ public interface IntakeIO {
     public double extMotorSetpoint = 0.0; // 0 to 6
 
     public double encoderAbsPosition = 0.0;
+    public double encoderRelPosition = 0.0;
+    public double encoderVelocity = 0.0;
   }
 
   public default void updateInputs(IntakeIOInputs inputs) {}
