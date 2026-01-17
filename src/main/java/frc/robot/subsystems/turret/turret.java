@@ -6,9 +6,9 @@ package frc.robot.subsystems.turret;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class turret extends SubsystemBase {
+public class Turret extends SubsystemBase {
   /** Creates a new turret. */
-  public turret() {}
+  public Turret() {}
 
   @Override
   public void periodic() {
