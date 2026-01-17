@@ -1,17 +1,25 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLog;
 
-public class ShooterIO extends SubsystemBase {
-  /** Creates a new ShooterIO. */
-  public ShooterIO() {}
+public interface ShooterIO {
+  @AutoLog
+  public static class ShooterIOInputs {
+    public static double setpoint = 0.0;
+    public static double velocity = 0.0;
+    public static double position = 0.0;
+    public static double acceleration = 0.0;
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+    public static double leaderMotorTemp = 0.0;
+    public static double leaderMotorVoltage = 0.0;
+    public static double leaderMotorCurrent = 0.0;
+
+    public static double followerMotorTemp = 0.0;
+    public static double followerMotorVoltage = 0.0;
+    public static double followerMotorCurrent = 0.0;
   }
+
+  public default void updateInputs(ShooterIOInputs inputs) {}
+
+  public default void changeSetpoint(double Setpoint) {}
 }
