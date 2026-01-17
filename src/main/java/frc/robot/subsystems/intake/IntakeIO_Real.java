@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.GlobalConstants;
 
 public class IntakeIO_Real implements IntakeIO {
     private TalonFX extMotor;
@@ -26,8 +27,8 @@ public class IntakeIO_Real implements IntakeIO {
     );
 
     public IntakeIO_Real() {
-        extMotor = new TalonFX(IntakeConstants.CAN.ExtensionMotor.id);
-        encoder = new Canandmag(IntakeConstants.CAN.Encoder.id);
+        extMotor = new TalonFX(GlobalConstants.CAN.Intake_Extension.id);
+        encoder = new Canandmag(GlobalConstants.CAN.Intake_Encoder.id);
         
         var extConfigurator = extMotor.getConfigurator();
         var extConfigs = new TalonFXConfiguration();
