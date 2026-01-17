@@ -4,14 +4,52 @@
 
 package frc.robot.subsystems.hood;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Hood extends SubsystemBase {
-  /** Creates a new Hood. */
-  public Hood() {}
+  
+  private final HoodIO io;
+  private final HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
+
+  public Hood(HoodIO io) {
+    this.io = io;
+  }
+
+  public Command changeSetpoint(double setpoint) {
+    return this.runOnce(
+        () -> {
+          io.changeSetpoint(setpoint);
+        });
+  }
+
+  public Command changeSetpoint(DoubleSupplier setpoint) {
+    return this.runOnce(
+        () -> {
+          io.changeSetpoint(setpoint.getAsDouble());
+        });
+  }
+
+  public void setpoint(double setpoint) {
+    io.changeSetpoint(setpoint);
+  }
+
+  @AutoLogOutput(key = "RobotStates/HoodAtSetpoint")
+  public boolean atSetpoint() {
+    return MathUtil.isNear(inputs.Setpoint, inputs.Position, 2);
+  }
+
+  public double getPosition() {
+    return inputs.Position;
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    io.updateInputs(inputs);
+    Logger.processInputs("Hood", inputs);
   }
 }
