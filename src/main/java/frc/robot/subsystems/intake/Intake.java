@@ -4,13 +4,12 @@
 
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   public IntakeIO io;
@@ -22,16 +21,15 @@ public class Intake extends SubsystemBase {
 
   public Command changeExtSetpoint(double ext) {
     return this.runOnce(
-      () -> 
-        io.changeExtSetpoint(
-          MathUtil.clamp(ext, IntakeConstants.minLength, IntakeConstants.maxLength)
-        )
-    );
+        () ->
+            io.changeExtSetpoint(
+                MathUtil.clamp(ext, IntakeConstants.minLength, IntakeConstants.maxLength)));
   }
 
   @AutoLogOutput(key = "Intake/AtSetpoint")
   public boolean atSetpoint() {
-    return MathUtil.isNear(inputs.extMotorSetpoint, inputs.encoderAbsPosition, Units.inchesToMeters(0.5));
+    return MathUtil.isNear(
+        inputs.extMotorSetpoint, inputs.encoderAbsPosition, Units.inchesToMeters(0.5));
   }
 
   @Override
