@@ -8,7 +8,7 @@ public class IntakeConstants {
 
     public static enum CAN {
         ExtensionMotor(21),
-        RollerMotor(22);
+        Encoder(22);
 
         public int id;
         CAN(int id) {
