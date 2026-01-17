@@ -7,7 +7,7 @@ package frc.robot.subsystems.turret;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends SubsystemBase {
-  /** Creates a new turret. */
+  /** Creates a new Turret. */
   public Turret() {}
 
   @Override
