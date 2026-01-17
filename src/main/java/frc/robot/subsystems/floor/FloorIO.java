@@ -6,15 +6,14 @@ public interface FloorIO {
 
   @AutoLog
   public static class FloorIOInputs {
-    public double Setpoint = 0.0;
-    public double Velocity = 0.0;
-    public double Temp = 0.0;
-    public double Voltage = 0.0;
-    public double Current = 0.0;
+    public double setpoint = 0.0;
+    public double velocity = 0.0;
+    public double temp = 0.0;
+    public double voltage = 0.0;
+    public double current = 0.0;
   }
 
   public default void updateInputs(FloorIOInputs inputs) {}
-
 
   public default void changeSetpoint(double setpoint) {}
 }
