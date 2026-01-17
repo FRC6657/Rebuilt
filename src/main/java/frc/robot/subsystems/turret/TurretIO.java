@@ -3,15 +3,22 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.turret;
+import org.littletonrobotics.junction.AutoLog;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class TurretIO extends SubsystemBase {
-  /** Creates a new TurretIO. */
-  public TurretIO() {}
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+public interface TurretIO {
+  
+  @AutoLog
+  public static class TurretIOInputs {
+    public double kSetpoint = 0.0;
+    public double kVelocity = 0.0;
+    public double kAccerleration = 0.0;
+    public double kTemp = 0.0;
+    public double kVoltage = 0.0;
+    public double kCurrent = 0.0;
+    public double kPosition = TurretConstants.INITIAL_SETPOINT;
   }
+
+  public default void updateInputs(TurretIOInputs inputs) {}
+
+  public default void changeSetpoint(double setpoint) {}
 }
