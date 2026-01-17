@@ -1,5 +1,3 @@
 package frc.robot.subsystems.hood;
 
-public class HoodIO_Real {
-    
-}
+public class HoodIO_Real {}

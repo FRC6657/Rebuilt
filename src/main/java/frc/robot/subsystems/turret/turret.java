@@ -14,6 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   private final TurretIO io;
+
   private final TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
 
   public Turret(TurretIO io) {
@@ -22,16 +23,16 @@ public class Turret extends SubsystemBase {
 
   public Command changeSetpoint(double setpoint) {
     return this.runOnce(
-      () -> { 
-        io.changeSetpoint(setpoint);
-    });
+        () -> {
+          io.changeSetpoint(setpoint);
+        });
   }
 
   public Command changeSetpoint(DoubleSupplier setpoint) {
     return this.runOnce(
-      () -> {
-        io.changeSetpoint(setpoint.getAsDouble());
-      });
+        () -> {
+          io.changeSetpoint(setpoint.getAsDouble());
+        });
   }
 
   public void setpoint(double setpoint) {
@@ -40,11 +41,11 @@ public class Turret extends SubsystemBase {
 
   @AutoLogOutput(key = "RobotStates/TurretAtSetpoint")
   public boolean atSetpoint() {
-    return MathUtil.isNear(inputs.kSetpoint, inputs.kPosition, 2);
+    return MathUtil.isNear(inputs.Setpoint, inputs.Position, 2);
   }
 
   public double getPosition() {
-    return inputs.kPosition;
+    return inputs.Position;
   }
 
   @Override
