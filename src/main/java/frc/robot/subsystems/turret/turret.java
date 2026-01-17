@@ -4,11 +4,25 @@
 
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
-  public Turret() {}
+  private final TurretIO io;
+  private final TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
+
+  public Turret(TurretIO io) {
+    this.io = io;
+  }
+
+  public Command changeSetpoint(double setpoint) {
+    
+  }
 
   @Override
   public void periodic() {
