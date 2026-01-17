@@ -15,11 +15,6 @@ public class IntakeIO_Real {
     private double angleSetpoint = IntakeConstants.ExtensionMotor.maxLength;
     private double speedSetpoint = 0;
 
-    private ProfiledPIDController extPID =
-        new ProfiledPIDController(
-            13.5, 0, 0, new Constraints(Units.inchesToMeters(12), Units.inchesToMeters(10))
-    );
-
     public IntakeIO_Real() {
         var extConfigurator = extMotor.getConfigurator();
         var extConfigs = new TalonFXConfiguration();
@@ -28,5 +23,14 @@ public class IntakeIO_Real {
         extConfigurator.apply(extConfigs);
         extMotor.setNeutralMode(NeutralModeValue.Brake);
         
+        var extVelocitySignal = extMotor.getVelocity();
+        var extTempSignal = extMotor.getDeviceTemp();
+        var extVoltageSignal = extMotor.getMotorVoltage();
+        var extCurrentSignal = extMotor.getSupplyCurrent();
+
+        extMotor.optimizeBusUtilization();
+
+        changeExtSeptoint(IntakeConstants.ExtensionMotor.minLength);
     }
+
 }
