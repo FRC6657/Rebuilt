@@ -42,10 +42,10 @@ public class IntakeIO_Real implements IntakeIO {
         var extVoltageSignal = extMotor.getMotorVoltage();
         var extCurrentSignal = extMotor.getSupplyCurrent();
 
-        extVelocitySignal.setUpdateFrequency(IntakeConstants.updateFrequency);
-        extTempSignal.setUpdateFrequency(IntakeConstants.updateFrequency);
-        extVoltageSignal.setUpdateFrequency(IntakeConstants.updateFrequency);
-        extCurrentSignal.setUpdateFrequency(IntakeConstants.updateFrequency);
+        extVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        extTempSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        extVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        extCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
         extMotor.optimizeBusUtilization();
         extPID.enableContinuousInput(0, 2);
