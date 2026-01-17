@@ -1,0 +1,25 @@
+
+public FloorIO_Real(){
+
+  var motorConfigurator = rollerMotor.getConfigurator();
+  var motorConfigs = new TalonFXConfiguration();
+  motorConfigs.Feedback.SensorToMechanismRatio =
+    1.0 / Constants.Elevator.gearing; 
+  motorConfigs.CurrentLimits = Constants.Floor.currentConfigs;
+  motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+  motorConfigurator.apply(motorConfigs);
+
+
+  var Temp = rollerMotor.getDeviceTemp();
+  var Voltage = rollerMotor.getMotorVoltage();
+  var Current = rollerMotor.getSupplyCurrent();
+
+
+  Temp.setUpdateFrequency(Constants.mainLoopFrequency / 4);
+  Voltage.setUpdateFrequency(Constants.mainLoopFrequency);
+  Current.setUpdateFrequency(Constants.mainLoopFrequency);
+
+  rollerMotor.optimizeBusUtilization();
+
+  changeSetpoint(0);
+}

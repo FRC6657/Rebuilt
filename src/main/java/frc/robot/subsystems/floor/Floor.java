@@ -4,14 +4,22 @@
 
 package frc.robot.subsystems.floor;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Floor extends SubsystemBase {
   /** Creates a new Floor. */
-  public Floor(
+  public Floor(){
     
-  ) {}
+      TalonFX rollerMotor = new TalonFX(FloorConstants.FloorMotor.id);
+    
+      double rollerSetpoint = 0; 
+
+  }
+
 
   @Override
   public void periodic() {
