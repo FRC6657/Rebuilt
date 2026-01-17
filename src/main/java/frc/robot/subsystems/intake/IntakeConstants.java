@@ -4,17 +4,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.math.util.Units;
 
 public class IntakeConstants {
-    public static double updateFrequency = 50d;
-
-    public static enum CAN {
-        ExtensionMotor(21),
-        Encoder(22);
-
-        public int id;
-        CAN(int id) {
-            this.id = id;
-        }
-    }
 
     public static class ExtensionMotor {
         public static final double minLength = Units.inchesToMeters(0);
