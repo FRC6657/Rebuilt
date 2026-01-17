@@ -21,11 +21,36 @@ public class Turret extends SubsystemBase {
   }
 
   public Command changeSetpoint(double setpoint) {
-    
+    return this.runOnce(
+      () -> { 
+        io.changeSetpoint(setpoint);
+    });
+  }
+
+  public Command changeSetpoint(DoubleSupplier setpoint) {
+    return this.runOnce(
+      () -> {
+        io.changeSetpoint(setpoint.getAsDouble());
+      });
+  }
+
+  public void setpoint(double setpoint) {
+    io.changeSetpoint(setpoint);
+  }
+
+  @AutoLogOutput(key = "RobotStates/TurretAtSetpoint")
+  public boolean atSetpoint() {
+    return MathUtil.isNear(inputs.kSetpoint, inputs.kPosition, 2);
+  }
+
+  public double getPosition() {
+    return inputs.kPosition;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    io.updateInputs(inputs);
+    Logger.processInputs("ArmPivot", inputs);
   }
 }
