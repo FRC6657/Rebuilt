@@ -1,19 +1,21 @@
 package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-
 import edu.wpi.first.math.util.Units;
 
 public class IntakeConstants {
+    public static double updateFrequency = 50d;
+
     public static enum CAN {
-        ExtensionMotor(11),
-        RollerMotor(12);
+        ExtensionMotor(21),
+        RollerMotor(22);
 
         public int id;
         CAN(int id) {
             this.id = id;
         }
     }
+
     public static class ExtensionMotor {
         public static final double minLength = Units.inchesToMeters(0);
         public static final double maxLength = Units.inchesToMeters(6);
