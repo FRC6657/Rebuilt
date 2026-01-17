@@ -1,0 +1,20 @@
+package frc.robot.subsystems.floor;
+
+import org.littletonrobotics.junction.AutoLog;
+
+public interface FloorIO {
+
+  @AutoLog
+  public static class FloorIOInputs {
+    public double Setpoint = 0.0;
+    public double Velocity = 0.0;
+    public double Temp = 0.0;
+    public double Voltage = 0.0;
+    public double Current = 0.0;
+  }
+
+  public default void updateInputs(FloorIOInputs inputs) {}
+
+
+  public default void changeSetpoint(double setpoint) {}
+}
