@@ -9,15 +9,15 @@ public class TurretConstants {
   public static final double INITIAL_SETPOINT = 0.0;
   // update gear ration
   public static final double GEAR_RATIO = 1 / 1d;
-  public static final double SupplyLimit = 30;
-  public static final double StatorLimit = 60;
+  public static final double supplyLimit = 30;
+  public static final double statorLimit = 60;
   public static final CurrentLimitsConfigs currentConfigs =
       new CurrentLimitsConfigs()
-          .withStatorCurrentLimit(StatorLimit)
-          .withSupplyCurrentLimit(SupplyLimit)
+          .withStatorCurrentLimit(statorLimit)
+          .withSupplyCurrentLimit(supplyLimit)
           .withStatorCurrentLimitEnable(true)
           .withSupplyCurrentLimitEnable(true)
-          .withSupplyCurrentLowerLimit(SupplyLimit)
+          .withSupplyCurrentLowerLimit(supplyLimit)
           .withSupplyCurrentLowerTime(0);
   public static Slot0Configs motorSlot0 =
       new Slot0Configs()
