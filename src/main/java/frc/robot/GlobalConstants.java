@@ -20,10 +20,10 @@ public class GlobalConstants {
         Shooter_Follower(14),
         Floor_One(15),
         Floor_Two(16),
-        Shooter_One(17),
-        Shooter_Two(18),
-        Hood(19),
-        Turret(20);
+        Hood(17),
+        Turret(18),
+        Intake_Extension(19),
+        Intake_Encoder(20);
         
         public int id;
         CAN(int id){
