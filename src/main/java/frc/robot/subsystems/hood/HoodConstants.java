@@ -7,7 +7,9 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 
 public class HoodConstants {
   public static final double INITIAL_SETPOINT = 0.0;
-  public static final double GEAR_RATIO = 1/1d;
+  public static final double MIN_SETPOINT = 0.0;
+  public static final double MAX_SETPOINT = 0.0;
+  public static final double GEAR_RATIO = 1 / 1d;
   public static final double supplyLimit = 30;
   public static final double statorLimit = 60;
   public static final CurrentLimitsConfigs currentConfigs =
