@@ -17,15 +17,14 @@ public class TunnelIO_Real implements TunnelIO {
         var motorConfigs = new TalonFXConfiguration();
 
         motorConfigs.CurrentLimits = TunnelConstants.CURRENT_CONFIGS;
+    
+    }
 
-        public void updateInputs(TunnelIOInputs inputs){
+     public void updateInputs(TunnelIOInputs inputs){
             TunnelIOInputs.setpoint = tunnelSetpoint;
             TunnelIOInputs.velocity = tunnelMotor.getVelocity().getValueAsDouble();
         }
 
         public void changeRollerSpeed(double speed) {}
-    
-    }
-
     }
 
