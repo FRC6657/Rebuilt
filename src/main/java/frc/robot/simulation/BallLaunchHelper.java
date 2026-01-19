@@ -153,7 +153,8 @@ public final class BallLaunchHelper {
    * @param robotPose The robot's pose on the field
    * @return The turret velocity in field coordinates (m/s)
    */
-  public static Translation2d calculateTurretVelocity(ChassisSpeeds chassisSpeeds, Pose2d robotPose) {
+  public static Translation2d calculateTurretVelocity(
+      ChassisSpeeds chassisSpeeds, Pose2d robotPose) {
     // Turret offset from robot center (robot-relative)
     double turretOffsetX = TURRET_CENTER.getX();
     double turretOffsetY = TURRET_CENTER.getY();

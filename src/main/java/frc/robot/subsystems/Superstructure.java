@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.turret.TurretConstants;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,7 +26,7 @@ public class Superstructure {
   @AutoLogOutput(key = "3DComponents")
   public Pose3d[] get3DComponents() {
 
-    //Turret / Shooter
+    // Turret / Shooter
     Rotation3d turretRotation = new Rotation3d(0, 0, turretAngle);
     Translation3d rotatedHoodOffset = TurretConstants.HOOD_OFFSET.rotateBy(turretRotation);
     Translation3d hoodPosition = TurretConstants.TURRET_CENTER.plus(rotatedHoodOffset);
@@ -35,7 +34,8 @@ public class Superstructure {
     Rotation3d hoodRotation = hoodLocalPitch.rotateBy(turretRotation);
 
     return new Pose3d[] {
-      new Pose3d(TurretConstants.TURRET_CENTER, turretRotation), new Pose3d(hoodPosition, hoodRotation)
+      new Pose3d(TurretConstants.TURRET_CENTER, turretRotation),
+      new Pose3d(hoodPosition, hoodRotation)
     };
   }
 

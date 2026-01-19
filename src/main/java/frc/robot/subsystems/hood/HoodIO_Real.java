@@ -8,10 +8,10 @@ import edu.wpi.first.math.MathUtil;
 
 public class HoodIO_Real implements HoodIO {
 
-    //update placeholder value here
-    TalonFX hoodMotor = new TalonFX(1);
-    private MotionMagicVoltage motionMagicVoltage =
-        new MotionMagicVoltage(HoodConstants.INITIAL_SETPOINT / 360);
+  // update placeholder value here
+  TalonFX hoodMotor = new TalonFX(1);
+  private MotionMagicVoltage motionMagicVoltage =
+      new MotionMagicVoltage(HoodConstants.INITIAL_SETPOINT / 360);
 
   public HoodIO_Real() {
 
@@ -40,27 +40,23 @@ public class HoodIO_Real implements HoodIO {
     hoodMotor.setPosition(HoodConstants.INITIAL_SETPOINT / 360);
   }
 
-    @Override
-    public void updateInputs(HoodIOInputs inputs) {
-        
-        inputs.Temp = hoodMotor.getDeviceTemp().getValueAsDouble();
-        inputs.Current = hoodMotor.getSupplyCurrent().getValueAsDouble();
-        inputs.Voltage = hoodMotor.getMotorVoltage().getValueAsDouble();
-        inputs.Position = hoodMotor.getPosition().getValueAsDouble() * 360;
-        inputs.Velocity = hoodMotor.getVelocity().getValueAsDouble() * 360;
-        inputs.Accerleration = hoodMotor.getAcceleration().getValueAsDouble() * 360;
-        inputs.Setpoint = motionMagicVoltage.Position * 360;
+  @Override
+  public void updateInputs(HoodIOInputs inputs) {
 
-        hoodMotor.setControl(motionMagicVoltage);
-    }
+    inputs.Temp = hoodMotor.getDeviceTemp().getValueAsDouble();
+    inputs.Current = hoodMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.Voltage = hoodMotor.getMotorVoltage().getValueAsDouble();
+    inputs.Position = hoodMotor.getPosition().getValueAsDouble() * 360;
+    inputs.Velocity = hoodMotor.getVelocity().getValueAsDouble() * 360;
+    inputs.Accerleration = hoodMotor.getAcceleration().getValueAsDouble() * 360;
+    inputs.Setpoint = motionMagicVoltage.Position * 360;
 
-    @Override
-    public void changeSetpoint(double setpoint) {
-        motionMagicVoltage.Position =
-            MathUtil.clamp(
-                setpoint, 
-                HoodConstants.INITIAL_SETPOINT, 
-                HoodConstants.MAX_SETPOINT) 
-            / 360;
+    hoodMotor.setControl(motionMagicVoltage);
+  }
+
+  @Override
+  public void changeSetpoint(double setpoint) {
+    motionMagicVoltage.Position =
+        MathUtil.clamp(setpoint, HoodConstants.INITIAL_SETPOINT, HoodConstants.MAX_SETPOINT) / 360;
   }
 }
