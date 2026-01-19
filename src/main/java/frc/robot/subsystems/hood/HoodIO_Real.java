@@ -12,8 +12,6 @@ public class HoodIO_Real implements HoodIO {
     TalonFX hoodMotor = new TalonFX(1);
     private MotionMagicVoltage motionMagicVoltage =
         new MotionMagicVoltage(HoodConstants.INITIAL_SETPOINT / 360);
-    
-    public HoodIO_Real() {
 
   public HoodIO_Real() {
 
@@ -40,6 +38,7 @@ public class HoodIO_Real implements HoodIO {
     hoodMotor.optimizeBusUtilization();
 
     hoodMotor.setPosition(HoodConstants.INITIAL_SETPOINT / 360);
+  }
 
     @Override
     public void updateInputs(HoodIOInputs inputs) {
@@ -61,7 +60,7 @@ public class HoodIO_Real implements HoodIO {
             MathUtil.clamp(
                 setpoint, 
                 HoodConstants.INITIAL_SETPOINT, 
-                HoodConstants.MAX_STEPOINT) 
+                HoodConstants.MAX_SETPOINT) 
             / 360;
-    }
+  }
 }
