@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.MathUtil;
 
 public class HoodIO_Real implements HoodIO {
@@ -16,32 +15,31 @@ public class HoodIO_Real implements HoodIO {
     
     public HoodIO_Real() {
 
-        var motorConfigurator = hoodMotor.getConfigurator();
-        var motorConfigs = new TalonFXConfiguration();
-        motorConfigs.Feedback.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
-        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        motorConfigs.Slot0 = HoodConstants.motorSlot0;
-        motorConfigs.CurrentLimits = HoodConstants.currentConfigs;
-        motorConfigs.MotionMagic = HoodConstants.MotionMagicConfig;
-        motorConfigurator.apply(motorConfigs);
+  public HoodIO_Real() {
 
-        var Position = hoodMotor.getPosition();
-        var Temp = hoodMotor.getDeviceTemp();
-        var Voltage = hoodMotor.getMotorVoltage();
-        var Current = hoodMotor.getSupplyCurrent();
+    var motorConfigurator = hoodMotor.getConfigurator();
+    var motorConfigs = new TalonFXConfiguration();
+    motorConfigs.Feedback.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
+    motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorConfigs.Slot0 = HoodConstants.motorSlot0;
+    motorConfigs.CurrentLimits = HoodConstants.currentConfigs;
+    motorConfigs.MotionMagic = HoodConstants.MotionMagicConfig;
+    motorConfigurator.apply(motorConfigs);
 
-        //update placeholder values
-        Temp.setUpdateFrequency(50);
-        Voltage.setUpdateFrequency(50);
-        Current.setUpdateFrequency(50);
-        Position.setUpdateFrequency(50);
+    var Position = hoodMotor.getPosition();
+    var Temp = hoodMotor.getDeviceTemp();
+    var Voltage = hoodMotor.getMotorVoltage();
+    var Current = hoodMotor.getSupplyCurrent();
 
-        hoodMotor.optimizeBusUtilization();
+    // update placeholder values
+    Temp.setUpdateFrequency(50);
+    Voltage.setUpdateFrequency(50);
+    Current.setUpdateFrequency(50);
+    Position.setUpdateFrequency(50);
 
-        hoodMotor.setPosition(HoodConstants.INITIAL_SETPOINT / 360);
+    hoodMotor.optimizeBusUtilization();
 
-        changeSetpoint(HoodConstants.INITIAL_SETPOINT);
-    }
+    hoodMotor.setPosition(HoodConstants.INITIAL_SETPOINT / 360);
 
     @Override
     public void updateInputs(HoodIOInputs inputs) {

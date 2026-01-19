@@ -57,4 +57,3 @@ public class ShooterIO_Real implements ShooterIO {
 
   public void changeSetpoint(double Setpoint) {}
 }
-
