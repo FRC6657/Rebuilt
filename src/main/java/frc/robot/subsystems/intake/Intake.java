@@ -23,7 +23,10 @@ public class Intake extends SubsystemBase {
     return this.runOnce(
         () ->
             io.changeExtSetpoint(
-                MathUtil.clamp(ext, IntakeConstants.ExtensionMotor.minLength, IntakeConstants.ExtensionMotor.maxLength)));
+                MathUtil.clamp(
+                    ext,
+                    IntakeConstants.ExtensionMotor.minLength,
+                    IntakeConstants.ExtensionMotor.maxLength)));
   }
 
   @AutoLogOutput(key = "Intake/AtSetpoint")
