@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 public class ShooterConstants {
   public static int leaderCAN = 1;
   public static int followerCAN = 2;
+  public static double gearRatio;
 
   public static double updateFrequency = 0.0;
   public static CurrentLimitsConfigs currentConfigs;

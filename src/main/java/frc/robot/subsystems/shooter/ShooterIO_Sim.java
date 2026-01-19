@@ -9,7 +9,8 @@ public class ShooterIO_Sim implements ShooterIO {
     double setpoint = 0.0;
     double speed = 0.0;
     
-    private DCMotorSim shooterSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(2), 0.0001));
+    private DCMotorSim shooterSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(2), 0.0001, ShooterConstants.gearRatio),
+          DCMotor.getFalcon500(2));
 
     public ShooterIO_Sim(){}
 
