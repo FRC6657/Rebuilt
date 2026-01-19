@@ -8,6 +8,8 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -17,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.simulation.BallLaunchHelper;
+import frc.robot.simulation.GamePieceConstants;
+import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
@@ -136,14 +141,11 @@ public class Robot extends LoggedRobot {
             () ->
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
-                        * DrivebaseConstants.kMaxLinearSpeed
-                        * 1.0,
+                        * DrivebaseConstants.kMaxLinearSpeed * 0.5,
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
-                        * DrivebaseConstants.kMaxLinearSpeed
-                        * 1.0,
+                        * DrivebaseConstants.kMaxLinearSpeed * 0.5,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
-                        * DrivebaseConstants.kMaxAngularSpeed
-                        * 1.0)));
+                        * DrivebaseConstants.kMaxAngularSpeed * 0.375)));
 
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
@@ -154,6 +156,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    GamePieceSimulation.getInstance().update();
   }
 
   @Override
