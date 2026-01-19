@@ -15,7 +15,7 @@ public final class GamePieceConstants {
 
   // Physics constants
   public static final double GRAVITY_MPS2 = 9.81;
-  public static final double COEFFICIENT_OF_RESTITUTION = 0.3; // Bounciness 
+  public static final double COEFFICIENT_OF_RESTITUTION = 0.3; // Bounciness
   public static final double FLOOR_FRICTION_COEFFICIENT = 0.3; // Rolling/sliding friction
   public static final double FLOOR_HEIGHT_METERS = PIECE_RADIUS_METERS;
   public static final double VELOCITY_THRESHOLD = 0.05; // Stop pieces below this velocity
@@ -33,10 +33,8 @@ public final class GamePieceConstants {
 
   // Tower dimensions
   public static final double TOWER_BASE_RADIUS_METERS = 0.6; // ~24 inches
-  public static final double TOWER_FUNNEL_TOP_RADIUS_METERS =
-      0.55 + Units.inchesToMeters(1);
-  public static final double TOWER_FUNNEL_BOTTOM_RADIUS_METERS =
-      0.3 + Units.inchesToMeters(1);
+  public static final double TOWER_FUNNEL_TOP_RADIUS_METERS = 0.55 + Units.inchesToMeters(1);
+  public static final double TOWER_FUNNEL_BOTTOM_RADIUS_METERS = 0.3 + Units.inchesToMeters(1);
   public static final double TOWER_FUNNEL_TOP_HEIGHT_METERS = 1.8;
   public static final double TOWER_FUNNEL_BOTTOM_HEIGHT_METERS =
       TOWER_FUNNEL_TOP_HEIGHT_METERS - Units.feetToMeters(1);

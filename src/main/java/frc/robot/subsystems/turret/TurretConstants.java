@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
@@ -37,8 +36,8 @@ public class TurretConstants {
           .withMotionMagicCruiseVelocity(MaxVelocity)
           .withMotionMagicAcceleration(MaxAcceleration);
 
-
-   //Visualization Stuff
-   public static Translation3d TURRET_CENTER = new Translation3d(0.118317, -0.118317, 0.511175);
-   public static Translation3d HOOD_OFFSET = new Translation3d(0, Units.inchesToMeters(-4.156585), Units.inchesToMeters(2.75));
+  // Visualization Stuff
+  public static Translation3d TURRET_CENTER = new Translation3d(0.118317, -0.118317, 0.511175);
+  public static Translation3d HOOD_OFFSET =
+      new Translation3d(0, Units.inchesToMeters(-4.156585), Units.inchesToMeters(2.75));
 }
