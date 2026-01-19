@@ -1,6 +1,7 @@
 package frc.robot.subsystems.hood;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -10,7 +11,7 @@ public class HoodIO_Real implements HoodIO {
 
     //update placeholder value here
     TalonFX hoodMotor = new TalonFX(1);
-    private MotionMagicVoltage MotionMagicVoltage =
+    private MotionMagicVoltage motionMagicVoltage =
         new MotionMagicVoltage(HoodConstants.INITIAL_SETPOINT / 360);
     
     public HoodIO_Real() {
@@ -51,14 +52,14 @@ public class HoodIO_Real implements HoodIO {
         inputs.Position = hoodMotor.getPosition().getValueAsDouble() * 360;
         inputs.Velocity = hoodMotor.getVelocity().getValueAsDouble() * 360;
         inputs.Accerleration = hoodMotor.getAcceleration().getValueAsDouble() * 360;
-        inputs.Setpoint = MotionMagicVoltage.Position * 360;
+        inputs.Setpoint = motionMagicVoltage.Position * 360;
 
-        hoodMotor.setControl(MotionMagicVoltage);
+        hoodMotor.setControl(motionMagicVoltage);
     }
 
     @Override
     public void changeSetpoint(double setpoint) {
-        MotionMagicVoltage.Position =
+        motionMagicVoltage.Position =
             MathUtil.clamp(
                 setpoint, 
                 HoodConstants.INITIAL_SETPOINT, 
