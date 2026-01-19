@@ -7,9 +7,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class TunnelIO_Real implements TunnelIO {
 
-    FalconFX tunnelMotor = new TalonFX(TunnelConstants.TUNNEL_MOTOR);
+    TalonFX tunnelMotor = new TalonFX(TunnelConstants.TUNNEL_MOTOR);
 
-    private double setpoint = TunnelConstants.INITIAL_SETPOINT;
+    private double tunnelSetpoint = TunnelConstants.INITIAL_SETPOINT;
 
     public TunnelIO_Real(){
 
@@ -19,7 +19,7 @@ public class TunnelIO_Real implements TunnelIO {
         motorConfigs.CurrentLimits = TunnelConstants.CURRENT_CONFIGS;
 
         public void updateInputs(TunnelIOInputs inputs){
-            TunnelIOInputs.setpoint = setpoint;
+            TunnelIOInputs.setpoint = tunnelSetpoint;
             TunnelIOInputs.velocity = tunnelMotor.getVelocity().getValueAsDouble();
         }
 
