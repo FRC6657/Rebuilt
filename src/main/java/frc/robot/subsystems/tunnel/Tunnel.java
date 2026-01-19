@@ -7,11 +7,13 @@ package frc.robot.subsystems.tunnel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Tunnel extends SubsystemBase {
-  /** Creates a new Tunnel. */
-  public Tunnel() {}
+
+  public Tunnel(TurretIO io) {
+    this.io = io;
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
   }
 }
