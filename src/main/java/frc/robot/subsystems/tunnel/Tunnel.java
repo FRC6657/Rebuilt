@@ -4,16 +4,28 @@
 
 package frc.robot.subsystems.tunnel;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.tunnel.TunnelIO;
+import frc.robot.subsystems.tunnel.TunnelIO.TunnelIOInputs;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Tunnel extends SubsystemBase {
 
-  public Tunnel(TurretIO io) {
+  private final TunnelIO io;
+  private final TunnelIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+  
+  public Tunnel(TunnelIO io) {
     this.io = io;
   }
 
+  public Command changeRollerSpeed(double speed) {
+    
+  }
+  
   @Override
   public void periodic() {
     
   }
+
 }
