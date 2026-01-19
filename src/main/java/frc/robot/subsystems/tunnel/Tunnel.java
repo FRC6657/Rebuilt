@@ -22,7 +22,12 @@ public class Tunnel extends SubsystemBase {
   public Command changeRollerSpeed(double speed) {
     
   }
-  
+
+  @AutoLogOutput(key = "Tunnel/AtSetpoint")
+  public boolean atSetpoint(){
+    return MathUtil.isNear(inputs.)
+  }
+
   @Override
   public void periodic() {
     

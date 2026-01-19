@@ -1,6 +1,6 @@
 package frc.robot.subsystems.tunnel;
 
-public class TunnelIO {
+public interface TunnelIO {
 
     public static class TunnelIOInputs{
     public double velocity = 0.0;
