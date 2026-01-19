@@ -15,7 +15,6 @@ public class FloorIO_Real implements FloorIO {
     var motorConfigurator = rollerMotor.getConfigurator();
     var motorConfigs = new TalonFXConfiguration();
 
-    motorConfigs.CurrentLimits = FloorConstants.currentConfigs;
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfigurator.apply(motorConfigs);
 
@@ -35,12 +34,11 @@ public class FloorIO_Real implements FloorIO {
   @Override
   public void updateInputs(FloorIOInputs inputs) {
 
+    rollerMotor.setControl(new VoltageOut(rollerSetpoint));
+
     inputs.temp = rollerMotor.getDeviceTemp().getValueAsDouble();
     inputs.current = rollerMotor.getSupplyCurrent().getValueAsDouble();
     inputs.voltage = rollerMotor.getMotorVoltage().getValueAsDouble();
-
-    double rollerSetpoint;
-    inputs.setpoint = rollerSetpoint;
   }
 
   @Override
