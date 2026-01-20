@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.simulation.GamePieceConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -25,6 +26,11 @@ public class Superstructure {
   private double turretAngle = Math.PI / 4;
   private double hoodAngle = 0.0;
   Pose2d turretPos = new Pose2d();
+  Pose2d turretTarget =
+      new Pose2d(
+          GamePieceConstants.BLUE_TOWER_CENTER.getX(),
+          GamePieceConstants.BLUE_TOWER_CENTER.getY(),
+          new Rotation2d());
 
   public Superstructure(Drivebase drivebase) {
     this.drivebase = drivebase;
@@ -58,6 +64,18 @@ public class Superstructure {
                     TurretConstants.TURRET_CENTER.getX(),
                     TurretConstants.TURRET_CENTER.getY(),
                     new Rotation2d()));
+
+    Rotation2d targetAngle =
+        new Rotation2d(
+            Math.PI / 2
+                + Math.atan(
+                    (turretPos.getY() - turretTarget.getY())
+                        / (turretPos.getX() - turretTarget.getX())));
+
+    turretAngle = targetAngle.getRadians();
+
+    turretPos = new Pose2d(turretPos.getX(), turretPos.getY(), targetAngle);
+
     Logger.recordOutput(
         "turretPos",
         new Pose3d(
