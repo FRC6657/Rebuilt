@@ -26,12 +26,6 @@ import frc.robot.subsystems.drivebase.GyroIO_CTRE;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
-import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.hood.HoodIO;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
-import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretIO;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
 import frc.robot.subsystems.vision.ApriltagCameras;
@@ -54,9 +48,6 @@ public class Robot extends LoggedRobot {
   // Subsystems
   private final ApriltagCameras cameras;
   private final Drivebase drivebase;
-  private final Turret turret;
-  private final Hood hood;
-  private final Shooter shoot;
 
   // Superstructure
   private final Superstructure superstructure;
@@ -98,13 +89,13 @@ public class Robot extends LoggedRobot {
                 ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
                 : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
 
-    turret = new Turret(new TurretIO() {});
+    // turret = new Turret(new TurretIO() {});
 
-    hood = new Hood(new HoodIO() {});
+    // hood = new Hood(new HoodIO() {});
 
-    shoot = new Shooter(new ShooterIO() {});
+    // shoot = new Shooter(new ShooterIO() {});
 
-    superstructure = new Superstructure(drivebase, turret, hood, shoot);
+    superstructure = new Superstructure(drivebase);
 
     AutoBuilder.configure(
         drivebase::getPose,
@@ -171,6 +162,10 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
+  }
+
+  @Override
+  public void teleopPeriodic() {
     superstructure.changeTurretAngle(90);
   }
 

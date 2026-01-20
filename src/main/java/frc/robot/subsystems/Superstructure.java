@@ -9,9 +9,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drivebase.Drivebase;
-import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -20,20 +17,20 @@ public class Superstructure {
 
   // Subsystems
   Drivebase drivebase;
-  Turret turret;
-  Hood hood;
-  Shooter shoot;
+  // Turret turret;
+  // Hood hood;
+  // Shooter shoot;
 
   // Fake test visualization angles (radians)
-  private double turretAngle = 0.0;
+  private double turretAngle = Math.PI / 4;
   private double hoodAngle = 0.0;
-  Pose2d turretPos = drivebase.getPose();
+  Pose2d turretPos = new Pose2d();
 
-  public Superstructure(Drivebase drivebase, Turret turret, Hood hood, Shooter shoot) {
+  public Superstructure(Drivebase drivebase) {
     this.drivebase = drivebase;
-    this.turret = turret;
-    this.hood = hood;
-    this.shoot = shoot;
+    // this.turret = turret;
+    // this.hood = hood;
+    // this.shoot = shoot;
   }
 
   @AutoLogOutput(key = "3DComponents")
@@ -61,7 +58,15 @@ public class Superstructure {
                     TurretConstants.TURRET_CENTER.getX(),
                     TurretConstants.TURRET_CENTER.getY(),
                     new Rotation2d()));
-    Logger.recordOutput("turretPos", turretPos);
+    Logger.recordOutput(
+        "turretPos",
+        new Pose3d(
+            turretPos.getX(),
+            turretPos.getY(),
+            TurretConstants.TURRET_CENTER.getZ(),
+            new Rotation3d(
+                Rotation2d.fromRadians(
+                    drivebase.getPose().getRotation().getRadians() + turretAngle - Math.PI / 2))));
   }
 
   public Command logMessage(String message) {
