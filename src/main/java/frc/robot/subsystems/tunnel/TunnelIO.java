@@ -11,6 +11,5 @@ public interface TunnelIO {
     }
 
   public void updateInputs(TunnelIOInputs inputs){}
-
-  public void changeRollerSpeed(double speed) {}
+  public void changeRollerSpeed(double speed){}
 }

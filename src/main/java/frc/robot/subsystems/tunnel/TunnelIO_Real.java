@@ -17,7 +17,24 @@ public class TunnelIO_Real implements TunnelIO {
         var motorConfigs = new TalonFXConfiguration();
 
         motorConfigs.CurrentLimits = TunnelConstants.CURRENT_CONFIGS;
+       
+        var motorPosition = tunnelMotor.getPosition();
+        var motorVelocity = tunnelMotor.getVelocity();
+        var motorAcceleration = tunnelMotor.getAcceleration();
+        var motorTemp = tunnelMotor.getDeviceTemp();
+        var motorVoltage = tunnelMotor.getMotorVoltage();
+        var motorCurrent = tunnelMotor.getSupplyCurrent();
+
+        motorTemp.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
+        motorPosition.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
+        motorVelocity.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
+        motorAcceleration.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
+        motorVoltage.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
+        motorCurrent.setUpdateFrequency(TunnelConstants.UPDATE_FREQUENCY);
     
+        tunnelMotor.setPosition(0);
+
+        changeRollerSpeed(TunnelIOInputs.setpoint);
     }
 
      public void updateInputs(TunnelIOInputs inputs){
@@ -25,6 +42,6 @@ public class TunnelIO_Real implements TunnelIO {
             TunnelIOInputs.velocity = tunnelMotor.getVelocity().getValueAsDouble();
         }
 
-        public void changeRollerSpeed(double speed) {}
+        public void changeRollerSpeed(double speed){}
     }
 

@@ -7,4 +7,5 @@ public class TunnelConstants {
     public static int TUNNEL_MOTOR = 1;
     public static double INITIAL_SETPOINT = 0.0;
     public static CurrentLimitsConfigs CURRENT_CONFIGS; 
+    public static double UPDATE_FREQUENCY;
 }
