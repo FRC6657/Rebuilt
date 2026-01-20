@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 public class Tunnel extends SubsystemBase {
 
   private final TunnelIO io;
-  private final TunnelIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+  private final TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
   
   public Tunnel(TunnelIO io) {
     this.io = io;
@@ -25,7 +25,6 @@ public class Tunnel extends SubsystemBase {
 
   @AutoLogOutput(key = "Tunnel/AtSetpoint")
   public boolean atSetpoint(){
-    return MathUtil.isNear(inputs.)
   }
 
   @Override
