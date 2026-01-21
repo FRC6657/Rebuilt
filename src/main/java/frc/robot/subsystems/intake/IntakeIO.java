@@ -12,12 +12,12 @@ public interface IntakeIO {
     public double extMotorCurrent = 0.0; // Amps
     public double extMotorSetpoint = 0.0; // 0 to 6
 
-    public double wheelsMotorPosition = 0.0; // Inches
-    public double wheelsMotorVelocity = 0.0; // Inches per second
-    public double wheelsMotorTemp = 0.0; // Celcius
-    public double wheelsMotorVoltage = 0.0; // Volts
-    public double wheelsMotorCurrent = 0.0; // Amps
-    public double wheelsMotorSetpoint = 0.0; // 0 to 6
+    public double wheelMotorPosition = 0.0; // Inches
+    public double wheelMotorVelocity = 0.0; // Inches per second
+    public double wheelMotorTemp = 0.0; // Celcius
+    public double wheelMotorVoltage = 0.0; // Volts
+    public double wheelMotorCurrent = 0.0; // Amps
+    public double wheelMotorSetpoint = 0.0; // 0 to 6
 
     public double encoderAbsPosition = 0.0;
     public double encoderRelPosition = 0.0;

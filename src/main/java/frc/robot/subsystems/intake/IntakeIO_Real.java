@@ -28,6 +28,7 @@ public class IntakeIO_Real implements IntakeIO {
 
     public IntakeIO_Real() {
         extMotor = new TalonFX(GlobalConstants.CAN.Intake_Extension.id);
+        wheelMotor
         encoder = new Canandmag(GlobalConstants.CAN.Intake_Encoder.id);
         
         var extConfigurator = extMotor.getConfigurator();
