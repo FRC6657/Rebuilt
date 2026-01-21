@@ -54,6 +54,15 @@ public class IntakeIO_Real implements IntakeIO {
         extVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
         extCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
+        var wheelVelocitySignal = wheelMotor.getVelocity();
+        var wheelTempSignal = wheelMotor.getDeviceTemp();
+        var wheelVoltageSignal = wheelMotor.getMotorVoltage();
+        var wheelCurrentSignal = wheelMotor.getSupplyCurrent();
+        wheelVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        wheelTempSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        wheelVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+        wheelCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+
         extMotor.optimizeBusUtilization();
         extPID.enableContinuousInput(0, 2);
         changeExtSetpoint(IntakeConstants.ExtensionMotor.minLength);
