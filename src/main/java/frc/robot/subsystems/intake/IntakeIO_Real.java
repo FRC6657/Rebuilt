@@ -28,7 +28,7 @@ public class IntakeIO_Real implements IntakeIO {
 
     public IntakeIO_Real() {
         extMotor = new TalonFX(GlobalConstants.CAN.Intake_Extension.id);
-        wheelMotor
+        wheelMotor = new TalonFX(GlobalConstants.CAN.Intake_Wheels.id);
         encoder = new Canandmag(GlobalConstants.CAN.Intake_Encoder.id);
         
         var extConfigurator = extMotor.getConfigurator();
@@ -37,12 +37,18 @@ public class IntakeIO_Real implements IntakeIO {
         extConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         extConfigurator.apply(extConfigs);
         extMotor.setNeutralMode(NeutralModeValue.Brake);
+
+        var wheelConfigurator = wheelMotor.getConfigurator();
+        var wheelConfigs = new TalonFXConfiguration();
+        wheelConfigs.CurrentLimits = IntakeConstants.WheelMotor.wheelCurrentConfigs;
+        wheelConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        wheelConfigurator.apply(wheelConfigs);
+        wheelMotor.setNeutralMode(NeutralModeValue.Brake);
         
         var extVelocitySignal = extMotor.getVelocity();
         var extTempSignal = extMotor.getDeviceTemp();
         var extVoltageSignal = extMotor.getMotorVoltage();
         var extCurrentSignal = extMotor.getSupplyCurrent();
-
         extVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
         extTempSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
         extVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);

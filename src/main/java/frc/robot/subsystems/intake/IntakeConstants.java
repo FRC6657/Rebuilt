@@ -20,4 +20,17 @@ public class IntakeConstants {
                 .withSupplyCurrentLowerLimit(30)
                 .withSupplyCurrentLowerTime(0);
     }
+
+    public static class WheelMotor {
+        public static final double wheelCurrentLimit = 30;
+
+        public static final CurrentLimitsConfigs wheelCurrentConfigs =
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(wheelCurrentLimit)
+                .withSupplyCurrentLimit(wheelCurrentLimit)
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimitEnable(true)
+                .withSupplyCurrentLowerLimit(30)
+                .withSupplyCurrentLowerTime(0);
+    }
 }
