@@ -166,7 +166,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    superstructure.changeTurretAngle(90);
+    superstructure.runTurretTest();
   }
 
   @Override

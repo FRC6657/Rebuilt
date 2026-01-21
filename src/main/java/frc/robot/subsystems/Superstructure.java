@@ -1,10 +1,9 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,12 +24,9 @@ public class Superstructure {
   // Fake test visualization angles (radians)
   private double turretAngle = Math.PI / 4;
   private double hoodAngle = 0.0;
-  Pose2d turretPos = new Pose2d();
-  Pose2d turretTarget =
-      new Pose2d(
-          GamePieceConstants.BLUE_TOWER_CENTER.getX(),
-          GamePieceConstants.BLUE_TOWER_CENTER.getY(),
-          new Rotation2d());
+  Translation2d turretTarget =
+      new Translation2d(
+          GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
   public Superstructure(Drivebase drivebase) {
     this.drivebase = drivebase;
@@ -55,49 +51,45 @@ public class Superstructure {
     };
   }
 
-  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
-    if (x0 < x1) {
-      return new Rotation2d(
-          Math.PI / 2
-              + Math.atan(
-                  (turretPos.getY() - turretTarget.getY())
-                      / (turretPos.getX() - turretTarget.getX())));
-    } else {
-      return new Rotation2d(
-          Math.PI / -2
-              + Math.atan(
-                  (turretPos.getY() - turretTarget.getY())
-                      / (turretPos.getX() - turretTarget.getX())));
-    }
+  // public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
+  //   if (x0 < x1) {
+  //     return new Rotation2d(
+  //         Math.PI / 2
+  //             + Math.atan(
+  //                 (turretPos.getY() - turretTarget.getY())
+  //                     / (turretPos.getX() - turretTarget.getX())));
+  //   } else {
+  //     return new Rotation2d(
+  //         Math.PI / -2
+  //             + Math.atan(
+  //                 (turretPos.getY() - turretTarget.getY())
+  //                     / (turretPos.getX() - turretTarget.getX())));
+  //   }
+  // }
+
+  public Translation2d getTurretGlobalPosition() {
+    return drivebase
+        .getPose()
+        .getTranslation()
+        .plus(
+            new Translation2d(
+                TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
   }
 
-  public void changeTurretAngle(double radians) {
-    turretPos =
-        drivebase
-            .getPose()
-            .transformBy(
-                new Transform2d(
-                    TurretConstants.TURRET_CENTER.getX(),
-                    TurretConstants.TURRET_CENTER.getY(),
-                    new Rotation2d()));
+  public Rotation2d getGlobalTargetHeading(Translation2d goalPose) {
+    return Rotation2d.fromRadians(
+        Math.atan2(
+            (goalPose.getY() - getTurretGlobalPosition().getY()),
+            (goalPose.getX() - getTurretGlobalPosition().getX())));
+  }
 
-    Rotation2d targetAngle =
-        findTargetAngle(
-            turretPos.getX(), turretPos.getY(), turretTarget.getX(), turretTarget.getY());
+  public Rotation2d getRelativeTurretHeading(Rotation2d globalHeading) {
+    return globalHeading.minus(drivebase.getPose().getRotation()).minus(Rotation2d.kCW_90deg);
+  }
 
-    turretAngle = targetAngle.getRadians() - drivebase.getPose().getRotation().getRadians();
-
-    turretPos = new Pose2d(turretPos.getX(), turretPos.getY(), targetAngle);
-
-    Logger.recordOutput(
-        "turretPos",
-        new Pose3d(
-            turretPos.getX(),
-            turretPos.getY(),
-            TurretConstants.TURRET_CENTER.getZ(),
-            new Rotation3d(
-                Rotation2d.fromRadians(
-                    drivebase.getPose().getRotation().getRadians() + turretAngle - Math.PI / 2))));
+  public void runTurretTest() {
+    Rotation2d targetAngle = getGlobalTargetHeading(turretTarget);
+    turretAngle = getRelativeTurretHeading(targetAngle).getRadians();
   }
 
   public Command logMessage(String message) {
