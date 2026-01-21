@@ -23,7 +23,8 @@ public class GlobalConstants {
         Hood(17),
         Turret(18),
         Intake_Extension(19),
-        Intake_Encoder(20);
+        Intake_Wheels(20),
+        Intake_Encoder(21);
         
         public int id;
         CAN(int id){
