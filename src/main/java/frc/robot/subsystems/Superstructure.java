@@ -55,6 +55,22 @@ public class Superstructure {
     };
   }
 
+  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
+    if (x0 < x1) {
+      return new Rotation2d(
+          Math.PI / 2
+              + Math.atan(
+                  (turretPos.getY() - turretTarget.getY())
+                      / (turretPos.getX() - turretTarget.getX())));
+    } else {
+      return new Rotation2d(
+          Math.PI / -2
+              + Math.atan(
+                  (turretPos.getY() - turretTarget.getY())
+                      / (turretPos.getX() - turretTarget.getX())));
+    }
+  }
+
   public void changeTurretAngle(double radians) {
     turretPos =
         drivebase
@@ -66,12 +82,9 @@ public class Superstructure {
                     new Rotation2d()));
 
     Rotation2d targetAngle =
-        new Rotation2d(
-            Math.PI / 2
-                + Math.atan(
-                    (turretPos.getY() - turretTarget.getY())
-                        / (turretPos.getX() - turretTarget.getX())));
-
+        findTargetAngle(
+            turretPos.getX(), turretPos.getY(), turretTarget.getX(), turretTarget.getY());
+    
     turretAngle = targetAngle.getRadians();
 
     turretPos = new Pose2d(turretPos.getX(), turretPos.getY(), targetAngle);
