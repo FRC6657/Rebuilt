@@ -16,7 +16,7 @@ import frc.robot.GlobalConstants;
 
 public class IntakeIO_Real implements IntakeIO {
     private TalonFX extMotor;
-
+    private TalonFX wheelMotor;
     private Canandmag encoder;
 
     private double angleSetpoint = IntakeConstants.ExtensionMotor.maxLength;
