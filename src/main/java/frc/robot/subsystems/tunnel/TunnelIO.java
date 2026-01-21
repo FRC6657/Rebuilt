@@ -10,6 +10,6 @@ public interface TunnelIO {
     public static double setpoint = 0.0;
     }
 
-  public void updateInputs(TunnelIOInputs inputs){}
-  public void changeRollerSpeed(double speed){}
+  public default void updateInputs(TunnelIOInputs inputs){}
+  public default void setSpeed(double speed){}
 }

@@ -34,14 +34,18 @@ public class TunnelIO_Real implements TunnelIO {
     
         tunnelMotor.setPosition(0);
 
-        changeRollerSpeed(TunnelIOInputs.setpoint);
+        setSpeed(TunnelIOInputs.setpoint);
     }
 
-     public void updateInputs(TunnelIOInputs inputs){
+    @Override
+    public void updateInputs(TunnelIOInputs inputs){
             TunnelIOInputs.setpoint = tunnelSetpoint;
             TunnelIOInputs.velocity = tunnelMotor.getVelocity().getValueAsDouble();
         }
 
-        public void changeRollerSpeed(double speed){}
-    }
+    @Override
+    public void setSpeed(double speed){
+            tunnelSetpoint = speed;
+        }
+}
 
