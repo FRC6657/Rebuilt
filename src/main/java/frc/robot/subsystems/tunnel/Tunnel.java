@@ -28,7 +28,7 @@ public class Tunnel extends SubsystemBase {
 
   @AutoLogOutput(key = "Tunnel/AtSetpoint")
   public boolean atSetpoint() {
-    return MathUtil.isNear(inputs.setpoint, inputs.getPosition);
+    return MathUtil.isNear(inputs.setpoint, inputs.getPosition());
   }
 
   @Override

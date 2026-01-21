@@ -1,7 +1,10 @@
 package frc.robot.subsystems.tunnel;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface TunnelIO {
 
+  @AutoLog
   public static class TunnelIOInputs {
     public static double velocity = 0.0;
     public static double temp = 0.0;
