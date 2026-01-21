@@ -84,8 +84,8 @@ public class Superstructure {
     Rotation2d targetAngle =
         findTargetAngle(
             turretPos.getX(), turretPos.getY(), turretTarget.getX(), turretTarget.getY());
-    
-    turretAngle = targetAngle.getRadians();
+
+    turretAngle = targetAngle.getRadians() - drivebase.getPose().getRotation().getRadians();
 
     turretPos = new Pose2d(turretPos.getX(), turretPos.getY(), targetAngle);
 
