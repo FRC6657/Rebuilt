@@ -89,6 +89,12 @@ public class Robot extends LoggedRobot {
                 ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
                 : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
 
+    // turret = new Turret(new TurretIO() {});
+
+    // hood = new Hood(new HoodIO() {});
+
+    // shoot = new Shooter(new ShooterIO() {});
+
     superstructure = new Superstructure(drivebase);
 
     AutoBuilder.configure(
@@ -156,6 +162,11 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
+  }
+
+  @Override
+  public void teleopPeriodic() {
+    superstructure.runTurretTest();
   }
 
   @Override
