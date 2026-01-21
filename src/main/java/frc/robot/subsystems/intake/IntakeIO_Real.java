@@ -67,6 +67,7 @@ public class IntakeIO_Real implements IntakeIO {
         extPID.enableContinuousInput(0, 2);
         changeExtSetpoint(IntakeConstants.ExtensionMotor.minLength);
         extPID.reset(encoder.getAbsPosition());
+        wheelMotor.optimizeBusUtilization();
     }
 
     @Override
@@ -80,6 +81,11 @@ public class IntakeIO_Real implements IntakeIO {
         inputs.extMotorVoltage = extMotor.get() * RobotController.getBatteryVoltage();
         inputs.extMotorCurrent = extMotor.getSupplyCurrent().getValueAsDouble();
         inputs.extMotorSetpoint = speedSetpoint;
+
+        inputs.wheelMotorVelocity = wheelMotor.getVelocity().getValueAsDouble();
+        inputs.wheelMotorTemp = wheelMotor.getDeviceTemp().getValueAsDouble();
+        inputs.wheelMotorVoltage = wheelMotor.get() * RobotController.getBatteryVoltage();
+        inputs.wheelMotorCurrent = wheelMotor.getSupplyCurrent().getValueAsDouble();
 
         double pidOutput = extPID.calculate(inputs.encoderAbsPosition, angleSetpoint);
         extMotor.set(pidOutput);
