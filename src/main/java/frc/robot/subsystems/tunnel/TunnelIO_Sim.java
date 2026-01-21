@@ -1,5 +1,3 @@
 package frc.robot.subsystems.tunnel;
 
-public class TunnelIO_Sim {
-    
-}
+public class TunnelIO_Sim {}

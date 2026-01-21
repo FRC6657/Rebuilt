@@ -1,8 +1,7 @@
 package frc.robot.subsystems.floor;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import frc.robot.subsystems.floor.FloorConstants.RollerSetpoint;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface FloorIO {
 

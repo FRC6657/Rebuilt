@@ -7,32 +7,27 @@ package frc.robot.subsystems.tunnel;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.tunnel.TunnelIO;
-import frc.robot.subsystems.tunnel.TunnelIO.TunnelIOInputs;
-
 import java.lang.System.Logger;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Tunnel extends SubsystemBase {
 
   private final TunnelIO io;
   private final TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
-  
+
   public Tunnel(TunnelIO io) {
     this.io = io;
   }
 
   public Command changeRollerSpeed(double speed) {
     return this.runOnce(
-      ()-> {
-        io.setSpeed(speed);
-      }
-    );
+        () -> {
+          io.setSpeed(speed);
+        });
   }
 
   @AutoLogOutput(key = "Tunnel/AtSetpoint")
-  public boolean atSetpoint(){
+  public boolean atSetpoint() {
     return MathUtil.isNear(inputs.setpoint, inputs.getPosition);
   }
 
@@ -41,5 +36,4 @@ public class Tunnel extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Tunnel", inputs);
   }
-
 }

@@ -28,6 +28,6 @@ public class Floor extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Outtake", (LoggableInputs) inputs);
+    Logger.processInputs("Floor", (LoggableInputs) inputs);
   }
 }
