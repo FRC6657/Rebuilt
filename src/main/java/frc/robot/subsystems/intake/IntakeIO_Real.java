@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeIO_Real implements IntakeIO {
   private TalonFX extMotor;
-
+  private TalonFX wheelMotor;
   private Canandmag encoder;
 
   private double angleSetpoint = IntakeConstants.ExtensionMotor.maxLength;
@@ -26,6 +26,7 @@ public class IntakeIO_Real implements IntakeIO {
 
   public IntakeIO_Real() {
     extMotor = new TalonFX(GlobalConstants.CAN.Intake_Extension.id);
+    wheelMotor = new TalonFX(GlobalConstants.CAN.Intake_Wheels.id);
     encoder = new Canandmag(GlobalConstants.CAN.Intake_Encoder.id);
 
     var extConfigurator = extMotor.getConfigurator();
@@ -35,20 +36,36 @@ public class IntakeIO_Real implements IntakeIO {
     extConfigurator.apply(extConfigs);
     extMotor.setNeutralMode(NeutralModeValue.Brake);
 
+    var wheelConfigurator = wheelMotor.getConfigurator();
+    var wheelConfigs = new TalonFXConfiguration();
+    wheelConfigs.CurrentLimits = IntakeConstants.WheelMotor.wheelCurrentConfigs;
+    wheelConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    wheelConfigurator.apply(wheelConfigs);
+    wheelMotor.setNeutralMode(NeutralModeValue.Brake);
+
     var extVelocitySignal = extMotor.getVelocity();
     var extTempSignal = extMotor.getDeviceTemp();
     var extVoltageSignal = extMotor.getMotorVoltage();
     var extCurrentSignal = extMotor.getSupplyCurrent();
-
     extVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     extTempSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     extVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     extCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
+    var wheelVelocitySignal = wheelMotor.getVelocity();
+    var wheelTempSignal = wheelMotor.getDeviceTemp();
+    var wheelVoltageSignal = wheelMotor.getMotorVoltage();
+    var wheelCurrentSignal = wheelMotor.getSupplyCurrent();
+    wheelVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    wheelTempSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    wheelVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    wheelCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+
     extMotor.optimizeBusUtilization();
     extPID.enableContinuousInput(0, 2);
     changeExtSetpoint(IntakeConstants.ExtensionMotor.minLength);
     extPID.reset(encoder.getAbsPosition());
+    wheelMotor.optimizeBusUtilization();
   }
 
   @Override
@@ -62,6 +79,11 @@ public class IntakeIO_Real implements IntakeIO {
     inputs.extMotorVoltage = extMotor.get() * RobotController.getBatteryVoltage();
     inputs.extMotorCurrent = extMotor.getSupplyCurrent().getValueAsDouble();
     inputs.extMotorSetpoint = speedSetpoint;
+
+    inputs.wheelMotorVelocity = wheelMotor.getVelocity().getValueAsDouble();
+    inputs.wheelMotorTemp = wheelMotor.getDeviceTemp().getValueAsDouble();
+    inputs.wheelMotorVoltage = wheelMotor.get() * RobotController.getBatteryVoltage();
+    inputs.wheelMotorCurrent = wheelMotor.getSupplyCurrent().getValueAsDouble();
 
     double pidOutput = extPID.calculate(inputs.encoderAbsPosition, angleSetpoint);
     extMotor.set(pidOutput);

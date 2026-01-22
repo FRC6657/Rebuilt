@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
                     IntakeConstants.ExtensionMotor.maxLength)));
   }
 
-  @AutoLogOutput(key = "Intake/AtSetpoint")
+  @AutoLogOutput(key = "Intake/AtExtensionSetpoint")
   public boolean atSetpoint() {
     return MathUtil.isNear(
         inputs.extMotorSetpoint, inputs.encoderAbsPosition, Units.inchesToMeters(0.5));
