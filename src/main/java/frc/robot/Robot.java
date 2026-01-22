@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
@@ -88,6 +89,12 @@ public class Robot extends LoggedRobot {
                 ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
                 : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
 
+    // turret = new Turret(new TurretIO() {});
+
+    // hood = new Hood(new HoodIO() {});
+
+    // shoot = new Shooter(new ShooterIO() {});
+
     superstructure = new Superstructure(drivebase);
 
     AutoBuilder.configure(
@@ -137,13 +144,13 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * 1.0,
+                        * 0.5,
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * 1.0,
+                        * 0.5,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * 1.0)));
+                        * 0.375)));
 
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
@@ -154,6 +161,12 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    GamePieceSimulation.getInstance().update();
+  }
+
+  @Override
+  public void teleopPeriodic() {
+    superstructure.runTurretTest();
   }
 
   @Override
