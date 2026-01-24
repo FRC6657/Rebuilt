@@ -119,10 +119,11 @@ public class Superstructure {
     return Commands.sequence(
       logMessage("Home Robot"),
       shoot.changeSetpoint(0),
-      tunnel.setSpeed(0),
+      tunnel.changeRollerSpeed(0),
       floor.changeRollerSetpoint(0),
       turret.changeSetpoint(0),
       intake.changeExtSetpoint(0),
+      intake.changeWheelSpeed(0),
       hood.changeSetpoint(0));
   }
 
@@ -131,7 +132,7 @@ public class Superstructure {
     return Commands.sequence(
       logMessage("Fuel Intake"),
       intake.changeExtSetpoint(6),
-      intake.changeWheelSetpoint(0.7)
+      intake.changeWheelSpeed(0.7)
     );
   }
 }

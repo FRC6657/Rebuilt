@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake", inputs);
   }
 
-  public Command changeWheelSetpoint(double speed) {
+  public Command changeWheelSpeed(double speed) {
     return this.runOnce(
       () -> io.changeWheelSetpoint(speed)
     );
