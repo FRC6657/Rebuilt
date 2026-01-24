@@ -100,7 +100,7 @@ public class IntakeIO_Real implements IntakeIO {
   }
 
   @Override
-  public void changeWheelSetpoint(double setpoint){
+  public void changeWheelSetpoint(double setpoint) {
     speedSetpoint = setpoint;
   }
 }

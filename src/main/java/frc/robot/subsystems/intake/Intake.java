@@ -42,8 +42,6 @@ public class Intake extends SubsystemBase {
   }
 
   public Command changeWheelSpeed(double speed) {
-    return this.runOnce(
-      () -> io.changeWheelSetpoint(speed)
-    );
+    return this.runOnce(() -> io.changeWheelSetpoint(speed));
   }
 }
