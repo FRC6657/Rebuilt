@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -17,9 +20,9 @@ public class Superstructure {
 
   // Subsystems
   Drivebase drivebase;
-  // Turret turret;
-  // Hood hood;
-  // Shooter shoot;
+  Turret turret;
+  Hood hood;
+  Shooter shoot;
 
   // Fake test visualization angles (radians)
   private double turretAngle = Math.PI / 4;
@@ -28,11 +31,11 @@ public class Superstructure {
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
-  public Superstructure(Drivebase drivebase) {
+  public Superstructure(Drivebase drivebase, Turret turret, Hood hood, Shooter shoot) {
     this.drivebase = drivebase;
-    // this.turret = turret;
-    // this.hood = hood;
-    // this.shoot = shoot;
+    this.turret = turret;
+    this.hood = hood;
+    this.shoot = shoot;
   }
 
   @AutoLogOutput(key = "3DComponents")
@@ -51,21 +54,21 @@ public class Superstructure {
     };
   }
 
-  // public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
-  //   if (x0 < x1) {
-  //     return new Rotation2d(
-  //         Math.PI / 2
-  //             + Math.atan(
-  //                 (turretPos.getY() - turretTarget.getY())
-  //                     / (turretPos.getX() - turretTarget.getX())));
-  //   } else {
-  //     return new Rotation2d(
-  //         Math.PI / -2
-  //             + Math.atan(
-  //                 (turretPos.getY() - turretTarget.getY())
-  //                     / (turretPos.getX() - turretTarget.getX())));
-  //   }
-  // }
+  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
+    if (x0 < x1) {
+      return new Rotation2d(
+          Math.PI / 2
+              + Math.atan(
+                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
+                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
+    } else {
+      return new Rotation2d(
+          Math.PI / -2
+              + Math.atan(
+                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
+                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
+    }
+  }
 
   public Translation2d getTurretGlobalPosition() {
     return drivebase
