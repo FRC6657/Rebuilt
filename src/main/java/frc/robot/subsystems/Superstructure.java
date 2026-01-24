@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.floor.Floor;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.tunnel.Tunnel;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -27,6 +29,7 @@ public class Superstructure {
   Shooter shoot;
   Floor floor;
   Intake intake;
+  Tunnel tunnel;
 
   // Fake test visualization angles (radians)
   private double turretAngle = Math.PI / 4;
@@ -42,6 +45,7 @@ public class Superstructure {
     this.shoot = shoot;
     this.floor = floor;
     this.intake = intake;
+    this.tunnel = tunnel;
   }
 
   @AutoLogOutput(key = "3DComponents")
@@ -104,6 +108,24 @@ public class Superstructure {
   public Command logMessage(String message) {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
+
+  public Command shoot(){
+   return Commands.sequence(
+    logMessage("Shoot"),
+    shoot.changeSetpoint(12));
+  }
+
+  public Command HomeRobot() {
+    return Commands.sequence(
+      logMessage("Home Robot"),
+      shoot.changeSetpoint(0),
+      tunnel.setSpeed(0),
+      floor.changeRollerSetpoint(0),
+      turret.changeSetpoint(0),
+      intake.changeExtSetpoint(0),
+      hood.changeSetpoint(0));
+  }
+
 
   public Command intakeFuel() {
     return Commands.sequence(
