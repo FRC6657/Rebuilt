@@ -26,4 +26,6 @@ public interface IntakeIO {
   public default void updateInputs(IntakeIOInputs inputs) {}
 
   public default void changeExtSetpoint(double setpoint) {}
+
+  public default void changeWheelSetpoint(double setpoint) {}
 }

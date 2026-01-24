@@ -40,4 +40,8 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
   }
+
+  public Command changeWheelSpeed(double speed) {
+    return this.runOnce(() -> io.changeWheelSetpoint(speed));
+  }
 }
