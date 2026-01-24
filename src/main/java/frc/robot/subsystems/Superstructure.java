@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
+import frc.robot.subsystems.floor.Floor;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -17,9 +22,11 @@ public class Superstructure {
 
   // Subsystems
   Drivebase drivebase;
-  // Turret turret;
-  // Hood hood;
-  // Shooter shoot;
+  Turret turret;
+  Hood hood;
+  Shooter shoot;
+  Floor floor;
+  Intake intake;
 
   // Fake test visualization angles (radians)
   private double turretAngle = Math.PI / 4;
@@ -30,9 +37,11 @@ public class Superstructure {
 
   public Superstructure(Drivebase drivebase) {
     this.drivebase = drivebase;
-    // this.turret = turret;
-    // this.hood = hood;
-    // this.shoot = shoot;
+    this.turret = turret;
+    this.hood = hood;
+    this.shoot = shoot;
+    this.floor = floor;
+    this.intake = intake;
   }
 
   @AutoLogOutput(key = "3DComponents")
