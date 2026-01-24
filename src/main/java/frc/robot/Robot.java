@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
@@ -50,6 +51,7 @@ public class Robot extends LoggedRobot {
 
   // Controllers
   private CommandXboxController driver = new CommandXboxController(0);
+  private CommandGenericHID operator = new CommandGenericHID(1);
 
   // Subsystems
   private final ApriltagCameras cameras;
@@ -161,6 +163,8 @@ public class Robot extends LoggedRobot {
                         * DrivebaseConstants.kMaxAngularSpeed
                         * 0.375)));
 
+
+    
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
 
