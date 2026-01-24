@@ -104,4 +104,12 @@ public class Superstructure {
   public Command logMessage(String message) {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
+
+  public Command intakeFuel() {
+    return Commands.sequence(
+      logMessage("Fuel Intake"),
+      intake.changeExtSetpoint(6),
+      intake.changeWheelSetpoint(0.7)
+    );
+  }
 }
