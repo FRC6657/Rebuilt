@@ -17,7 +17,7 @@ public class IntakeIO_Real implements IntakeIO {
   private TalonFX wheelMotor;
   private Canandmag encoder;
 
-  private double angleSetpoint = IntakeConstants.ExtensionMotor.maxLength;
+  private double extSetpoint = IntakeConstants.ExtensionMotor.minLength;
   private double speedSetpoint = 0;
 
   private ProfiledPIDController extPID =
@@ -85,8 +85,10 @@ public class IntakeIO_Real implements IntakeIO {
     inputs.wheelMotorVoltage = wheelMotor.get() * RobotController.getBatteryVoltage();
     inputs.wheelMotorCurrent = wheelMotor.getSupplyCurrent().getValueAsDouble();
 
-    double pidOutput = extPID.calculate(inputs.encoderAbsPosition, angleSetpoint);
+    double pidOutput = extPID.calculate(inputs.encoderAbsPosition, extSetpoint);
     extMotor.set(pidOutput);
+
+    wheelMotor.set(speedSetpoint);
 
     Logger.recordOutput("Intake/ExtensionPIDOutput", pidOutput);
     Logger.recordOutput("Intake/ExtensionPIDProfileSetpoint", extPID.getSetpoint().position);
@@ -94,6 +96,11 @@ public class IntakeIO_Real implements IntakeIO {
 
   @Override
   public void changeExtSetpoint(double setpoint) {
+    extSetpoint = setpoint;
+  }
+
+  @Override
+  public void changeWheelSetpoint(double setpoint){
     speedSetpoint = setpoint;
   }
 }
