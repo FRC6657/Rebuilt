@@ -29,6 +29,8 @@ import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.turret.Turret;
@@ -59,6 +61,7 @@ public class Robot extends LoggedRobot {
   private final Turret turret;
   private final Hood hood;
   private final Shooter shoot;
+  private final Intake intake;
 
   // Superstructure
   private final Superstructure superstructure;
@@ -107,6 +110,8 @@ public class Robot extends LoggedRobot {
     shoot = new Shooter(new ShooterIO() {});
 
     superstructure = new Superstructure(drivebase, turret, hood, shoot);
+
+    intake = new Intake(new IntakeIO() {});
 
     AutoBuilder.configure(
         drivebase::getPose,
@@ -162,8 +167,6 @@ public class Robot extends LoggedRobot {
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
                         * 0.375)));
-
-
     
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));

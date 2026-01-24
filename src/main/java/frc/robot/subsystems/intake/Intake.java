@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
   public IntakeIO io;
   public IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   /** Creates a new Intake. */
-  public Intake() {
+  public Intake(IntakeIO io) {
     this.io = io;
   }
 
