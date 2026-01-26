@@ -167,7 +167,7 @@ public class Robot extends LoggedRobot {
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
                         * 0.375)));
-    
+
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
 
@@ -187,7 +187,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    autoChooser.get().schedule();
+    CommandScheduler.getInstance().schedule(autoChooser.get());
   }
 
   @Override
