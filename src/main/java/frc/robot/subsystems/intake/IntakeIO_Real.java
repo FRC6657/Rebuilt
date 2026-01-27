@@ -78,12 +78,13 @@ public class IntakeIO_Real implements IntakeIO {
     inputs.extMotorTemp = extMotor.getDeviceTemp().getValueAsDouble();
     inputs.extMotorVoltage = extMotor.get() * RobotController.getBatteryVoltage();
     inputs.extMotorCurrent = extMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.extMotorSetpoint = speedSetpoint;
+    inputs.extMotorSetpoint = extSetpoint;
 
     inputs.wheelMotorVelocity = wheelMotor.getVelocity().getValueAsDouble();
     inputs.wheelMotorTemp = wheelMotor.getDeviceTemp().getValueAsDouble();
     inputs.wheelMotorVoltage = wheelMotor.get() * RobotController.getBatteryVoltage();
     inputs.wheelMotorCurrent = wheelMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.wheelMotorSetpoint = speedSetpoint;
 
     double pidOutput = extPID.calculate(inputs.encoderAbsPosition, extSetpoint);
     extMotor.set(pidOutput);
