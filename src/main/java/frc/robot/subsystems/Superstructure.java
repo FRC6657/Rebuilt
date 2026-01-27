@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
@@ -37,7 +38,7 @@ public class Superstructure {
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
-  public Superstructure(Drivebase drivebase, Turret turret, Hood hood, Shooter shoot) {
+  public Superstructure(Drivebase drivebase) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
@@ -63,21 +64,21 @@ public class Superstructure {
     };
   }
 
-  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
-    if (x0 < x1) {
-      return new Rotation2d(
-          Math.PI / 2
-              + Math.atan(
-                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
-                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
-    } else {
-      return new Rotation2d(
-          Math.PI / -2
-              + Math.atan(
-                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
-                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
-    }
-  }
+  // public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
+  //   if (x0 < x1) {
+  //     return new Rotation2d(
+  //         Math.PI / 2
+  //             + Math.atan(
+  //                 (turretPos.getY() - turretTarget.getY())
+  //                     / (turretPos.getX() - turretTarget.getX())));
+  //   } else {
+  //     return new Rotation2d(
+  //         Math.PI / -2
+  //             + Math.atan(
+  //                 (turretPos.getY() - turretTarget.getY())
+  //                     / (turretPos.getX() - turretTarget.getX())));
+  //   }
+  // }
 
   public Translation2d getTurretGlobalPosition() {
     return drivebase
@@ -108,24 +109,21 @@ public class Superstructure {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
 
-  public Command shoot() {
-    return Commands.sequence(logMessage("Shoot"), shoot.changeSetpoint(12));
+  public Command shoot(){
+   return Commands.sequence(
+    logMessage("Shoot"),
+    shoot.changeSetpoint(12));
   }
 
-  public Command HomeRobot() {
+  public Command HomeRobot(){
     return Commands.sequence(
-        logMessage("Home Robot"),
-        shoot.changeSetpoint(0),
-        tunnel.changeRollerSpeed(0),
-        floor.changeRollerSetpoint(0),
-        turret.changeSetpoint(0),
-        intake.changeExtSetpoint(0),
-        intake.changeWheelSpeed(0),
-        hood.changeSetpoint(0));
+      logMessage("Home Robot"),
+      shoot.changeSetpoint(0),
+      tunnel.changeRollerSpeed(0),
+      floor.changeRollerSetpoint(0),
+      turret.changeSetpoint(0),
+      intake.changeExtSetpoint(0),
+      hood.changeSetpoint(0));
   }
 
-  public Command intakeFuel() {
-    return Commands.sequence(
-        logMessage("Fuel Intake"), intake.changeExtSetpoint(6), intake.changeWheelSpeed(0.7));
-  }
 }
