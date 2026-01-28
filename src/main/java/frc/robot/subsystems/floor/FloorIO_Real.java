@@ -4,10 +4,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.GlobalConstants;
 
 public class FloorIO_Real implements FloorIO {
 
-  TalonFX rollerMotor = new TalonFX(2);
+  TalonFX rollerMotor = new TalonFX(GlobalConstants.CAN.Floor.id);
   double rollerSetpoint = 0;
 
   public FloorIO_Real() {

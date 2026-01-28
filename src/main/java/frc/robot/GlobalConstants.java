@@ -19,14 +19,13 @@ public class GlobalConstants {
     Swerve_Gyro(13),
     Shooter_Leader(14),
     Shooter_Follower(15),
-    Floor_One(16),
-    Floor_Two(17),
-    Hood(18),
-    Turret(19),
-    Intake_Extension(20),
-    Intake_Wheels(21),
-    Intake_Encoder(22),
-    Tunnel(23);
+    Floor(16),
+    Hood(17),
+    Turret(18),
+    Intake_Extension(19),
+    Intake_Wheels(20),
+    Intake_Encoder(21),
+    Tunnel(22);
 
     public int id;
 
