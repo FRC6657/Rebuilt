@@ -18,6 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.GlobalConstants;
 
 public class DrivebaseConstants {
 
@@ -25,19 +26,19 @@ public class DrivebaseConstants {
 
   // Drivebase CAN IDs
   public static enum CAN {
-    FR_D(1),
-    FL_D(2),
-    BR_D(3),
-    BL_D(4),
-    FR_T(5),
-    FL_T(6),
-    BR_T(7),
-    BL_T(8),
-    FR_E(9),
-    FL_E(10),
-    BR_E(11),
-    BL_E(12),
-    Gyro(13);
+    FR_D(GlobalConstants.CAN.Swerve_FR_D.id),
+    FL_D(GlobalConstants.CAN.Swerve_FL_D.id),
+    BR_D(GlobalConstants.CAN.Swerve_BR_D.id),
+    BL_D(GlobalConstants.CAN.Swerve_BL_D.id),
+    FR_T(GlobalConstants.CAN.Swerve_FR_T.id),
+    FL_T(GlobalConstants.CAN.Swerve_FL_T.id),
+    BR_T(GlobalConstants.CAN.Swerve_BR_T.id),
+    BL_T(GlobalConstants.CAN.Swerve_BL_T.id),
+    FR_E(GlobalConstants.CAN.Swerve_FR_E.id),
+    FL_E(GlobalConstants.CAN.Swerve_FL_E.id),
+    BR_E(GlobalConstants.CAN.Swerve_BR_E.id),
+    BL_E(GlobalConstants.CAN.Swerve_BL_E.id),
+    Gyro(GlobalConstants.CAN.Swerve_Gyro.id);
 
     public int id;
 
