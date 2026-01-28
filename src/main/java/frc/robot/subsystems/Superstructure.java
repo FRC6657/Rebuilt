@@ -38,7 +38,7 @@ public class Superstructure {
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
-  public Superstructure(Drivebase drivebase) {
+  public Superstructure(Drivebase drivebase, Turret turret, Hood hood, Shooter shoot) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
@@ -64,21 +64,21 @@ public class Superstructure {
     };
   }
 
-  // public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
-  //   if (x0 < x1) {
-  //     return new Rotation2d(
-  //         Math.PI / 2
-  //             + Math.atan(
-  //                 (turretPos.getY() - turretTarget.getY())
-  //                     / (turretPos.getX() - turretTarget.getX())));
-  //   } else {
-  //     return new Rotation2d(
-  //         Math.PI / -2
-  //             + Math.atan(
-  //                 (turretPos.getY() - turretTarget.getY())
-  //                     / (turretPos.getX() - turretTarget.getX())));
-  //   }
-  // }
+  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
+    if (x0 < x1) {
+      return new Rotation2d(
+          Math.PI / 2
+              + Math.atan(
+                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
+                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
+    } else {
+      return new Rotation2d(
+          Math.PI / -2
+              + Math.atan(
+                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
+                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
+    }
+  }
 
   public Translation2d getTurretGlobalPosition() {
     return drivebase
@@ -109,10 +109,8 @@ public class Superstructure {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
 
-  public Command shoot(){
-   return Commands.sequence(
-    logMessage("Shoot"),
-    shoot.changeSetpoint(12));
+public Command shoot() {
+    return Commands.sequence(logMessage("Shoot"), shoot.changeSetpoint(12));
   }
 
   public Command HomeRobot(){
@@ -123,7 +121,12 @@ public class Superstructure {
       floor.changeRollerSetpoint(0),
       turret.changeSetpoint(0),
       intake.changeExtSetpoint(0),
+      intake.changeWheelSpeed(0),
       hood.changeSetpoint(0));
   }
 
+  public Command intakeFuel() {
+    return Commands.sequence(
+        logMessage("Fuel Intake"), intake.changeExtSetpoint(6), intake.changeWheelSpeed(0.7));
+  }
 }
