@@ -39,9 +39,9 @@ public class TurretIO_Real implements TurretIO {
 
     turretMotor.optimizeBusUtilization();
 
-    turretMotor.setPosition(TurretConstants.INITIAL_SETPOINT / 360);
+    // turretMotor.setPosition(TurretConstants.INITIAL_SETPOINT); // I don't think we need this
 
-    changeSetpoint(TurretConstants.INITIAL_SETPOINT);
+    changeSetpoint(TurretConstants.INITIAL_SETPOINT * 360);
   }
 
   @Override

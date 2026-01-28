@@ -16,7 +16,7 @@ public interface TurretIO {
     public double Temp = 0.0;
     public double Voltage = 0.0;
     public double Current = 0.0;
-    public double Position = TurretConstants.INITIAL_SETPOINT;
+    public double Position = TurretConstants.INITIAL_SETPOINT * 360;
   }
 
   public default void updateInputs(TurretIOInputs inputs) {}
