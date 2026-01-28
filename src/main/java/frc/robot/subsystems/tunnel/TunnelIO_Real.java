@@ -3,9 +3,11 @@ package frc.robot.subsystems.tunnel;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import frc.robot.GlobalConstants;
+
 public class TunnelIO_Real implements TunnelIO {
 
-  TalonFX tunnelMotor = new TalonFX(TunnelConstants.TUNNEL_MOTOR);
+  TalonFX tunnelMotor = new TalonFX(GlobalConstants.CAN.Tunnel.id);
 
   private double tunnelSetpoint = TunnelConstants.INITIAL_SETPOINT;
 

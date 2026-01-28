@@ -4,10 +4,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.GlobalConstants;
 
 public class ShooterIO_Real implements ShooterIO {
-  TalonFX leaderMotor = new TalonFX(ShooterConstants.leaderCAN);
-  TalonFX followerMotor = new TalonFX(ShooterConstants.followerCAN);
+  TalonFX leaderMotor = new TalonFX(GlobalConstants.CAN.Shooter_Leader.id);
+  TalonFX followerMotor = new TalonFX(GlobalConstants.CAN.Shooter_Follower.id);
 
   private double ShooterSetpoint;
 
@@ -21,7 +22,7 @@ public class ShooterIO_Real implements ShooterIO {
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake; // can be changed later
     leaderConfigurator.apply(motorConfigs);
     followerConfigurator.apply(motorConfigs);
-    followerMotor.setControl(new Follower(ShooterConstants.followerCAN, null));
+    followerMotor.setControl(new Follower(GlobalConstants.CAN.Shooter_Follower.id, null));
 
     var leaderMotorPostition = leaderMotor.getPosition();
     var leaderMotorVelocity = leaderMotor.getVelocity();
