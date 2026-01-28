@@ -39,7 +39,7 @@ public class TurretIO_Real implements TurretIO {
 
     turretMotor.optimizeBusUtilization();
 
-    //turretMotor.setPosition(TurretConstants.INITIAL_SETPOINT); // I don't think we need this
+    // turretMotor.setPosition(TurretConstants.INITIAL_SETPOINT); // I don't think we need this
 
     changeSetpoint(TurretConstants.INITIAL_SETPOINT * 360);
   }
@@ -59,11 +59,12 @@ public class TurretIO_Real implements TurretIO {
   }
 
   @Override
-  public void changeSetpoint(double setpoint){
+  public void changeSetpoint(double setpoint) {
     double clampedInput = setpoint % 360;
-    if(clampedInput < 0){
+    if (clampedInput < 0) {
       clampedInput = clampedInput + 360;
     }
-    motionMagicVoltage = new MotionMagicVoltage(clampedInput/360 + TurretConstants.INITIAL_SETPOINT);
+    motionMagicVoltage =
+        new MotionMagicVoltage(clampedInput / 360 + TurretConstants.INITIAL_SETPOINT);
   }
 }

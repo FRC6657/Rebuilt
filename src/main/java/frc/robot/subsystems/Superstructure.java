@@ -49,7 +49,7 @@ public class Superstructure {
 
   @AutoLogOutput(key = "3DComponents")
   public Pose3d[] get3DComponents() {
-
+    //double turretAngle = turret.getPosition();
     // Turret / Shooter
     Rotation3d turretRotation = new Rotation3d(0, 0, turretAngle);
     Translation3d rotatedHoodOffset = TurretConstants.HOOD_OFFSET.rotateBy(turretRotation);
