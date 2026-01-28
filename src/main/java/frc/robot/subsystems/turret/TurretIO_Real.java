@@ -8,10 +8,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.GlobalConstants;
 
 public class TurretIO_Real implements TurretIO {
-  // Update Code with proper CANID
-  TalonFX turretMotor = new TalonFX(1);
+  TalonFX turretMotor = new TalonFX(GlobalConstants.CAN.Turret.id);
   private MotionMagicVoltage motionMagicVoltage =
       new MotionMagicVoltage(TurretConstants.INITIAL_SETPOINT);
 
