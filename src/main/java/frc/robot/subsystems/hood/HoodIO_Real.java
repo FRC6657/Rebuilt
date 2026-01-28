@@ -5,11 +5,12 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
+import frc.robot.GlobalConstants;
 
 public class HoodIO_Real implements HoodIO {
 
   // update placeholder value here
-  TalonFX hoodMotor = new TalonFX(1);
+  TalonFX hoodMotor = new TalonFX(GlobalConstants.CAN.Hood.id);
   private MotionMagicVoltage motionMagicVoltage =
       new MotionMagicVoltage(HoodConstants.INITIAL_SETPOINT / 360);
 
