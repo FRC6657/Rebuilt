@@ -22,10 +22,10 @@ public class IntakeIO_Sim implements IntakeIO {
               DCMotor.getFalcon500(1), 0.0001, 1), // TODO configure correct gearing
           DCMotor.getFalcon500(1));
 
-  private DCMotorSim wheelSim = 
+  private DCMotorSim wheelSim =
       new DCMotorSim(
-        LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), 0.0001, 1),
-      DCMotor.getFalcon500(1));
+          LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), 0.0001, 1),
+          DCMotor.getFalcon500(1));
 
   public IntakeIO_Sim() {}
 
