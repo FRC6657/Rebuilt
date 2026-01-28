@@ -13,7 +13,7 @@ public class TurretIO_Real implements TurretIO {
   // Update Code with proper CANID
   TalonFX turretMotor = new TalonFX(1);
   private MotionMagicVoltage motionMagicVoltage =
-      new MotionMagicVoltage(TurretConstants.INITIAL_SETPOINT / 360);
+      new MotionMagicVoltage(TurretConstants.INITIAL_SETPOINT);
 
   public TurretIO_Real() {
 
@@ -56,5 +56,14 @@ public class TurretIO_Real implements TurretIO {
     inputs.Setpoint = motionMagicVoltage.Position * 360;
 
     turretMotor.setControl(motionMagicVoltage);
+  }
+
+  @Override
+  public void changeSetpoint(double setpoint){
+    double clampedInput = setpoint % 360;
+    if(clampedInput < 0){
+      clampedInput = clampedInput + 360;
+    }
+    motionMagicVoltage = new MotionMagicVoltage(clampedInput/360 + TurretConstants.INITIAL_SETPOINT);
   }
 }

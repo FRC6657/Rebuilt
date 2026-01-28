@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class TurretConstants {
-  public static final double INITIAL_SETPOINT = 0.0;
+  public static final double INITIAL_SETPOINT = 0.0 / 360;
   // update gear ration
   public static final double GEAR_RATIO = 1 / 1d;
   public static final double supplyLimit = 30;

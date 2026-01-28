@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.turret;
 
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -14,7 +16,7 @@ public class TurretIO_Sim implements TurretIO {
   /** Creates a new TurretIO_Sim. */
   private double voltage = 0;
 
-  private double setpoint = TurretConstants.INITIAL_SETPOINT;
+  private double setpoint = TurretConstants.INITIAL_SETPOINT * 360;
 
   private DCMotorSim turretSim =
       new DCMotorSim(
@@ -42,5 +44,14 @@ public class TurretIO_Sim implements TurretIO {
     inputs.Voltage = voltage;
     inputs.Current = turretSim.getCurrentDrawAmps();
     inputs.Setpoint = setpoint;
+  }
+
+  @Override
+  public void changeSetpoint(double setpoint){
+    double clampedInput = setpoint % 360;
+    if(clampedInput < 0){
+      clampedInput = clampedInput + 360;
+    }
+    setpoint = clampedInput/360 + TurretConstants.INITIAL_SETPOINT;
   }
 }
