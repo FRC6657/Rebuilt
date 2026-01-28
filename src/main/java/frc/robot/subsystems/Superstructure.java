@@ -126,6 +126,6 @@ public class Superstructure {
 
   public Command intakeFuel() {
     return Commands.sequence(
-        logMessage("Fuel Intake"), intake.changeExtSetpoint(6), intake.changeWheelSpeed(0.7));
+        logMessage("Fuel Intake"), intake.changeExtSetpoint(6), Commands.waitSeconds(0.5), intake.changeWheelSpeed(0.7));
   }
 }
