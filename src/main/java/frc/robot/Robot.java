@@ -172,6 +172,8 @@ public class Robot extends LoggedRobot {
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
     
     driver.a().onTrue(Superstructure.intakeFuel()).onFalse(Superstructure.HomeRobot());
+
+    driver.b().whileTrue(Superstructure.hoodMove());
     
     Logger.start();
   }
