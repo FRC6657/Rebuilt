@@ -170,11 +170,11 @@ public class Robot extends LoggedRobot {
 
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
-    
+
     driver.a().onTrue(superstructure.intakeFuel()).onFalse(superstructure.HomeRobot());
 
     driver.b().whileTrue(superstructure.hoodMove());
-    
+
     Logger.start();
   }
 
