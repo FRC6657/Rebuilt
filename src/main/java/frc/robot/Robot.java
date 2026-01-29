@@ -27,12 +27,16 @@ import frc.robot.subsystems.drivebase.GyroIO_CTRE;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
+import frc.robot.subsystems.floor.Floor;
+import frc.robot.subsystems.floor.FloorIO;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.tunnel.Tunnel;
+import frc.robot.subsystems.tunnel.TunnelIO;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretIO;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
@@ -62,6 +66,8 @@ public class Robot extends LoggedRobot {
   private final Hood hood;
   private final Shooter shoot;
   private final Intake intake;
+  private final Floor floor;
+  private final Tunnel tunnel;
 
   // Superstructure
   private final Superstructure superstructure;
@@ -109,9 +115,13 @@ public class Robot extends LoggedRobot {
 
     shoot = new Shooter(new ShooterIO() {});
 
-    superstructure = new Superstructure(drivebase, turret, hood, shoot);
-
     intake = new Intake(new IntakeIO() {});
+
+    floor = new Floor(new FloorIO() {});
+
+    tunnel = new Tunnel(new TunnelIO() {});
+
+    superstructure = new Superstructure(drivebase, turret, hood, shoot, intake, floor, tunnel);
 
     AutoBuilder.configure(
         drivebase::getPose,

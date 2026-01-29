@@ -37,7 +37,14 @@ public class Superstructure {
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
-  public Superstructure(Drivebase drivebase, Turret turret, Hood hood, Shooter shoot) {
+  public Superstructure(
+      Drivebase drivebase,
+      Turret turret,
+      Hood hood,
+      Shooter shoot,
+      Intake intake,
+      Floor floor,
+      Tunnel tunnel) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
