@@ -142,6 +142,8 @@ public class Superstructure {
     return Commands.sequence(
       logMessage("Tunnel Travel"),
       tunnel.changeRollerSpeed(90));
+  }
+  
   public Command floorMove() {
     return Commands.sequence(floor.changeRollerSetpoint(10));
   }
