@@ -49,7 +49,7 @@ public class Superstructure {
 
   @AutoLogOutput(key = "3DComponents")
   public Pose3d[] get3DComponents() {
-    //double turretAngle = turret.getPosition();
+    // double turretAngle = turret.getPosition();
     // Turret / Shooter
     Rotation3d turretRotation = new Rotation3d(0, 0, turretAngle);
     Translation3d rotatedHoodOffset = TurretConstants.HOOD_OFFSET.rotateBy(turretRotation);
@@ -133,22 +133,18 @@ public class Superstructure {
   }
 
   public Command turretRotation() {
-    return Commands.sequence(
-      logMessage("Turret Rotation"),
-      turret.changeSetpoint(90));
+    return Commands.sequence(logMessage("Turret Rotation"), turret.changeSetpoint(90));
   }
 
   public Command tunnelTravel() {
-    return Commands.sequence(
-      logMessage("Tunnel Travel"),
-      tunnel.changeRollerSpeed(90));
+    return Commands.sequence(logMessage("Tunnel Travel"), tunnel.changeRollerSpeed(90));
   }
-  
+
   public Command floorMove() {
     return Commands.sequence(floor.changeRollerSetpoint(10));
   }
 
-  public Command hoodMove(){
+  public Command hoodMove() {
     return Commands.sequence(hood.changeSetpoint(1));
   }
 }
