@@ -183,7 +183,7 @@ public class Robot extends LoggedRobot {
 
     driver.a().onTrue(superstructure.intakeFuel()).onFalse(superstructure.HomeRobot());
 
-    driver.b().whileTrue(superstructure.hoodMove());
+    driver.b().onTrue(superstructure.hoodMove());
 
     Logger.start();
   }
