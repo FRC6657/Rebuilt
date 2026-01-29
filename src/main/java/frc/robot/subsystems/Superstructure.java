@@ -131,4 +131,16 @@ public class Superstructure {
         Commands.waitSeconds(0.5),
         intake.changeWheelSpeed(0.7));
   }
+
+  public Command turretRotation() {
+    return Commands.sequence(
+      logMessage("Turret Rotation"),
+      turret.changeSetpoint(90));
+  }
+
+  public Command tunnelTravel() {
+    return Commands.sequence(
+      logMessage("Tunnel Travel"),
+      tunnel.changeRollerSpeed(90));
+  }
 }
