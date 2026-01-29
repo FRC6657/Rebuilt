@@ -131,4 +131,12 @@ public class Superstructure {
         Commands.waitSeconds(0.5),
         intake.changeWheelSpeed(0.7));
   }
+
+  public Command floorMove() {
+    return Commands.sequence(floor.changeRollerSetpoint(10));
+  }
+
+  public Command hoodMove(){
+    return Commands.sequence(hood.changeSetpoint(1));
+  }
 }
