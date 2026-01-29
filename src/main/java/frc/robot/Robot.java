@@ -29,6 +29,8 @@ import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
 import frc.robot.subsystems.floor.Floor;
 import frc.robot.subsystems.floor.FloorIO;
+import frc.robot.subsystems.floor.FloorIO_Real;
+import frc.robot.subsystems.floor.FloorIO_Sim;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.intake.Intake;
@@ -117,7 +119,7 @@ public class Robot extends LoggedRobot {
 
     intake = new Intake(new IntakeIO() {});
 
-    floor = new Floor(new FloorIO() {});
+    floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim()){};
 
     tunnel = new Tunnel(new TunnelIO() {});
 
