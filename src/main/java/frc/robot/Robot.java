@@ -33,16 +33,24 @@ import frc.robot.subsystems.floor.FloorIO_Real;
 import frc.robot.subsystems.floor.FloorIO_Sim;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
+import frc.robot.subsystems.hood.HoodIO_Real;
+import frc.robot.subsystems.hood.HoodIO_Sim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIO_Real;
+import frc.robot.subsystems.shooter.ShooterIO_Sim;
 import frc.robot.subsystems.tunnel.Tunnel;
 import frc.robot.subsystems.tunnel.TunnelIO;
+import frc.robot.subsystems.tunnel.TunnelIO_Real;
+import frc.robot.subsystems.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretIO;
+import frc.robot.subsystems.turret.TurretIO_Real;
+import frc.robot.subsystems.turret.TurretIO_Sim;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
 import frc.robot.subsystems.vision.ApriltagCameras;
@@ -113,17 +121,17 @@ public class Robot extends LoggedRobot {
                 ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
                 : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
 
-    turret = new Turret(new TurretIO() {});
+    turret = new Turret(RobotBase.isReal() ? new TurretIO_Real() : new TurretIO_Sim());
 
-    hood = new Hood(new HoodIO() {});
+    hood = new Hood(RobotBase.isReal() ? new HoodIO_Real() : new HoodIO_Sim());
 
-    shoot = new Shooter(new ShooterIO() {});
+    shoot = new Shooter(RobotBase.isReal() ? new ShooterIO_Real() : new ShooterIO_Sim());
 
     intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
 
-    floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim()){};
+    floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim());
 
-    tunnel = new Tunnel(new TunnelIO() {});
+    tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
 
     superstructure = new Superstructure(drivebase, turret, hood, shoot, intake, floor, tunnel);
 
