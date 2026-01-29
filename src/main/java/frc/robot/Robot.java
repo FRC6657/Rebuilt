@@ -35,6 +35,8 @@ import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIO_Real;
+import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.tunnel.Tunnel;
@@ -117,7 +119,7 @@ public class Robot extends LoggedRobot {
 
     shoot = new Shooter(new ShooterIO() {});
 
-    intake = new Intake(new IntakeIO() {});
+    intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
 
     floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim()){};
 
@@ -185,7 +187,7 @@ public class Robot extends LoggedRobot {
 
     driver.a().onTrue(superstructure.intakeFuel()).onFalse(superstructure.HomeRobot());
 
-    driver.b().whileTrue(superstructure.hoodMove());
+    driver.b().onTrue(superstructure.hoodMove());
 
     Logger.start();
   }
