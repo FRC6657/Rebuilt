@@ -37,7 +37,7 @@ public class TurretConstants {
           .withMotionMagicAcceleration(MaxAcceleration);
 
   // Visualization Stuff
-  public static Translation3d TURRET_CENTER = new Translation3d(0.118317, -0.118317, 0.511175);
+  public static Translation3d TURRET_CENTER = new Translation3d(0.118317, -0.105617, 0.511175);
   public static Translation3d HOOD_OFFSET =
       new Translation3d(0, Units.inchesToMeters(-4.156585), Units.inchesToMeters(2.75));
 }
