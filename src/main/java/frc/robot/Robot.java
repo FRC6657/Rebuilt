@@ -21,15 +21,10 @@ import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
-import frc.robot.subsystems.drivebase.GyroIO_CTRE;
 import frc.robot.subsystems.drivebase.GyroIO_Redux;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameras;
-import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -84,10 +79,12 @@ public class Robot extends LoggedRobot {
     //         drivebase::addVisionMeasurement,
     //         RobotBase.isReal() || replay
     //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
-    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose),
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
+    // drivebase::getPose),
     //         RobotBase.isReal() || replay
     //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
-    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
+    // drivebase::getPose));
 
     superstructure = new Superstructure(drivebase);
 
