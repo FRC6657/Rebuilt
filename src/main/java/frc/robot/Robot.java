@@ -22,6 +22,7 @@ import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
 import frc.robot.subsystems.drivebase.GyroIO_CTRE;
+import frc.robot.subsystems.drivebase.GyroIO_Redux;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
@@ -63,7 +64,7 @@ public class Robot extends LoggedRobot {
 
     drivebase =
         new Drivebase(
-            RobotBase.isReal() ? new GyroIO_CTRE() : new GyroIO() {},
+            RobotBase.isReal() ? new GyroIO_Redux() : new GyroIO() {},
             RobotBase.isReal()
                 ? new ModuleIO[] {
                   new ModuleIO_Real(DrivebaseConstants.kFrontLeftModuleConstants),

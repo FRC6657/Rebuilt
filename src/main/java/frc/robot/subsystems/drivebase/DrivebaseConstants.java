@@ -85,8 +85,8 @@ public class DrivebaseConstants {
     }
   }
 
-  public static final DCMotor kDriveMotor = DCMotor.getFalcon500(1);
-  public static final DCMotor kTurnMotor = DCMotor.getFalcon500(1);
+  public static final DCMotor kDriveMotor = DCMotor.getKrakenX60(1);
+  public static final DCMotor kTurnMotor = DCMotor.getKrakenX60(1);
   public static final double kDriveWheelDiameter = Units.inchesToMeters(4);
 
   public static final int kDrivePinionTeeth = 14;
