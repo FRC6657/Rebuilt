@@ -40,6 +40,8 @@ public class Superstructure {
   Intake intake;
   Tunnel tunnel;
 
+  public boolean isShooting = false;
+
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
       new Translation2d(
@@ -173,5 +175,29 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
         Commands.waitSeconds(0.5),
         intake.changeSetpoint(RollerSetpoint.FORWARD));
+  }
+
+  public Command tunnelLaunch() {
+    return Commands.sequence(
+      logMessage("Tunnel Launch"),
+      tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+  }
+
+  public Command tunnelOff() {
+    return Commands.sequence(
+      logMessage("Tunnel Off"), 
+      tunnel.changeSetpoint(TunnelSetpoint.Off));
+  }
+
+  public Command flywheelShoot() {
+    return Commands.sequence(
+      logMessage("Flywheel Shoot"),
+      shoot.changeSetpoint(60));
+  }
+
+  public Command flywheelOff() {
+    return Commands.sequence(
+      logMessage("Flywheel Off"),
+      shoot.changeSetpoint(0));
   }
 }

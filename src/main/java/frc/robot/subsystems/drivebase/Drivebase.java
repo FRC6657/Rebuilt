@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -23,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
+
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -152,7 +155,7 @@ public class Drivebase extends SubsystemBase {
 
   /** Runs the drivetrain at the given robot-relative speeds in closed-loop mode. */
   public void drive(ChassisSpeeds speeds) {
-    drive(speeds, false);
+    drive(speeds, false, false);
   }
 
   /**
@@ -160,7 +163,12 @@ public class Drivebase extends SubsystemBase {
    *
    * @param speeds The desired robot relative speeds
    */
-  public void drive(ChassisSpeeds speeds, boolean openLoop) {
+  public void drive(ChassisSpeeds speeds, boolean openLoop, boolean isShooting) {
+
+    if(isShooting){
+      SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(TurretConstants.TURRET_CENTER.getX(),TurretConstants.TURRET_CENTER.getY()));
+
+    } else {}
 
     previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
 
@@ -204,7 +212,7 @@ public class Drivebase extends SubsystemBase {
    * @param speeds The desired field relative speeds
    * @return The command to run the drivetrain for teleop with field relative speeds
    */
-  public Command driveTeleop(Supplier<ChassisSpeeds> speeds) {
+  public Command driveTeleop(Supplier<ChassisSpeeds> speeds, boolean isShooting) {
     return this.run(
         () -> {
           var speed =
@@ -213,7 +221,7 @@ public class Drivebase extends SubsystemBase {
                   DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
                       ? getPose().getRotation()
                       : getPose().getRotation().minus(Rotation2d.fromDegrees(180)));
-          this.drive(speed, false);
+          this.drive(speed, false, isShooting);
         });
   }
 
