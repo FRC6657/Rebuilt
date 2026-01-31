@@ -91,7 +91,7 @@ public class DrivebaseConstants {
 
   public static final int kDrivePinionTeeth = 14;
   public static final double kDriveRatio =
-      (45d / 15d) * MK4i_Ratio.L3.ratio * (50d / kDrivePinionTeeth);
+      (45d / 15d) * MK4i_Ratio.L2.ratio * (50d / kDrivePinionTeeth);
   public static final double kTurnRatio = (150d / 7d);
   public static final double kDriveRotorToMeters = kDriveRatio / (kDriveWheelDiameter * Math.PI);
 
