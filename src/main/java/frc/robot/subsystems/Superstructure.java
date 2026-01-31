@@ -40,6 +40,8 @@ public class Superstructure {
   Intake intake;
   Tunnel tunnel;
 
+  public boolean isShooting = false;
+
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
       new Translation2d(

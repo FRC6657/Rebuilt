@@ -180,7 +180,7 @@ public class Robot extends LoggedRobot {
                         * 0.5,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * 0.375)));
+                        * 0.375), superstructure.isShooting));
 
     autoChooser.addOption(
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
