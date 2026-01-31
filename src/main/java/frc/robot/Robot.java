@@ -189,7 +189,7 @@ public class Robot extends LoggedRobot {
 
     // driver.b().onTrue(superstructure.hoodMove());
 
-    driver.x().onTrue(superstructure.tunnelLaunch());
+    driver.x().onTrue(superstructure.tunnelLaunch()).onFalse(superstructure.tunnelOff());
 
     Logger.start();
   }

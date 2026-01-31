@@ -180,4 +180,10 @@ public class Superstructure {
       logMessage("Tunnel Launch"),
       tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
   }
+
+  public Command tunnelOff() {
+    return Commands.sequence(
+      logMessage("Tunnel Off"), 
+      tunnel.changeSetpoint(TunnelSetpoint.Off));
+  }
 }
