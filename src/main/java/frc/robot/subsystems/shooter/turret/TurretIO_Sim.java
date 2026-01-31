@@ -14,6 +14,7 @@ import frc.robot.GlobalConstants;
 /** Simulated turret implementation using a DCMotorSim physics model with TalonFX position PID. */
 public class TurretIO_Sim implements TurretIO {
 
+  private double position = 0.0; // in degrees
   private TalonFX motor = new TalonFX(GlobalConstants.CAN.Turret.id);
   private PositionVoltage setpoint =
       new PositionVoltage(TurretConstants.INITIAL_SETPOINT / TurretConstants.CONVERSION_FACTOR);
@@ -40,7 +41,8 @@ public class TurretIO_Sim implements TurretIO {
     simState.setRawRotorPosition(motorSim.getAngularPosition().times(TurretConstants.GEAR_RATIO));
     simState.setRotorVelocity(motorSim.getAngularVelocity().times(TurretConstants.GEAR_RATIO));
 
-    inputs.position = motor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
+    position = motor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
+    inputs.position = position;
     inputs.velocity = motor.getVelocity().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
     inputs.acceleration =
         motor.getAcceleration().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
@@ -56,6 +58,14 @@ public class TurretIO_Sim implements TurretIO {
     if (clampedInput < 0) {
       clampedInput = clampedInput + 360;
     }
+
+    if (Math.abs(clampedInput - position) > 180) {
+      /*if the desired position is that far away from the current position, then we want to check if we can go the other way! */
+      if (clampedInput + 360 < TurretConstants.ROTATION_RANGE) {
+        clampedInput += 360;
+      }
+    }
+
     // Add initial offset and convert degrees to motor rotations
     this.setpoint.Position =
         (clampedInput + TurretConstants.INITIAL_SETPOINT) / TurretConstants.CONVERSION_FACTOR;
