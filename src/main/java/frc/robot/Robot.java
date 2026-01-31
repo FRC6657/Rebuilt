@@ -194,6 +194,8 @@ public class Robot extends LoggedRobot {
 
     driver.x().onTrue(superstructure.flywheelShoot()).onFalse(superstructure.flywheelOff());
 
+    driver.leftTrigger().onTrue(superstructure.HomeRobot());
+
     Logger.start();
   }
 
