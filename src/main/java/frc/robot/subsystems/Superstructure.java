@@ -174,4 +174,10 @@ public class Superstructure {
         Commands.waitSeconds(0.5),
         intake.changeSetpoint(RollerSetpoint.FORWARD));
   }
+
+  public Command tunnelLaunch() {
+    return Commands.sequence(
+      logMessage("Tunnel Launch"),
+      tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+  }
 }
