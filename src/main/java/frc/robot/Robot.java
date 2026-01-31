@@ -45,7 +45,7 @@ public class Robot extends LoggedRobot {
   private CommandXboxController driver = new CommandXboxController(0);
 
   // Subsystems
-  private final ApriltagCameras cameras;
+  // private final ApriltagCameras cameras;
   private final Drivebase drivebase;
 
   // Superstructure
@@ -78,15 +78,15 @@ public class Robot extends LoggedRobot {
                   new ModuleIO_Sim(DrivebaseConstants.kBackRightModuleConstants)
                 });
 
-    cameras =
-        new ApriltagCameras(
-            drivebase::addVisionMeasurement,
-            RobotBase.isReal() || replay
-                ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
-                : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose),
-            RobotBase.isReal() || replay
-                ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
-                : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
+    // cameras =
+    //     new ApriltagCameras(
+    //         drivebase::addVisionMeasurement,
+    //         RobotBase.isReal() || replay
+    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose),
+    //         RobotBase.isReal() || replay
+    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
 
     superstructure = new Superstructure(drivebase);
 
