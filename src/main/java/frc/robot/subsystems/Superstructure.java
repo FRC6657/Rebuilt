@@ -186,4 +186,16 @@ public class Superstructure {
       logMessage("Tunnel Off"), 
       tunnel.changeSetpoint(TunnelSetpoint.Off));
   }
+
+  public Command flywheelShoot() {
+    return Commands.sequence(
+      logMessage("Flywheel Shoot"),
+      shoot.changeSetpoint(60));
+  }
+
+  public Command flywheelOff() {
+    return Commands.sequence(
+      logMessage("Flywheel Off"),
+      shoot.changeSetpoint(0));
+  }
 }

@@ -191,6 +191,8 @@ public class Robot extends LoggedRobot {
 
     driver.x().onTrue(superstructure.tunnelLaunch()).onFalse(superstructure.tunnelOff());
 
+    driver.x().onTrue(superstructure.flywheelShoot()).onFalse(superstructure.flywheelOff());
+
     Logger.start();
   }
 
