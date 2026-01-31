@@ -20,11 +20,16 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.GlobalConstants;
 
+/**
+ * Constants for the swerve drivebase including CAN IDs, physical dimensions, gear ratios, speed
+ * limits, motor configs, and PID controllers.
+ */
 public class DrivebaseConstants {
 
+  /** High-frequency odometry sampling rate in Hz (separate from the main loop). */
   public static int kOdometryFrequency = 150; // Hz
 
-  // Drivebase CAN IDs
+  /** CAN IDs for all drivebase devices (drive, turn, encoder motors and gyro). */
   public static enum CAN {
     FR_D(GlobalConstants.CAN.Swerve_FR_D.id),
     FL_D(GlobalConstants.CAN.Swerve_FL_D.id),
@@ -73,7 +78,7 @@ public class DrivebaseConstants {
   public static final ModuleConstants kBackRightModuleConstants =
       new ModuleConstants("Back Right", CAN.BR_D.id, CAN.BR_T.id, CAN.BR_E.id);
 
-  // Enum representation of the MK4i Ratio Options
+  /** MK4i swerve module drive gear ratio options (output/input). */
   public static enum MK4i_Ratio {
     L1(19d / 25d),
     L2(17d / 27d),
@@ -86,8 +91,8 @@ public class DrivebaseConstants {
     }
   }
 
-  public static final DCMotor kDriveMotor = DCMotor.getFalcon500(1);
-  public static final DCMotor kTurnMotor = DCMotor.getFalcon500(1);
+  public static final DCMotor kDriveMotor = DCMotor.getKrakenX60(1);
+  public static final DCMotor kTurnMotor = DCMotor.getKrakenX60(1);
   public static final double kDriveWheelDiameter = Units.inchesToMeters(4);
 
   public static final int kDrivePinionTeeth = 14;

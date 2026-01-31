@@ -1,6 +1,7 @@
 package frc.robot;
 
 public class GlobalConstants {
+
   public static double mainLoopFrequency = 50d;
 
   public static enum CAN {

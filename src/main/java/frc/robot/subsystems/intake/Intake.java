@@ -4,44 +4,67 @@
 
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.littletonrobotics.junction.AutoLogOutput;
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
+import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Intake subsystem controlling a linear extension mechanism and roller wheels. Uses the IO layer
+ * pattern for hardware abstraction (real vs. simulated).
+ */
 public class Intake extends SubsystemBase {
+
   public IntakeIO io;
   public IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-  /** Creates a new Intake. */
+
+  /**
+   * @param io the hardware IO implementation (real or simulated)
+   */
   public Intake(IntakeIO io) {
     this.io = io;
   }
 
-  public Command changeExtSetpoint(double ext) {
-    return this.runOnce(
-        () ->
-            io.changeExtSetpoint(
-                MathUtil.clamp(
-                    ext,
-                    IntakeConstants.ExtensionMotor.minLength,
-                    IntakeConstants.ExtensionMotor.maxLength)));
+  /**
+   * Creates a command that changes the intake extension setpoint (position, velocity,
+   * acceleration).
+   *
+   * @param setpoint the desired extension setpoint
+   * @return the command
+   */
+  public Command changeSetpoint(ExtensionSetpoint setpoint) {
+    return this.runOnce(() -> io.changeSetpoint(setpoint));
   }
 
-  @AutoLogOutput(key = "Intake/AtExtensionSetpoint")
+  /**
+   * Creates a command that changes the intake roller voltage setpoint.
+   *
+   * @param setpoint the desired roller setpoint (off, forward, reverse)
+   * @return the command
+   */
+  public Command changeSetpoint(RollerSetpoint setpoint) {
+    return this.runOnce(() -> io.changeSetpoint(setpoint));
+  }
+
+  /**
+   * @return the current extension position in inches
+   */
+  public double getPosition() {
+    return inputs.extensionPosition;
+  }
+
+  /**
+   * @return true if the extension is within tolerance of its target position
+   */
   public boolean atSetpoint() {
-    return MathUtil.isNear(
-        inputs.extMotorSetpoint, inputs.encoderAbsPosition, Units.inchesToMeters(0.5));
+    return io.atSetpoint();
   }
 
+  /** Updates sensor inputs and logs them to AdvantageKit each cycle. */
   @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
-  }
-
-  public Command changeWheelSpeed(double speed) {
-    return this.runOnce(() -> io.changeWheelSetpoint(speed));
   }
 }

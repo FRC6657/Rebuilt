@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.\\\\gradlew.bat build:*)",
+      "Bash(./gradlew.bat build)",
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "Bash(curl:*)",
+      "Bash(.\\\\gradlew build:*)",
+      "Bash(.gradlew.bat build)",
+      "Bash(./gradlew build:*)"
+    ]
+  }
+}

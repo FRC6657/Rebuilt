@@ -8,7 +8,10 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.CAN;
 import java.util.Queue;
 
-/** Currently Untested, */
+/**
+ * Redux Canandgyro implementation. Currently untested. Registers yaw for high-frequency odometry
+ * sampling via the PhoenixOdometryThread.
+ */
 public class GyroIO_Redux implements GyroIO {
 
   private final Canandgyro gyro;

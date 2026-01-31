@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.ModuleConstants;
 import java.util.Queue;
 
+/**
+ * Real hardware implementation of a swerve module using TalonFX drive/turn motors and a Canandmag
+ * absolute encoder. Registers drive/turn positions for high-frequency odometry sampling.
+ */
 public class ModuleIO_Real implements ModuleIO {
 
-  // Module Specific Constants
   private final ModuleConstants constants;
 
-  // Module Hardware
+  // Module hardware
   private final TalonFX drive;
   private final TalonFX turn;
   private final Canandmag encoder;

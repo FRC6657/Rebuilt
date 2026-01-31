@@ -27,28 +27,24 @@ import frc.robot.subsystems.drivebase.GyroIO_CTRE;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
-import frc.robot.subsystems.floor.Floor;
-import frc.robot.subsystems.floor.FloorIO_Real;
-import frc.robot.subsystems.floor.FloorIO_Sim;
-import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.hood.HoodIO_Real;
-import frc.robot.subsystems.hood.HoodIO_Sim;
+import frc.robot.subsystems.indexer.floor.Floor;
+import frc.robot.subsystems.indexer.floor.FloorIO_Real;
+import frc.robot.subsystems.indexer.floor.FloorIO_Sim;
+import frc.robot.subsystems.indexer.tunnel.Tunnel;
+import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
+import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO_Real;
-import frc.robot.subsystems.shooter.ShooterIO_Sim;
-import frc.robot.subsystems.tunnel.Tunnel;
-import frc.robot.subsystems.tunnel.TunnelIO_Real;
-import frc.robot.subsystems.tunnel.TunnelIO_Sim;
-import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretIO_Real;
-import frc.robot.subsystems.turret.TurretIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameras;
-import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIO_Real;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIO_Sim;
+import frc.robot.subsystems.shooter.hood.Hood;
+import frc.robot.subsystems.shooter.hood.HoodIO_Real;
+import frc.robot.subsystems.shooter.hood.HoodIO_Sim;
+import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretIO_Real;
+import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -66,11 +62,11 @@ public class Robot extends LoggedRobot {
   private CommandGenericHID operator = new CommandGenericHID(1);
 
   // Subsystems
-  private final ApriltagCameras cameras;
+  // private final ApriltagCameras cameras;
   private final Drivebase drivebase;
   private final Turret turret;
   private final Hood hood;
-  private final Shooter shoot;
+  private final Flywheel shoot;
   private final Intake intake;
   private final Floor floor;
   private final Tunnel tunnel;
@@ -105,21 +101,23 @@ public class Robot extends LoggedRobot {
                   new ModuleIO_Sim(DrivebaseConstants.kBackRightModuleConstants)
                 });
 
-    cameras =
-        new ApriltagCameras(
-            drivebase::addVisionMeasurement,
-            RobotBase.isReal() || replay
-                ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
-                : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose),
-            RobotBase.isReal() || replay
-                ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
-                : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1, drivebase::getPose));
+    // cameras =
+    //     new ApriltagCameras(
+    //         drivebase::addVisionMeasurement,
+    //         RobotBase.isReal() || replay
+    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
+    // drivebase::getPose),
+    //         RobotBase.isReal() || replay
+    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
+    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
+    // drivebase::getPose));
 
     turret = new Turret(RobotBase.isReal() ? new TurretIO_Real() : new TurretIO_Sim());
 
     hood = new Hood(RobotBase.isReal() ? new HoodIO_Real() : new HoodIO_Sim());
 
-    shoot = new Shooter(RobotBase.isReal() ? new ShooterIO_Real() : new ShooterIO_Sim());
+    shoot = new Flywheel(RobotBase.isReal() ? new FlywheelIO_Real() : new FlywheelIO_Sim());
 
     intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
 
@@ -189,7 +187,7 @@ public class Robot extends LoggedRobot {
 
     driver.a().onTrue(superstructure.intakeFuel()).onFalse(superstructure.HomeRobot());
 
-    driver.b().onTrue(superstructure.hoodMove());
+    // driver.b().onTrue(superstructure.hoodMove());
 
     Logger.start();
   }

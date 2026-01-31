@@ -2,20 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.floor;
+package frc.robot.subsystems.indexer.floor;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.floor.FloorConstants.RollerSetpoint;
+import frc.robot.GlobalConstants;
+import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
 
+/** Simulated floor indexer implementation using a DCMotorSim physics model. */
 public class FloorIO_Sim implements FloorIO {
-  /** Creates a new FloorIO_Sim. */
-  private TalonFX motor;
 
-  private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
+  private TalonFX motor = new TalonFX(GlobalConstants.CAN.Floor.id);
+  private VoltageOut setpoint = new VoltageOut(0);
 
   private DCMotorSim motorModel =
       new DCMotorSim(
@@ -24,16 +24,16 @@ public class FloorIO_Sim implements FloorIO {
           FloorConstants.MOTOR);
 
   public FloorIO_Sim() {
-
-    motor = new TalonFX(1); // Replace with CANID
-    motor.getConfigurator().apply(FloorConstants.motorConfigs);
+    motor.getConfigurator().apply(FloorConstants.CONFIG);
   }
 
   @Override
   public void updateInputs(FloorIOInputs inputs) {
 
+    // Control the motor
     motor.setControl(setpoint);
 
+    // Sim Stuff
     var motorSim = motor.getSimState();
     motorSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorSim.getMotorVoltage());
@@ -41,18 +41,14 @@ public class FloorIO_Sim implements FloorIO {
     motorSim.setRawRotorPosition(motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
     motorSim.setRotorVelocity(motorModel.getAngularVelocity().times(FloorConstants.GEAR_RATIO));
 
+    // Log Data
+    inputs.temp = -1; // Sim has no temps
     inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.current = motor.getSupplyCurrent().getValueAsDouble();
-    inputs.position = motor.getPosition().getValueAsDouble() * 360;
-    inputs.velocity = motor.getVelocity().getValueAsDouble() * 360;
-    inputs.acceleration = motor.getAcceleration().getValueAsDouble() * 360;
-    inputs.setpoint = setpoint.Position * 360;
+    inputs.statorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
-  public void changeSetpoint(RollerSetpoint newSetpoint) {
-    var degrees =
-        MathUtil.clamp(newSetpoint.voltage, FloorConstants.MIN_ANGLE, FloorConstants.MAX_ANGLE);
-    setpoint.Position = degrees / 360.0;
+  public void changeSetpoint(FloorSetpoint setpoint) {
+    this.setpoint.Output = setpoint.voltage;
   }
 }

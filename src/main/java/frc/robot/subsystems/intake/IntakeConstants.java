@@ -1,36 +1,103 @@
 package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import edu.wpi.first.math.util.Units;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.system.plant.DCMotor;
 
+/**
+ * Constants for the intake subsystem, split into Extension (linear actuator) and Roller (spinning
+ * wheel) configurations.
+ */
 public class IntakeConstants {
 
-  public static class ExtensionMotor {
-    public static final double minLength = Units.inchesToMeters(0);
-    public static final double maxLength = Units.inchesToMeters(6);
+  /** Constants for the intake extension mechanism (linear motion via Falcon 500). */
+  public class Extension {
 
-    public static final double extCurrentLimit = 30;
+    public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
 
-    public static final CurrentLimitsConfigs extCurrentConfigs =
-        new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(extCurrentLimit)
-            .withSupplyCurrentLimit(extCurrentLimit)
-            .withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLowerLimit(30)
-            .withSupplyCurrentLowerTime(0);
+    public static final double INITIAL_SETPOINT = 0; // in
+
+    public static final double MIN_SETPOINT = 0; // in (fully retracted)
+    public static final double MAX_SETPOINT = 13.0; // in (fully extended)
+    public static final double POSITION_TOLERANCE = 0.25; // in
+
+    /** Overall gear reduction from motor to output. */
+    public static final double GEAR_RATIO = (5d / 1d) * (50d / 28d);
+    /** Linear inches of travel per output shaft rotation (circumference of drive pulley). */
+    public static final double CONVERSION_FACTOR = Math.PI; // Linear Inches Per Rotation
+
+    public static final double SUPPLY_LIMIT = 30; // Amps
+    public static final double STATOR_LIMIT = 60; // Amps
+
+    public static final TalonFXConfiguration CONFIG =
+        new TalonFXConfiguration()
+            .withMotorOutput(
+                new MotorOutputConfigs()
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
+            .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(STATOR_LIMIT)
+                    .withSupplyCurrentLimit(SUPPLY_LIMIT)
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentLowerLimit(SUPPLY_LIMIT)
+                    .withSupplyCurrentLowerTime(0));
+
+    /** Predefined extension setpoints with position, velocity, and acceleration profiles. */
+    public static enum ExtensionSetpoint {
+      RETRACTED_SLOW(MIN_SETPOINT, 1, 1),
+      RETRACTED_FAST(MIN_SETPOINT, 4, 40),
+      EXTENDED_SLOW(MAX_SETPOINT, 1, 1),
+      EXTENDED_FAST(MAX_SETPOINT, 4, 40);
+
+      public final double position;
+      public final double velocity;
+      public final double acceleration;
+
+      private ExtensionSetpoint(double position, double velocity, double acceleration) {
+        this.position = position;
+        this.velocity = velocity;
+        this.acceleration = acceleration;
+      }
+    }
   }
 
-  public static class WheelMotor {
-    public static final double wheelCurrentLimit = 30;
+  /** Constants for the intake roller (voltage-controlled spinning wheels). */
+  public class Roller {
 
-    public static final CurrentLimitsConfigs wheelCurrentConfigs =
-        new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(wheelCurrentLimit)
-            .withSupplyCurrentLimit(wheelCurrentLimit)
-            .withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLowerLimit(30)
-            .withSupplyCurrentLowerTime(0);
+    public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
+    public static final double GEAR_RATIO = 24d / 11d;
+
+    public static final TalonFXConfiguration CONFIG =
+        new TalonFXConfiguration()
+            .withMotorOutput(
+                new MotorOutputConfigs()
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Coast))
+            .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withSupplyCurrentLimit(30)
+                    .withStatorCurrentLimit(60)
+                    .withSupplyCurrentLimitEnable(true)
+                    .withStatorCurrentLimitEnable(true));
+
+    /** Predefined roller voltage setpoints. */
+    public static enum RollerSetpoint {
+      Off(0.0), // No power
+      FORWARD(6), // 6V forward (intake)
+      REVERSE(-6); // 6V reverse (eject)
+
+      public final double voltage;
+
+      private RollerSetpoint(double voltage) {
+        this.voltage = voltage;
+      }
+    }
   }
 }

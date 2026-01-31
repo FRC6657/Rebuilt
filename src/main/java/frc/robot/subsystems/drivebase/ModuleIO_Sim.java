@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.ModuleConstants;
 
+/**
+ * Simulated swerve module implementation using DCMotorSim physics models. The drive motor uses
+ * TalonFX sim state for CTRE velocity PID, while the turn motor uses a WPILib PID controller with
+ * continuous wrapping.
+ */
 public class ModuleIO_Sim implements ModuleIO {
 
   private final ModuleConstants constants;

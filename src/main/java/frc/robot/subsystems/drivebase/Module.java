@@ -4,14 +4,21 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Represents a single swerve module (drive + turn). Wraps a ModuleIO and processes high-frequency
+ * odometry samples collected by the PhoenixOdometryThread.
+ */
 public class Module {
 
-  // Module IOs
   private ModuleIO io;
   private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
 
+  /** High-frequency odometry positions built from odometry thread samples. */
   private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
 
+  /**
+   * @param io the hardware IO implementation (real or simulated)
+   */
   public Module(ModuleIO io) {
     this.io = io;
   }
@@ -43,7 +50,7 @@ public class Module {
     return new SwerveModulePosition(inputs.drivePositionMeters, inputs.turnPosition);
   }
 
-  // Update Module IO
+  /** Updates sensor inputs, logs them, and reconstructs high-frequency odometry positions. */
   public void updateInputs() {
     io.updateInputs(inputs);
     Logger.processInputs(
@@ -58,10 +65,16 @@ public class Module {
     }
   }
 
+  /**
+   * @return the timestamps of high-frequency odometry samples since last update
+   */
   public double[] getOdometryTimestamps() {
     return inputs.odometryTimestamps;
   }
 
+  /**
+   * @return the high-frequency odometry positions corresponding to each timestamp
+   */
   public SwerveModulePosition[] getOdometryPositions() {
     return odometryPositions;
   }

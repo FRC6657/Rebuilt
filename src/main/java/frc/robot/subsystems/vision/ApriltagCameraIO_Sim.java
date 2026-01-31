@@ -7,12 +7,21 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 
+/**
+ * Simulated AprilTag camera using PhotonVision's VisionSystemSim. Extends the real implementation
+ * and updates the simulated world before reading results. All camera sims share one static
+ * VisionSystemSim instance.
+ */
 public class ApriltagCameraIO_Sim extends ApriltagCameraIO_Real {
 
   private static VisionSystemSim visionSim;
   private final Supplier<Pose2d> poseSupplier;
   private final PhotonCameraSim cameraSim;
 
+  /**
+   * @param cameraInfo the camera configuration (name, transform, FOV, resolution)
+   * @param poseSupplier supplies the robot's current pose for the simulation
+   */
   public ApriltagCameraIO_Sim(CameraInfo cameraInfo, Supplier<Pose2d> poseSupplier) {
     super(cameraInfo);
     this.poseSupplier = poseSupplier;

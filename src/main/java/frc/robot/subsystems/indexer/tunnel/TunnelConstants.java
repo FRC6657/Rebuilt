@@ -1,25 +1,26 @@
-package frc.robot.subsystems.floor;
+package frc.robot.subsystems.indexer.tunnel;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 
-public class FloorConstants {
+/** Constants for the tunnel indexer, including motor config and voltage setpoints. */
+public class TunnelConstants {
 
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
-  public static final double GEAR_RATIO = 1 / 1d;
-  public static final double MIN_ANGLE = 0.0;
-  public static final double MAX_ANGLE = 120.0;
+  public static final double GEAR_RATIO = 24d / 11d; // Motor rotations per output rotation
 
-  public static final TalonFXConfiguration motorConfigs =
+  public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withInverted(InvertedValue.CounterClockwise_Positive)
                   .withNeutralMode(NeutralModeValue.Coast))
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withSupplyCurrentLimit(20)
@@ -27,14 +28,15 @@ public class FloorConstants {
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
 
-  public static enum RollerSetpoint {
-    Off(0.0),
-    In(6),
-    Out(-12);
+  /** Predefined voltage setpoints for the tunnel roller. */
+  public static enum TunnelSetpoint {
+    Off(0.0), // No power
+    FORWARD(6), // 6V forward (feed game pieces to shooter)
+    REVERSE(-6); // 6V reverse (eject game pieces)
 
     public final double voltage;
 
-    private RollerSetpoint(double voltage) {
+    private TunnelSetpoint(double voltage) {
       this.voltage = voltage;
     }
   }

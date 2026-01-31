@@ -1,32 +1,44 @@
 package frc.robot.subsystems.intake;
 
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
+import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 import org.littletonrobotics.junction.AutoLog;
 
+/**
+ * Hardware abstraction interface for the intake subsystem. Implementations handle extension
+ * position control and roller voltage control.
+ */
 public interface IntakeIO {
+
+  /** Logged sensor inputs for the intake extension and roller motors. */
   @AutoLog
   public static class IntakeIOInputs {
-    public double extMotorPosition = 0.0; // Inches
-    public double extMotorVelocity = 0.0; // Inches per second
-    public double extMotorTemp = 0.0; // Celcius
-    public double extMotorVoltage = 0.0; // Volts
-    public double extMotorCurrent = 0.0; // Amps
-    public double extMotorSetpoint = 0.0; // 0 to 6
 
-    public double wheelMotorPosition = 0.0; // Inches
-    public double wheelMotorVelocity = 0.0; // Inches per second
-    public double wheelMotorTemp = 0.0; // Celcius
-    public double wheelMotorVoltage = 0.0; // Volts
-    public double wheelMotorCurrent = 0.0; // Amps
-    public double wheelMotorSetpoint = 0.0; // 0 to unknown
+    public double extensionPosition = 0.0; // Inches
+    public double extensionVelocity = 0.0; // Inches per second
+    public double extensionAcceleration = 0.0; // Inches per second per second
+    public double extensionTemp; // Celsius
+    public double extensionVoltage = 0.0; // Volts
+    public double extensionStatorCurrent = 0.0; // Amps
 
-    public double encoderAbsPosition = 0.0;
-    public double encoderRelPosition = 0.0;
-    public double encoderVelocity = 0.0;
+    public double rollerTemp = 0.0; // Celsius
+    public double rollerVoltage = 0.0; // Volts
+    public double rollerStatorCurrent = 0.0; // Amps
   }
 
+  /** Reads the latest sensor values and applies motor outputs. */
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void changeExtSetpoint(double setpoint) {}
+  /** Sets the extension mechanism to the given position/velocity/acceleration profile. */
+  public default void changeSetpoint(ExtensionSetpoint setpoint) {}
 
-  public default void changeWheelSetpoint(double setpoint) {}
+  /** Sets the roller motor to the given voltage setpoint. */
+  public default void changeSetpoint(RollerSetpoint setpoint) {}
+
+  /**
+   * @return true if the extension is within tolerance of its target position
+   */
+  public default boolean atSetpoint() {
+    return false;
+  }
 }

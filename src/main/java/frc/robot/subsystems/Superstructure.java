@@ -7,43 +7,50 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
-import frc.robot.subsystems.floor.Floor;
-import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.indexer.floor.Floor;
+import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
+import frc.robot.subsystems.indexer.tunnel.Tunnel;
+import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.tunnel.Tunnel;
-import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretConstants;
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
+import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
+import frc.robot.subsystems.shooter.hood.Hood;
+import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Coordinates all robot subsystems into unified high-level commands. Acts as the central command
+ * factory for multi-subsystem actions.
+ */
 public class Superstructure {
 
   // Subsystems
   Drivebase drivebase;
   Turret turret;
   Hood hood;
-  Shooter shoot;
+  Flywheel shoot;
   Floor floor;
   Intake intake;
   Tunnel tunnel;
 
-  // Fake test visualization angles (radians)
-  private double turretAngle = Math.PI / 4;
-  private double hoodAngle = 0.0;
-  private double intakeExt = Units.inchesToMeters(0);
+  /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
 
+  /** Constructs the Superstructure with references to all robot subsystems. */
   public Superstructure(
       Drivebase drivebase,
       Turret turret,
       Hood hood,
-      Shooter shoot,
+      Flywheel shoot,
       Intake intake,
       Floor floor,
       Tunnel tunnel) {
@@ -56,40 +63,44 @@ public class Superstructure {
     this.tunnel = tunnel;
   }
 
+  /**
+   * Returns the 3D poses of the turret, hood, and intake for AdvantageScope visualization. Computes
+   * each component's pose relative to the robot origin using current mechanism positions.
+   *
+   * @return array of [turret pose, hood pose, intake pose]
+   */
   @AutoLogOutput(key = "3DComponents")
   public Pose3d[] get3DComponents() {
-    // double turretAngle = turret.getPosition();
 
-    // Turret / Shooter
-    Rotation3d turretRotation = new Rotation3d(0, 0, turretAngle);
+    // Compute turret yaw rotation from current turret position
+    Rotation3d turretRotation = new Rotation3d(0, 0, Units.degreesToRadians(turret.getPosition()));
+
+    // Rotate the hood offset by turret yaw to get the hood's position in robot frame
     Translation3d rotatedHoodOffset = TurretConstants.HOOD_OFFSET.rotateBy(turretRotation);
     Translation3d hoodPosition = TurretConstants.TURRET_CENTER.plus(rotatedHoodOffset);
-    Rotation3d hoodLocalPitch = new Rotation3d(hoodAngle, 0, 0);
+
+    // Hood pitch is local, then rotated into turret frame
+    Rotation3d hoodLocalPitch = new Rotation3d(Units.degreesToRadians(hood.getPosition()), 0, 0);
     Rotation3d hoodRotation = hoodLocalPitch.rotateBy(turretRotation);
 
     return new Pose3d[] {
       new Pose3d(TurretConstants.TURRET_CENTER, turretRotation),
       new Pose3d(hoodPosition, hoodRotation),
-      new Pose3d(-Math.cos(0.222900) * intakeExt, 0, -Math.sin(0.222900) * intakeExt, new Rotation3d())
+      // Intake position projected along its mounting angle (0.2229 rad from horizontal)
+      new Pose3d(
+          -Math.cos(0.222900) * intake.getPosition(),
+          0,
+          -Math.sin(0.222900) * intake.getPosition(),
+          new Rotation3d())
     };
   }
 
-  public Rotation2d findTargetAngle(double x0, double y0, double x1, double y1) {
-    if (x0 < x1) {
-      return new Rotation2d(
-          Math.PI / 2
-              + Math.atan(
-                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
-                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
-    } else {
-      return new Rotation2d(
-          Math.PI / -2
-              + Math.atan(
-                  (TurretConstants.TURRET_CENTER.getY() - turretTarget.getY())
-                      / (TurretConstants.TURRET_CENTER.getX() - turretTarget.getX())));
-    }
-  }
-
+  /**
+   * Calculates the turret's position in field coordinates by adding the turret offset to the
+   * robot's current field pose.
+   *
+   * @return the turret's field-relative position
+   */
   public Translation2d getTurretGlobalPosition() {
     return drivebase
         .getPose()
@@ -99,6 +110,12 @@ public class Superstructure {
                 TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
   }
 
+  /**
+   * Calculates the field-relative heading from the turret to a goal position using atan2.
+   *
+   * @param goalPose the target position in field coordinates
+   * @return the angle from the turret to the goal
+   */
   public Rotation2d getGlobalTargetHeading(Translation2d goalPose) {
     return Rotation2d.fromRadians(
         Math.atan2(
@@ -106,15 +123,30 @@ public class Superstructure {
             (goalPose.getX() - getTurretGlobalPosition().getX())));
   }
 
+  /**
+   * Converts a field-relative heading into a turret-relative heading by subtracting the robot's
+   * current heading and a 90-degree CW offset.
+   *
+   * @param globalHeading the field-relative target heading
+   * @return the turret-relative heading in degrees
+   */
   public Rotation2d getRelativeTurretHeading(Rotation2d globalHeading) {
     return globalHeading.minus(drivebase.getPose().getRotation()).minus(Rotation2d.kCW_90deg);
   }
 
+  /** Schedules a turret tracking command that aims the turret at the turret target. */
   public void runTurretTest() {
     Rotation2d targetAngle = getGlobalTargetHeading(turretTarget);
-    turretAngle = getRelativeTurretHeading(targetAngle).getRadians();
+    CommandScheduler.getInstance()
+        .schedule(turret.changeSetpoint(() -> getRelativeTurretHeading(targetAngle).getDegrees()));
   }
 
+  /**
+   * Creates a command that logs a message to AdvantageKit.
+   *
+   * @param message the message to log
+   * @return a command that logs the message once
+   */
   public Command logMessage(String message) {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
@@ -127,35 +159,19 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Home Robot"),
         shoot.changeSetpoint(0),
-        tunnel.changeRollerSpeed(0),
-        floor.changeRollerSetpoint(0),
+        tunnel.changeSetpoint(TunnelSetpoint.Off),
+        floor.changeSetpoint(FloorSetpoint.Off),
         turret.changeSetpoint(0),
-        intake.changeExtSetpoint(0),
-        intake.changeWheelSpeed(0),
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        intake.changeSetpoint(RollerSetpoint.Off),
         hood.changeSetpoint(0));
   }
 
   public Command intakeFuel() {
     return Commands.sequence(
         logMessage("Fuel Intake"),
-        intake.changeExtSetpoint(6),
+        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
         Commands.waitSeconds(0.5),
-        intake.changeWheelSpeed(0.7));
-  }
-
-  public Command turretRotation() {
-    return Commands.sequence(logMessage("Turret Rotation"), turret.changeSetpoint(90));
-  }
-
-  public Command tunnelTravel() {
-    return Commands.sequence(logMessage("Tunnel Travel"), tunnel.changeRollerSpeed(90));
-  }
-
-  public Command floorMove() {
-    return Commands.sequence(floor.changeRollerSetpoint(10));
-  }
-
-  public Command hoodMove() {
-    return Commands.sequence(hood.changeSetpoint(1));
+        intake.changeSetpoint(RollerSetpoint.FORWARD));
   }
 }
