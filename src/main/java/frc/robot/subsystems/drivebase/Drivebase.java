@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
-
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -165,10 +164,15 @@ public class Drivebase extends SubsystemBase {
    */
   public void drive(ChassisSpeeds speeds, boolean openLoop, boolean isShooting) {
 
-    if(isShooting){
-      SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(TurretConstants.TURRET_CENTER.getX(),TurretConstants.TURRET_CENTER.getY()));
+    if (isShooting) {
+      SwerveModuleState[] moduleStates =
+          kinematics.toSwerveModuleStates(
+              speeds,
+              new Translation2d(
+                  TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
 
-    } else {}
+    } else {
+    }
 
     previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
 
