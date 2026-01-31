@@ -88,6 +88,11 @@ public class IntakeIO_Sim implements IntakeIO {
         rollerSim.getAngularPosition().times(IntakeConstants.Roller.GEAR_RATIO));
     rollerMotorSim.setRotorVelocity(
         rollerSim.getAngularVelocity().times(IntakeConstants.Roller.GEAR_RATIO));
+
+    inputs.extensionPosition = rollerMotor.getPosition().getValueAsDouble();
+    inputs.extensionVelocity = rollerMotor.getVelocity().getValueAsDouble();
+    inputs.extensionAcceleration = rollerMotor.getAcceleration().getValueAsDouble();
+    inputs.extensionVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override
