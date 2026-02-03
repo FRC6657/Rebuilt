@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
@@ -16,14 +15,15 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
 import frc.robot.subsystems.drivebase.GyroIO_CTRE;
+import frc.robot.subsystems.drivebase.GyroIO_Redux;
 import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
@@ -54,39 +54,34 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-@SuppressWarnings({"unused", "resource"})
+@SuppressWarnings("resource")
 public class Robot extends LoggedRobot {
 
-  // Controllers
   private CommandXboxController driver = new CommandXboxController(0);
-  private CommandGenericHID operator = new CommandGenericHID(1);
 
-  // Subsystems
-  // private final ApriltagCameras cameras;
   private final Drivebase drivebase;
   private final Turret turret;
   private final Hood hood;
-  private final Flywheel shoot;
+  private final Flywheel flywheel;
   private final Intake intake;
   private final Floor floor;
   private final Tunnel tunnel;
-
-  // Superstructure
   private final Superstructure superstructure;
 
-  // Auto Stuff
-  private final AutoFactory autoFactory;
+  private final GamePieceSimulation fuelSim;
+
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
   public Robot() {
 
-    // Get rid  of annoying warnings during testing
+    fuelSim = GamePieceSimulation.getInstance();
+
     DriverStation.silenceJoystickConnectionWarning(true);
 
     drivebase =
         new Drivebase(
-            RobotBase.isReal() ? new GyroIO_CTRE() : new GyroIO() {},
+            RobotBase.isReal() ? new GyroIO_Redux() : new GyroIO() {},
             RobotBase.isReal()
                 ? new ModuleIO[] {
                   new ModuleIO_Real(DrivebaseConstants.kFrontLeftModuleConstants),
@@ -101,31 +96,14 @@ public class Robot extends LoggedRobot {
                   new ModuleIO_Sim(DrivebaseConstants.kBackRightModuleConstants)
                 });
 
-    // cameras =
-    //     new ApriltagCameras(
-    //         drivebase::addVisionMeasurement,
-    //         RobotBase.isReal() || replay
-    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo1)
-    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
-    // drivebase::getPose),
-    //         RobotBase.isReal() || replay
-    //             ? new ApriltagCameraIO_Real(VisionConstants.ExampleCameraInfo2)
-    //             : new ApriltagCameraIO_Sim(VisionConstants.ExampleCameraInfo1,
-    // drivebase::getPose));
-
     turret = new Turret(RobotBase.isReal() ? new TurretIO_Real() : new TurretIO_Sim());
-
     hood = new Hood(RobotBase.isReal() ? new HoodIO_Real() : new HoodIO_Sim());
-
-    shoot = new Flywheel(RobotBase.isReal() ? new FlywheelIO_Real() : new FlywheelIO_Sim());
-
+    flywheel = new Flywheel(RobotBase.isReal() ? new FlywheelIO_Real() : new FlywheelIO_Sim());
     intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
-
     floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim());
-
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
 
-    superstructure = new Superstructure(drivebase, turret, hood, shoot, intake, floor, tunnel);
+    superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel);
 
     AutoBuilder.configure(
         drivebase::getPose,
@@ -136,10 +114,6 @@ public class Robot extends LoggedRobot {
         DrivebaseConstants.kPathPlannerConfig,
         () -> false,
         drivebase);
-
-    autoFactory =
-        new AutoFactory(
-            drivebase::getPose, drivebase::resetPose, drivebase::followTrajectory, true, drivebase);
 
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
   }
@@ -183,18 +157,38 @@ public class Robot extends LoggedRobot {
                         * 0.375),
             superstructure.isShooting));
 
-    autoChooser.addOption(
-        "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
+    // -- Test Bindings --
+    // driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
+    // driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+    // driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
+    // driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
+    // driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
+    // driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
+    // driver.y().onTrue(flywheel.changeSetpoint(3000));
+    // driver.y().onFalse(flywheel.changeSetpoint(0));
+    // driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
+    // driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
+    // driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+    // driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
+    // driver.leftTrigger().onTrue(hood.changeSetpoint(40));
+    // driver.leftTrigger().onFalse(hood.changeSetpoint(10));
 
-    driver.a().onTrue(superstructure.intakeFuel()).onFalse(superstructure.HomeRobot());
-
-    // driver.b().onTrue(superstructure.hoodMove());
-
-    driver.x().onTrue(superstructure.tunnelLaunch()).onFalse(superstructure.tunnelOff());
-
-    driver.x().onTrue(superstructure.flywheelShoot()).onFalse(superstructure.flywheelOff());
-
-    driver.leftTrigger().onTrue(superstructure.HomeRobot());
+    driver
+        .a()
+        .onTrue(
+            Commands.repeatingSequence(
+                    Commands.runOnce(
+                        () -> {
+                          BallLaunchHelper.spawnWithLaunchCharacteristics(
+                              fuelSim,
+                              flywheel.getVelocity(),
+                              hood.getPosition(),
+                              turret.getPosition(),
+                              drivebase.getPose(),
+                              drivebase.getVelocityRobotRelative());
+                        }),
+                    Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
+                .until(() -> !driver.a().getAsBoolean()));
 
     Logger.start();
   }
@@ -203,11 +197,6 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
-  }
-
-  @Override
-  public void teleopPeriodic() {
-    superstructure.runTurretTest();
   }
 
   @Override

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.shooter.turret;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -26,7 +27,13 @@ public class TurretIO_Sim implements TurretIO {
           TurretConstants.MOTOR);
 
   public TurretIO_Sim() {
-    motor.getConfigurator().apply(TurretConstants.CONFIG);
+    motor
+        .getConfigurator()
+        .apply(
+            TurretConstants.CONFIG.withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)));
   }
 
   @Override

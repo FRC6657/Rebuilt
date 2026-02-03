@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.indexer.floor;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -24,7 +25,13 @@ public class FloorIO_Sim implements FloorIO {
           FloorConstants.MOTOR);
 
   public FloorIO_Sim() {
-    motor.getConfigurator().apply(FloorConstants.CONFIG);
+    motor
+        .getConfigurator()
+        .apply(
+            FloorConstants.CONFIG.withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)));
   }
 
   @Override
@@ -37,7 +44,7 @@ public class FloorIO_Sim implements FloorIO {
     var motorSim = motor.getSimState();
     motorSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorSim.getMotorVoltage());
-    motorModel.update(0.02);
+    motorModel.update(1 / GlobalConstants.mainLoopFrequency);
     motorSim.setRawRotorPosition(motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
     motorSim.setRotorVelocity(motorModel.getAngularVelocity().times(FloorConstants.GEAR_RATIO));
 

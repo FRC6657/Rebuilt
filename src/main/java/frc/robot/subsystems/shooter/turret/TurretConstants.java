@@ -53,5 +53,5 @@ public class TurretConstants {
       new Translation3d(0.118317, -0.105617, 0.511175);
   /** Offset from turret center to the hood pivot point (rotates with turret). */
   public static final Translation3d HOOD_OFFSET =
-      new Translation3d(0, Units.inchesToMeters(-4.156585), Units.inchesToMeters(2.75));
+      new Translation3d(0, Units.inchesToMeters(-4.7), Units.inchesToMeters(0.95));
 }

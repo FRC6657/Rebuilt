@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -28,8 +29,12 @@ public class FlywheelIO_Sim implements FlywheelIO {
 
   public FlywheelIO_Sim() {
 
-    leader.getConfigurator().apply(FlywheelConstants.CONFIG);
-    follower.getConfigurator().apply(FlywheelConstants.CONFIG);
+    var simCurrentLimits =
+        new CurrentLimitsConfigs()
+            .withStatorCurrentLimitEnable(false)
+            .withSupplyCurrentLimitEnable(false);
+    leader.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
+    follower.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
 
     var velocity = leader.getVelocity();
     var acceleration = leader.getAcceleration();
@@ -72,9 +77,15 @@ public class FlywheelIO_Sim implements FlywheelIO {
     motorSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorSim.getMotorVoltage());
     motorModel.update(1 / GlobalConstants.mainLoopFrequency);
-    motorSim.setRawRotorPosition(
-        motorModel.getAngularPosition().times(FlywheelConstants.GEAR_RATIO));
-    motorSim.setRotorVelocity(motorModel.getAngularVelocity().times(FlywheelConstants.GEAR_RATIO));
+    var angularPosition = motorModel.getAngularPosition().times(FlywheelConstants.GEAR_RATIO);
+    var angularVelocity = motorModel.getAngularVelocity().times(FlywheelConstants.GEAR_RATIO);
+    motorSim.setRawRotorPosition(angularPosition);
+    motorSim.setRotorVelocity(angularVelocity);
+
+    var followerSim = follower.getSimState();
+    followerSim.setSupplyVoltage(12);
+    followerSim.setRawRotorPosition(angularPosition);
+    followerSim.setRotorVelocity(angularVelocity);
 
     inputs.velocity = leader.getVelocity().getValueAsDouble() * 60d;
     inputs.acceleration = leader.getAcceleration().getValueAsDouble() * 60d;
@@ -82,6 +93,10 @@ public class FlywheelIO_Sim implements FlywheelIO {
     inputs.leaderTemp = leader.getDeviceTemp().getValueAsDouble();
     inputs.leaderVoltage = leader.getMotorVoltage().getValueAsDouble();
     inputs.leaderStatorCurrent = leader.getStatorCurrent().getValueAsDouble();
+
+    inputs.followerTemp = follower.getDeviceTemp().getValueAsDouble();
+    inputs.followerVoltage = follower.getMotorVoltage().getValueAsDouble();
+    inputs.followerStatorCurrent = follower.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
@@ -92,7 +107,7 @@ public class FlywheelIO_Sim implements FlywheelIO {
   @Override
   public boolean atSetpoint() {
     return MathUtil.isNear(
-        setpoint.Velocity,
+        setpoint.Velocity * 60d,
         leader.getVelocity().getValueAsDouble() * 60d,
         FlywheelConstants.VELOCITY_TOLERANCE);
   }

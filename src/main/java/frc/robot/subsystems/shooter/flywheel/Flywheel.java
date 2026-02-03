@@ -34,6 +34,10 @@ public class Flywheel extends SubsystemBase {
         });
   }
 
+  public double getVelocity() {
+    return inputs.velocity;
+  }
+
   /**
    * @return true if the flywheel velocity is within tolerance of the target
    */

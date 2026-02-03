@@ -90,9 +90,9 @@ public class Superstructure {
       new Pose3d(hoodPosition, hoodRotation),
       // Intake position projected along its mounting angle (0.2229 rad from horizontal)
       new Pose3d(
-          -Math.cos(0.222900) * intake.getPosition(),
+          -Math.cos(0.222900) * Units.inchesToMeters(intake.getPosition()),
           0,
-          -Math.sin(0.222900) * intake.getPosition(),
+          -Math.sin(0.222900) * Units.inchesToMeters(intake.getPosition()),
           new Rotation3d())
     };
   }

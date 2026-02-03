@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.GlobalConstants;
@@ -12,9 +12,8 @@ import frc.robot.GlobalConstants;
 public class TurretIO_Real implements TurretIO {
 
   private TalonFX turretMotor = new TalonFX(GlobalConstants.CAN.Turret.id);
-  // MotionMagic control request initialized to home position (in rotations)
-  private MotionMagicVoltage motionMagicVoltage =
-      new MotionMagicVoltage(TurretConstants.INITIAL_SETPOINT / TurretConstants.CONVERSION_FACTOR);
+  private PositionVoltage positionVoltage =
+      new PositionVoltage(TurretConstants.INITIAL_SETPOINT / TurretConstants.CONVERSION_FACTOR);
 
   public TurretIO_Real() {
 
@@ -50,7 +49,7 @@ public class TurretIO_Real implements TurretIO {
     inputs.acceleration =
         turretMotor.getAcceleration().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
 
-    turretMotor.setControl(motionMagicVoltage);
+    turretMotor.setControl(positionVoltage);
   }
 
   @Override
@@ -61,14 +60,14 @@ public class TurretIO_Real implements TurretIO {
       clampedInput = clampedInput + 360;
     }
     // Add initial offset and convert degrees to motor rotations
-    motionMagicVoltage.Position =
+    positionVoltage.Position =
         (clampedInput + TurretConstants.INITIAL_SETPOINT) / TurretConstants.CONVERSION_FACTOR;
   }
 
   @Override
   public boolean atSetpoint() {
     return MathUtil.isNear(
-        motionMagicVoltage.Position * TurretConstants.CONVERSION_FACTOR,
+        positionVoltage.Position * TurretConstants.CONVERSION_FACTOR,
         turretMotor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR,
         TurretConstants.POSITION_TOLERANCE);
   }
