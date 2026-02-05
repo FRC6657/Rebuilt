@@ -1,7 +1,7 @@
 package frc.robot.subsystems.drivebase;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -39,7 +39,7 @@ public class ModuleIO_Real implements ModuleIO {
   // Control Signals
   private final VelocityVoltage drivePID = new VelocityVoltage(0.0);
   private final VoltageOut driveOpenLoop = new VoltageOut(0);
-  private final MotionMagicVoltage turnPID = new MotionMagicVoltage(0.0);
+  private final PositionVoltage turnPID = new PositionVoltage(0.0);
 
   private final Queue<Double> timestampQueue;
   private final Queue<Double> drivePositionQueue;

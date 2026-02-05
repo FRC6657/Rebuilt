@@ -8,6 +8,7 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -147,6 +148,8 @@ public class Robot extends LoggedRobot {
         "TestAuto", Commands.run(() -> drivebase.drive(new ChassisSpeeds(1, 0, 0))));
 
     Logger.start();
+
+    driver.x().onTrue(Commands.runOnce(()-> drivebase.resetPose(new Pose2d()), drivebase));
   }
 
   @Override
