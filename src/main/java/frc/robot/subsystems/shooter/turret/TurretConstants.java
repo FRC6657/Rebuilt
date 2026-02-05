@@ -33,11 +33,14 @@ public class TurretConstants {
   public static final double SUPPLY_LIMIT = 30; // Amps
   public static final double STATOR_LIMIT = 60; // Amps
 
+  public static final double KP = 25.0;
+  public static final double KD = 2.0;
+
   public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()
           .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
-          .withSlot0(new Slot0Configs().withKP(25.0).withKD(2))
+          .withSlot0(new Slot0Configs().withKP(KP).withKD(KD))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimit(STATOR_LIMIT)
@@ -46,6 +49,11 @@ public class TurretConstants {
                   .withSupplyCurrentLimitEnable(true)
                   .withSupplyCurrentLowerLimit(SUPPLY_LIMIT)
                   .withSupplyCurrentLowerTime(0));
+
+  private static final double MOTOR_KV_ROT =
+      12.0 * GEAR_RATIO * 2.0 * Math.PI / MOTOR.freeSpeedRadPerSec;
+
+  public static final double FF_VOLTS_PER_DEG_SEC = (MOTOR_KV_ROT + KD) / 360.0;
 
   // 3D visualization offsets (from CAD model, in meters)
   /** Position of the turret center relative to the robot origin. */

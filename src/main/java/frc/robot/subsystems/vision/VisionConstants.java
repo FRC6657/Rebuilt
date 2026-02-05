@@ -66,14 +66,16 @@ public class VisionConstants {
   public static CameraInfo Black2 =
       new CameraInfo(
           "FRC6657-9281-2-Black",
-          new Transform3d(new Translation3d(0.331989, -0.254149, 0.229592), new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-10))),
+          new Transform3d(
+              new Translation3d(0.331989, -0.254149, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-10))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
   public static CameraInfo White1 =
       new CameraInfo(
           "FRC6657-9281-1-White",
-            new Transform3d(
+          new Transform3d(
               new Translation3d(0.253248, 0.331830, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-240))),
           Rotation2d.fromDegrees(80),
@@ -82,7 +84,9 @@ public class VisionConstants {
   public static CameraInfo White2 =
       new CameraInfo(
           "FRC6657-9281-2-White",
-          new Transform3d(new Translation3d(0.331989, 0.254149, 0.229592), new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(10))),
+          new Transform3d(
+              new Translation3d(0.331989, 0.254149, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(10))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 }

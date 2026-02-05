@@ -22,6 +22,11 @@ public interface TurretIO {
   /** Sets the turret to the target heading in degrees (wrapped to 0-360). */
   public default void changeSetpoint(double setpoint) {}
 
+  /** Sets the turret heading with a velocity feedforward for smoother tracking while moving. */
+  public default void changeSetpoint(double setpoint, double feedforwardDegPerSec) {
+    changeSetpoint(setpoint);
+  }
+
   /**
    * @return true if the turret is within tolerance of its target heading
    */

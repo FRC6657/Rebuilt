@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +23,9 @@ import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
+import frc.robot.util.ShootOnTheFlyUtil;
+import frc.robot.util.ShootOnTheFlyUtil.AdjustedShotParameters;
+import frc.robot.util.ShotParameterMap;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -41,6 +45,11 @@ public class Superstructure {
   Tunnel tunnel;
 
   public boolean isShooting = false;
+
+  /** Latency compensation for SOTF in seconds. Increase if shots land behind target. */
+  private static final double LATENCY_COMPENSATION_SEC = 0.1;
+
+  private final ShotParameterMap shotMap = buildShotMap();
 
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
@@ -98,18 +107,19 @@ public class Superstructure {
   }
 
   /**
-   * Calculates the turret's position in field coordinates by adding the turret offset to the
-   * robot's current field pose.
+   * Calculates the turret's position in field coordinates by rotating the turret offset into the
+   * field frame and adding it to the robot pose.
    *
    * @return the turret's field-relative position
    */
   public Translation2d getTurretGlobalPosition() {
+    Translation2d offset =
+        new Translation2d(
+            TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY());
     return drivebase
         .getPose()
         .getTranslation()
-        .plus(
-            new Translation2d(
-                TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
+        .plus(offset.rotateBy(drivebase.getPose().getRotation()));
   }
 
   /**
@@ -154,19 +164,19 @@ public class Superstructure {
   }
 
   public Command shoot() {
-    return Commands.sequence(logMessage("Shoot"), shoot.changeSetpoint(12));
+    return Commands.sequence(logMessage("Shoot"), shoot.changeSetpointC(12));
   }
 
   public Command HomeRobot() {
     return Commands.sequence(
         logMessage("Home Robot"),
-        shoot.changeSetpoint(0),
+        shoot.changeSetpointC(0),
         tunnel.changeSetpoint(TunnelSetpoint.Off),
         floor.changeSetpoint(FloorSetpoint.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(RollerSetpoint.Off),
-        hood.changeSetpoint(0));
+        hood.changeSetpointC(0));
   }
 
   public Command intakeFuel() {
@@ -187,10 +197,82 @@ public class Superstructure {
   }
 
   public Command flywheelShoot() {
-    return Commands.sequence(logMessage("Flywheel Shoot"), shoot.changeSetpoint(60));
+    return Commands.sequence(logMessage("Flywheel Shoot"), shoot.changeSetpointC(60));
   }
 
   public Command flywheelOff() {
-    return Commands.sequence(logMessage("Flywheel Off"), shoot.changeSetpoint(0));
+    return Commands.sequence(logMessage("Flywheel Off"), shoot.changeSetpointC(0));
+  }
+
+  /**
+   * Continuously tracks the turret target while compensating for robot motion. Adjusts turret
+   * heading, flywheel RPM, and hood angle every cycle using shoot-on-the-fly.
+   */
+  public Command trackTarget() {
+    return Commands.run(
+        () -> {
+          ChassisSpeeds robotRelVel = drivebase.getVelocityRobotRelative();
+          Rotation2d robotHeading = drivebase.getPose().getRotation();
+          double omega = robotRelVel.omegaRadiansPerSecond;
+
+          // Turret velocity in field frame: robot center velocity + tangential from rotation
+          // v_tangential = ω × r_offset (cross product in 2D)
+          double turretOffsetX = TurretConstants.TURRET_CENTER.getX();
+          double turretOffsetY = TurretConstants.TURRET_CENTER.getY();
+          double turretVxRobot = robotRelVel.vxMetersPerSecond - omega * turretOffsetY;
+          double turretVyRobot = robotRelVel.vyMetersPerSecond + omega * turretOffsetX;
+          Translation2d turretVelField =
+              new Translation2d(turretVxRobot, turretVyRobot).rotateBy(robotHeading);
+
+          ChassisSpeeds turretFieldVel =
+              new ChassisSpeeds(turretVelField.getX(), turretVelField.getY(), omega);
+
+          AdjustedShotParameters result =
+              ShootOnTheFlyUtil.calculate(
+                  getTurretGlobalPosition(),
+                  turretFieldVel,
+                  turretTarget,
+                  shotMap,
+                  LATENCY_COMPENSATION_SEC);
+
+          if (result == null) return;
+
+          // Turret feedforward: predict how the turret-relative heading changes.
+          // d(turret_heading)/dt = v_perp / distance - ω_robot
+          // v_perp is the turret's velocity perpendicular to the line of sight.
+          Rotation2d aimDir = result.getTurretHeadingFieldRelative();
+          double vPerp =
+              -turretVelField.getX() * aimDir.getSin() + turretVelField.getY() * aimDir.getCos();
+          double headingRateDegPerSec = Math.toDegrees(vPerp / result.getEffectiveDistanceMeters());
+          double turretFeedforward = headingRateDegPerSec - Math.toDegrees(omega);
+
+          Rotation2d heading = getRelativeTurretHeading(result.getTurretHeadingFieldRelative());
+          turret.changeSetpoint(heading.getDegrees(), turretFeedforward);
+          hood.changeSetpointC(result.getHoodAngleDeg());
+          shoot.changeSetpointC(result.getFlywheelRPM());
+
+          Logger.recordOutput("SOTF/EffectiveDistance", result.getEffectiveDistanceMeters());
+          Logger.recordOutput("SOTF/VirtualDistance", result.getVirtualDistanceMeters());
+          Logger.recordOutput("SOTF/AdjustedRPM", result.getFlywheelRPM());
+          Logger.recordOutput("SOTF/AdjustedHoodAngle", result.getHoodAngleDeg());
+          Logger.recordOutput("SOTF/TurretHeading", heading.getDegrees());
+          Logger.recordOutput("SOTF/TurretFeedforward", turretFeedforward);
+        },
+        turret,
+        hood,
+        shoot);
+  }
+
+  /** Builds the shot parameter lookup table. Replace values with empirical tuning data. */
+  private static ShotParameterMap buildShotMap() {
+    ShotParameterMap map = new ShotParameterMap();
+    // addEntry(distanceMeters, flywheelRPM, hoodAngleDeg, timeOfFlightSec)
+    map.addEntry(0.9, 2400, 10.0, 1.0);
+    map.addEntry(1.7, 2500, 17.0, 1.0);
+    map.addEntry(2.7, 2600, 27.0, 1.0);
+    map.addEntry(3.7, 2800, 30.0, 1.06);
+    map.addEntry(4.7, 3000, 33.0, 1.1);
+    map.addEntry(5.5, 3200, 35.0, 1.2);
+    return map;
   }
 }

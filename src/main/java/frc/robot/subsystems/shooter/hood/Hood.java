@@ -14,8 +14,8 @@ import org.littletonrobotics.junction.Logger;
  */
 public class Hood extends SubsystemBase {
 
-  public HoodIO io;
-  public HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
+  private HoodIO io;
+  private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
 
   /**
    * @param io the hardware IO implementation (real or simulated)
@@ -30,8 +30,12 @@ public class Hood extends SubsystemBase {
    * @param setpoint the desired hood angle in degrees
    * @return the command
    */
-  public Command changeSetpoint(double setpoint) {
+  public Command changeSetpointC(double setpoint) {
     return this.runOnce(() -> io.changeSetpoint(setpoint));
+  }
+
+  public void changeSetpoint(double setpoint) {
+    io.changeSetpoint(setpoint);
   }
 
   /**

@@ -76,6 +76,13 @@ public class TurretIO_Sim implements TurretIO {
     // Add initial offset and convert degrees to motor rotations
     this.setpoint.Position =
         (clampedInput + TurretConstants.INITIAL_SETPOINT) / TurretConstants.CONVERSION_FACTOR;
+    this.setpoint.FeedForward = 0;
+  }
+
+  @Override
+  public void changeSetpoint(double setpoint, double feedforwardDegPerSec) {
+    changeSetpoint(setpoint);
+    this.setpoint.FeedForward = feedforwardDegPerSec * TurretConstants.FF_VOLTS_PER_DEG_SEC;
   }
 
   @Override

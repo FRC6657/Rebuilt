@@ -7,7 +7,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -45,11 +44,6 @@ import frc.robot.subsystems.shooter.hood.HoodIO_Sim;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameraIO;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
-import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
-import frc.robot.subsystems.vision.ApriltagCameras;
-import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -73,7 +67,7 @@ public class Robot extends LoggedRobot {
   private final Tunnel tunnel;
   private final Superstructure superstructure;
 
-  private final ApriltagCameras cameras;
+  // private final ApriltagCameras cameras;
   private final GamePieceSimulation fuelSim;
 
   private LoggedDashboardChooser<Command> autoChooser =
@@ -110,23 +104,23 @@ public class Robot extends LoggedRobot {
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
 
     superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel);
-    
-    cameras = new ApriltagCameras(
-      drivebase::addVisionMeasurement,
-      RobotBase.isReal() || replay ? 
-      new ApriltagCameraIO[]{
-        new ApriltagCameraIO_Real(VisionConstants.Black1),
-        new ApriltagCameraIO_Real(VisionConstants.Black2),
-        new ApriltagCameraIO_Real(VisionConstants.White1),
-        new ApriltagCameraIO_Real(VisionConstants.White2),
-      } : 
-      new ApriltagCameraIO[]{
-        new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
-        new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
-        new ApriltagCameraIO_Sim(VisionConstants.White1, drivebase::getPose),
-        new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
-      }
-    );
+
+    // cameras =
+    //     new ApriltagCameras(
+    //         drivebase::addVisionMeasurement,
+    //         RobotBase.isReal() || replay
+    //             ? new ApriltagCameraIO[] {
+    //               new ApriltagCameraIO_Real(VisionConstants.Black1),
+    //               new ApriltagCameraIO_Real(VisionConstants.Black2),
+    //               new ApriltagCameraIO_Real(VisionConstants.White1),
+    //               new ApriltagCameraIO_Real(VisionConstants.White2),
+    //             }
+    //             : new ApriltagCameraIO[] {
+    //               new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
+    //               new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
+    //               new ApriltagCameraIO_Sim(VisionConstants.White1, drivebase::getPose),
+    //               new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
+    //             });
 
     AutoBuilder.configure(
         drivebase::getPose,
@@ -197,7 +191,7 @@ public class Robot extends LoggedRobot {
     // driver.leftTrigger().onFalse(hood.changeSetpoint(10));
 
     driver
-        .a()
+        .rightTrigger()
         .onTrue(
             Commands.repeatingSequence(
                     Commands.runOnce(
@@ -211,7 +205,9 @@ public class Robot extends LoggedRobot {
                               drivebase.getVelocityRobotRelative());
                         }),
                     Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
-                .until(() -> !driver.a().getAsBoolean()));
+                .until(() -> !driver.rightTrigger().getAsBoolean()));
+
+    driver.leftTrigger().onTrue(superstructure.trackTarget());
 
     Logger.start();
   }
@@ -220,19 +216,18 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
-
-    Logger.recordOutput(
-        "Black1Transform",
-        new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black1.robotToCamera));
-    Logger.recordOutput(
-        "Black2Transform",
-        new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black2.robotToCamera));
-    Logger.recordOutput(
-        "White1Transform",
-        new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White1.robotToCamera));
-    Logger.recordOutput(
-        "White2Transform",
-        new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
+    // Logger.recordOutput(
+    //     "Black1Transform",
+    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black1.robotToCamera));
+    // Logger.recordOutput(
+    //     "Black2Transform",
+    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black2.robotToCamera));
+    // Logger.recordOutput(
+    //     "White1Transform",
+    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White1.robotToCamera));
+    // Logger.recordOutput(
+    //     "White2Transform",
+    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
   }
 
   @Override

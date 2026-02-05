@@ -27,11 +27,15 @@ public class Flywheel extends SubsystemBase {
    * @param setpoint the desired flywheel voltage (V)
    * @return the command
    */
-  public Command changeSetpoint(double setpoint) {
+  public Command changeSetpointC(double setpoint) {
     return this.runOnce(
         () -> {
           io.changeSetpoint(setpoint);
         });
+  }
+
+  public void changeSetpoint(double setpoint) {
+    io.changeSetpoint(setpoint);
   }
 
   public double getVelocity() {

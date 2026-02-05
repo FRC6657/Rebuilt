@@ -15,8 +15,8 @@ import org.littletonrobotics.junction.Logger;
  */
 public class Turret extends SubsystemBase {
 
-  public TurretIO io;
-  public TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
+  private TurretIO io;
+  private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
 
   /**
    * @param io the hardware IO implementation (real or simulated)
@@ -33,6 +33,10 @@ public class Turret extends SubsystemBase {
    */
   public Command changeSetpoint(double setpoint) {
     return this.runOnce(() -> io.changeSetpoint(setpoint));
+  }
+
+  public void changeSetpoint(double setpoint, double feedforward) {
+    io.changeSetpoint(setpoint, feedforward);
   }
 
   /**
