@@ -172,7 +172,7 @@ public class Robot extends LoggedRobot {
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
                         * 0.375),
-            superstructure.isShooting));
+            () -> superstructure.isShooting));
 
     // -- Test Bindings --
     // driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
@@ -207,13 +207,14 @@ public class Robot extends LoggedRobot {
                     Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
                 .until(() -> !driver.rightTrigger().getAsBoolean()));
 
-    driver.leftTrigger().onTrue(superstructure.trackTarget());
+    driver.leftTrigger().whileTrue(superstructure.sotfTracking());
 
     Logger.start();
   }
 
   @Override
   public void robotPeriodic() {
+
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
     // Logger.recordOutput(

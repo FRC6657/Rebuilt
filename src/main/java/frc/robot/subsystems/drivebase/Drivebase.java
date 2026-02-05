@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,6 +27,7 @@ import frc.robot.subsystems.shooter.turret.TurretConstants;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -165,13 +165,15 @@ public class Drivebase extends SubsystemBase {
   public void drive(ChassisSpeeds speeds, boolean openLoop, boolean isShooting) {
 
     if (isShooting) {
-      SwerveModuleState[] moduleStates =
-          kinematics.toSwerveModuleStates(
-              speeds,
-              new Translation2d(
-                  TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
-
-    } else {
+      // Adjust translational velocities so the robot rotates around the turret center
+      // instead of the robot center, then let the setpoint generator handle smoothing.
+      double cx = TurretConstants.TURRET_CENTER.getX();
+      double cy = TurretConstants.TURRET_CENTER.getY();
+      speeds =
+          new ChassisSpeeds(
+              speeds.vxMetersPerSecond + speeds.omegaRadiansPerSecond * cy,
+              speeds.vyMetersPerSecond - speeds.omegaRadiansPerSecond * cx,
+              speeds.omegaRadiansPerSecond);
     }
 
     previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
@@ -216,7 +218,7 @@ public class Drivebase extends SubsystemBase {
    * @param speeds The desired field relative speeds
    * @return The command to run the drivetrain for teleop with field relative speeds
    */
-  public Command driveTeleop(Supplier<ChassisSpeeds> speeds, boolean isShooting) {
+  public Command driveTeleop(Supplier<ChassisSpeeds> speeds, BooleanSupplier isShooting) {
     return this.run(
         () -> {
           var speed =
@@ -225,7 +227,7 @@ public class Drivebase extends SubsystemBase {
                   DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
                       ? getPose().getRotation()
                       : getPose().getRotation().minus(Rotation2d.fromDegrees(180)));
-          this.drive(speed, false, isShooting);
+          this.drive(speed, false, isShooting.getAsBoolean());
         });
   }
 

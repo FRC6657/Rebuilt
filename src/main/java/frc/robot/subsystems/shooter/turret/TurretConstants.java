@@ -6,6 +6,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -59,6 +61,10 @@ public class TurretConstants {
   /** Position of the turret center relative to the robot origin. */
   public static final Translation3d TURRET_CENTER =
       new Translation3d(0.118317, -0.105617, 0.511175);
+
+  public static final Transform2d robotToTurret =
+      new Transform2d(TURRET_CENTER.toTranslation2d(), new Rotation2d());
+
   /** Offset from turret center to the hood pivot point (rotates with turret). */
   public static final Translation3d HOOD_OFFSET =
       new Translation3d(0, Units.inchesToMeters(-4.7), Units.inchesToMeters(0.95));

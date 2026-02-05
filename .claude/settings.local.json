@@ -19,7 +19,8 @@
       "Bash(cmd /c \"gradlew.bat spotlessApply 2>&1\")",
       "Bash(cmd /c \"cd /d D:\\\\Projects\\\\FRC\\\\Rebuilt && gradlew.bat spotlessApply && echo SUCCESS\")",
       "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat spotlessApply)",
-      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat build)"
+      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat build)",
+      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat compileJava -x spotlessApply -x spotlessJava -x spotlessCheck)"
     ]
   }
 }

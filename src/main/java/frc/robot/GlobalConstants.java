@@ -34,4 +34,10 @@ public class GlobalConstants {
       this.id = id;
     }
   }
+
+  public static boolean disableHAL = false;
+
+  public static void disableHAL() {
+    disableHAL = true;
+  }
 }
