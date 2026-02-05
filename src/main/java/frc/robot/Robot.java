@@ -149,7 +149,7 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
 
-    driver.x().onTrue(Commands.runOnce(()-> drivebase.resetPose(new Pose2d()), drivebase));
+    driver.x().onTrue(Commands.runOnce(() -> drivebase.resetPose(new Pose2d()), drivebase));
   }
 
   @Override
