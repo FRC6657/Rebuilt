@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.reduxrobotics.sensors.canandmag.Canandmag;
+import com.reduxrobotics.sensors.canandmag.CanandmagSettings;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -68,6 +69,8 @@ public class ModuleIO_Real implements ModuleIO {
     turnVelocity = turn.getVelocity();
     turnAppliedVolts = turn.getMotorVoltage();
     turnCurrent = turn.getStatorCurrent();
+
+    encoder.setSettings(new CanandmagSettings().setInvertDirection(true));
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         DrivebaseConstants.kOdometryFrequency, drivePosition, turnPosition);
