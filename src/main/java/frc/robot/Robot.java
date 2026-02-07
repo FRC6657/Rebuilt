@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
@@ -61,6 +62,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
 
   private CommandXboxController driver = new CommandXboxController(0);
+  private CommandGenericHID operator = new CommandGenericHID(1);
 
   private final Drivebase drivebase;
   private final Turret turret;
