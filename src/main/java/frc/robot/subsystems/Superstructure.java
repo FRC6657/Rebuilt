@@ -177,25 +177,18 @@ public class Superstructure {
 
   public Command tunnelLaunch() {
     return Commands.sequence(
-      logMessage("Tunnel Launch"),
-      tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+        logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
   }
 
   public Command tunnelOff() {
-    return Commands.sequence(
-      logMessage("Tunnel Off"), 
-      tunnel.changeSetpoint(TunnelSetpoint.Off));
+    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
   }
 
   public Command flywheelShoot() {
-    return Commands.sequence(
-      logMessage("Flywheel Shoot"),
-      shoot.changeSetpoint(60));
+    return Commands.sequence(logMessage("Flywheel Shoot"), shoot.changeSetpoint(60));
   }
 
   public Command flywheelOff() {
-    return Commands.sequence(
-      logMessage("Flywheel Off"),
-      shoot.changeSetpoint(0));
+    return Commands.sequence(logMessage("Flywheel Off"), shoot.changeSetpoint(0));
   }
 }
