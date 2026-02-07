@@ -45,16 +45,14 @@ public class IntakeConstants {
                     .withStatorCurrentLimit(STATOR_LIMIT)
                     .withSupplyCurrentLimit(SUPPLY_LIMIT)
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withSupplyCurrentLowerLimit(SUPPLY_LIMIT)
-                    .withSupplyCurrentLowerTime(0));
+                    .withSupplyCurrentLimitEnable(true));
 
     /** Predefined extension setpoints with position, velocity, and acceleration profiles. */
     public static enum ExtensionSetpoint {
-      RETRACTED_SLOW(MIN_SETPOINT, 1, 1),
-      RETRACTED_FAST(MIN_SETPOINT, 4, 40),
-      EXTENDED_SLOW(MAX_SETPOINT, 1, 1),
-      EXTENDED_FAST(MAX_SETPOINT, 4, 40);
+      RETRACTED_SLOW(MIN_SETPOINT, 5, 40),
+      RETRACTED_FAST(MIN_SETPOINT, 80, 160),
+      EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
+      EXTENDED_FAST(MAX_SETPOINT, 80, 160);
 
       public final double position;
       public final double velocity;

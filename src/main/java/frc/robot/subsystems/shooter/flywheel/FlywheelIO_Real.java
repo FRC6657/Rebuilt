@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.MathUtil;
@@ -51,7 +52,11 @@ public class FlywheelIO_Real implements FlywheelIO {
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
 
-    leader.setControl(new VelocityVoltage(0));
+    if (setpoint.Velocity == 0) {
+      leader.setControl(new VoltageOut(0));
+    } else {
+      leader.setControl(setpoint);
+    }
     follower.setControl(
         new Follower(GlobalConstants.CAN.Shooter_Leader.id, MotorAlignmentValue.Opposed));
 
@@ -76,7 +81,7 @@ public class FlywheelIO_Real implements FlywheelIO {
   public boolean atSetpoint() {
     // Compare target (RPS) to actual velocity (converted back to RPM) within tolerance
     return MathUtil.isNear(
-        setpoint.Velocity,
+        setpoint.Velocity * 60d,
         leader.getVelocity().getValueAsDouble() * 60d,
         FlywheelConstants.VELOCITY_TOLERANCE);
   }

@@ -11,7 +11,16 @@
       "Bash(curl:*)",
       "Bash(.\\\\gradlew build:*)",
       "Bash(.gradlew.bat build)",
-      "Bash(./gradlew build:*)"
+      "Bash(./gradlew build:*)",
+      "WebFetch(domain:blog.eeshwark.com)",
+      "Bash(tree:*)",
+      "Bash(.gradlew.bat:*)",
+      "Bash(cmd /c \"gradlew.bat spotlessApply\")",
+      "Bash(cmd /c \"gradlew.bat spotlessApply 2>&1\")",
+      "Bash(cmd /c \"cd /d D:\\\\Projects\\\\FRC\\\\Rebuilt && gradlew.bat spotlessApply && echo SUCCESS\")",
+      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat spotlessApply)",
+      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat build)",
+      "Bash(D:/Projects/FRC/Rebuilt/gradlew.bat compileJava -x spotlessApply -x spotlessJava -x spotlessCheck)"
     ]
   }
 }

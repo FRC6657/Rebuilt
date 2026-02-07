@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.shooter.hood;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -24,7 +25,14 @@ public class HoodIO_Sim implements HoodIO {
           HoodConstants.MOTOR);
 
   public HoodIO_Sim() {
-    motor.getConfigurator().apply(HoodConstants.CONFIG);
+    motor
+        .getConfigurator()
+        .apply(
+            HoodConstants.CONFIG.withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)));
+    motor.setPosition(HoodConstants.INITIAL_SETPOINT / HoodConstants.CONVERSION_FACTOR);
   }
 
   @Override

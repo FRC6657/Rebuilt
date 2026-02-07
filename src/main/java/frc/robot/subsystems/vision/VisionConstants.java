@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 
 /**
  * Constants for the vision subsystem, including pose filtering thresholds, standard deviation
@@ -56,28 +57,36 @@ public class VisionConstants {
   public static CameraInfo Black1 =
       new CameraInfo(
           "FRC6657-9281-1-Black",
-          new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)),
+          new Transform3d(
+              new Translation3d(0.253248, -0.331830, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(240))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
   public static CameraInfo Black2 =
       new CameraInfo(
           "FRC6657-9281-2-Black",
-          new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)),
+          new Transform3d(
+              new Translation3d(0.331989, -0.254149, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-10))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
   public static CameraInfo White1 =
       new CameraInfo(
-          "FRC6657-9281-3-White",
-          new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)),
+          "FRC6657-9281-1-White",
+          new Transform3d(
+              new Translation3d(0.253248, 0.331830, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-240))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
   public static CameraInfo White2 =
       new CameraInfo(
-          "FRC6657-9281-4-White",
-          new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)),
+          "FRC6657-9281-2-White",
+          new Transform3d(
+              new Translation3d(0.331989, 0.254149, 0.229592),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(10))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 }

@@ -65,6 +65,13 @@ public class IntakeIO_Real implements IntakeIO {
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
 
+    // Run extension PID controller and apply voltage output
+    extensionMotor.setControl(
+        new VoltageOut(
+            extensionPID.calculate(
+                extensionMotor.getPosition().getValueAsDouble()
+                    * IntakeConstants.Extension.CONVERSION_FACTOR)));
+
     // Apply roller voltage each cycle
     rollerMotor.setControl(rollerSetpoint);
 

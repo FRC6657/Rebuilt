@@ -22,6 +22,7 @@ import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
+import frc.robot.util.LaunchCalculator;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -35,10 +36,12 @@ public class Superstructure {
   Drivebase drivebase;
   Turret turret;
   Hood hood;
-  Flywheel shoot;
+  Flywheel flywheel;
   Floor floor;
   Intake intake;
   Tunnel tunnel;
+
+  public boolean isShooting = false;
 
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
@@ -57,7 +60,7 @@ public class Superstructure {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
-    this.shoot = shoot;
+    this.flywheel = shoot;
     this.floor = floor;
     this.intake = intake;
     this.tunnel = tunnel;
@@ -88,26 +91,27 @@ public class Superstructure {
       new Pose3d(hoodPosition, hoodRotation),
       // Intake position projected along its mounting angle (0.2229 rad from horizontal)
       new Pose3d(
-          -Math.cos(0.222900) * intake.getPosition(),
+          -Math.cos(0.222900) * Units.inchesToMeters(intake.getPosition()),
           0,
-          -Math.sin(0.222900) * intake.getPosition(),
+          -Math.sin(0.222900) * Units.inchesToMeters(intake.getPosition()),
           new Rotation3d())
     };
   }
 
   /**
-   * Calculates the turret's position in field coordinates by adding the turret offset to the
-   * robot's current field pose.
+   * Calculates the turret's position in field coordinates by rotating the turret offset into the
+   * field frame and adding it to the robot pose.
    *
    * @return the turret's field-relative position
    */
   public Translation2d getTurretGlobalPosition() {
+    Translation2d offset =
+        new Translation2d(
+            TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY());
     return drivebase
         .getPose()
         .getTranslation()
-        .plus(
-            new Translation2d(
-                TurretConstants.TURRET_CENTER.getX(), TurretConstants.TURRET_CENTER.getY()));
+        .plus(offset.rotateBy(drivebase.getPose().getRotation()));
   }
 
   /**
@@ -152,19 +156,19 @@ public class Superstructure {
   }
 
   public Command shoot() {
-    return Commands.sequence(logMessage("Shoot"), shoot.changeSetpoint(12));
+    return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
   }
 
   public Command HomeRobot() {
     return Commands.sequence(
         logMessage("Home Robot"),
-        shoot.changeSetpoint(0),
+        flywheel.changeSetpointC(0),
         tunnel.changeSetpoint(TunnelSetpoint.Off),
         floor.changeSetpoint(FloorSetpoint.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(RollerSetpoint.Off),
-        hood.changeSetpoint(0));
+        hood.changeSetpointC(0));
   }
 
   public Command intakeFuel() {
@@ -185,10 +189,37 @@ public class Superstructure {
   }
 
   public Command flywheelShoot() {
-    return Commands.sequence(logMessage("Flywheel Shoot"), shoot.changeSetpoint(60));
+    return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
   }
 
   public Command flywheelOff() {
-    return Commands.sequence(logMessage("Flywheel Off"), shoot.changeSetpoint(0));
+    return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
   }
+
+  public Command sotfTracking() {
+    return Commands.run(
+            () -> {
+              isShooting = true;
+              var calc = LaunchCalculator.getInstance();
+
+              calc.setEstimatedPose(drivebase.getPose());
+              calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
+              calc.clearLaunchingParameters();
+
+              var params = calc.getParameters();
+
+              flywheel.changeSetpoint(
+                  Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
+              hood.changeSetpoint(Math.toDegrees(params.hoodAngle()));
+              Rotation2d turretHeading = getRelativeTurretHeading(params.turretAngle());
+              double omega = drivebase.getVelocityFieldRelative().omegaRadiansPerSecond;
+              double feedforward = Math.toDegrees(params.turretVelocity() - omega);
+              turret.changeSetpoint(turretHeading.getDegrees(), feedforward);
+            },
+            turret,
+            hood,
+            flywheel)
+        .finallyDo(() -> isShooting = false);
+  }
+
 }

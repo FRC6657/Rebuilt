@@ -6,6 +6,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -33,11 +35,14 @@ public class TurretConstants {
   public static final double SUPPLY_LIMIT = 30; // Amps
   public static final double STATOR_LIMIT = 60; // Amps
 
+  public static final double KP = 25.0;
+  public static final double KD = 2.0;
+
   public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()
           .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
-          .withSlot0(new Slot0Configs().withKP(25.0).withKD(2))
+          .withSlot0(new Slot0Configs().withKP(KP).withKD(KD))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimit(STATOR_LIMIT)
@@ -47,11 +52,20 @@ public class TurretConstants {
                   .withSupplyCurrentLowerLimit(SUPPLY_LIMIT)
                   .withSupplyCurrentLowerTime(0));
 
+  private static final double MOTOR_KV_ROT =
+      12.0 * GEAR_RATIO * 2.0 * Math.PI / MOTOR.freeSpeedRadPerSec;
+
+  public static final double FF_VOLTS_PER_DEG_SEC = (MOTOR_KV_ROT + KD) / 360.0;
+
   // 3D visualization offsets (from CAD model, in meters)
   /** Position of the turret center relative to the robot origin. */
   public static final Translation3d TURRET_CENTER =
       new Translation3d(0.118317, -0.105617, 0.511175);
+
+  public static final Transform2d robotToTurret =
+      new Transform2d(TURRET_CENTER.toTranslation2d(), new Rotation2d());
+
   /** Offset from turret center to the hood pivot point (rotates with turret). */
   public static final Translation3d HOOD_OFFSET =
-      new Translation3d(0, Units.inchesToMeters(-4.156585), Units.inchesToMeters(2.75));
+      new Translation3d(0, Units.inchesToMeters(-4.7), Units.inchesToMeters(0.95));
 }

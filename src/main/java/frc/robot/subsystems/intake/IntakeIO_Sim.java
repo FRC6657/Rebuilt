@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -26,25 +27,37 @@ public class IntakeIO_Sim implements IntakeIO {
   // WPILib profiled PID for smooth trapezoidal extension motion
   private ProfiledPIDController extensionPID =
       new ProfiledPIDController(
-          13.5, 0, 0, new Constraints(extensionSetpoint.velocity, extensionSetpoint.acceleration));
+          10, 0, 0, new Constraints(extensionSetpoint.velocity, extensionSetpoint.acceleration));
 
   // Physics simulation for the extension motor
-  private DCMotorSim extensionSim =
+  private DCMotorSim extensionModel =
       new DCMotorSim(
           LinearSystemId.createDCMotorSystem(
               DCMotor.getFalcon500(1), 0.0001, IntakeConstants.Extension.GEAR_RATIO),
           DCMotor.getFalcon500(1));
 
   // Physics simulation for the roller motor
-  private DCMotorSim rollerSim =
+  private DCMotorSim rollerModel =
       new DCMotorSim(
           LinearSystemId.createDCMotorSystem(
               DCMotor.getFalcon500(1), 0.0001, IntakeConstants.Roller.GEAR_RATIO),
           DCMotor.getFalcon500(1));
 
   public IntakeIO_Sim() {
-    extensionMotor.getConfigurator().apply(IntakeConstants.Extension.CONFIG);
-    rollerMotor.getConfigurator().apply(IntakeConstants.Roller.CONFIG);
+    extensionMotor
+        .getConfigurator()
+        .apply(
+            IntakeConstants.Extension.CONFIG.withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)));
+    rollerMotor
+        .getConfigurator()
+        .apply(
+            IntakeConstants.Roller.CONFIG.withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)));
   }
 
   @Override
@@ -60,21 +73,13 @@ public class IntakeIO_Sim implements IntakeIO {
     // Step the extension physics simulation forward
     var extensionMotorSim = extensionMotor.getSimState();
     extensionMotorSim.setSupplyVoltage(12);
-    extensionSim.setInputVoltage(extensionMotorSim.getMotorVoltage());
-    extensionSim.update(1 / GlobalConstants.mainLoopFrequency);
+    extensionModel.setInputVoltage(extensionMotorSim.getMotorVoltage());
+    extensionModel.update(1 / GlobalConstants.mainLoopFrequency);
     // Feed simulated position/velocity back into the TalonFX sim state (rotor units)
     extensionMotorSim.setRawRotorPosition(
-        extensionSim
-            .getAngularPosition()
-            .times(
-                IntakeConstants.Extension.GEAR_RATIO
-                    / IntakeConstants.Extension.CONVERSION_FACTOR));
+        extensionModel.getAngularPosition().times(IntakeConstants.Extension.GEAR_RATIO));
     extensionMotorSim.setRotorVelocity(
-        extensionSim
-            .getAngularVelocity()
-            .times(
-                IntakeConstants.Extension.GEAR_RATIO
-                    / IntakeConstants.Extension.CONVERSION_FACTOR));
+        extensionModel.getAngularVelocity().times(IntakeConstants.Extension.GEAR_RATIO));
 
     // Apply roller voltage
     rollerMotor.setControl(rollerSetpoint);
@@ -82,12 +87,29 @@ public class IntakeIO_Sim implements IntakeIO {
     // Step the roller physics simulation forward
     var rollerMotorSim = rollerMotor.getSimState();
     rollerMotorSim.setSupplyVoltage(12);
-    rollerSim.setInputVoltage(rollerMotorSim.getMotorVoltage());
-    rollerSim.update(1 / GlobalConstants.mainLoopFrequency);
+    rollerModel.setInputVoltage(rollerMotorSim.getMotorVoltage());
+    rollerModel.update(1 / GlobalConstants.mainLoopFrequency);
     rollerMotorSim.setRawRotorPosition(
-        rollerSim.getAngularPosition().times(IntakeConstants.Roller.GEAR_RATIO));
+        rollerModel.getAngularPosition().times(IntakeConstants.Roller.GEAR_RATIO));
     rollerMotorSim.setRotorVelocity(
-        rollerSim.getAngularVelocity().times(IntakeConstants.Roller.GEAR_RATIO));
+        rollerModel.getAngularVelocity().times(IntakeConstants.Roller.GEAR_RATIO));
+
+    inputs.extensionPosition =
+        extensionMotor.getPosition().getValueAsDouble()
+            * IntakeConstants.Extension.CONVERSION_FACTOR;
+    inputs.extensionVelocity =
+        extensionMotor.getVelocity().getValueAsDouble()
+            * IntakeConstants.Extension.CONVERSION_FACTOR;
+    inputs.extensionAcceleration =
+        extensionMotor.getAcceleration().getValueAsDouble()
+            * IntakeConstants.Extension.CONVERSION_FACTOR;
+    inputs.extensionTemp = 0;
+    inputs.extensionVoltage = extensionMotor.getMotorVoltage().getValueAsDouble();
+    inputs.extensionStatorCurrent = extensionModel.getCurrentDrawAmps();
+
+    inputs.rollerTemp = 0;
+    inputs.rollerVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
+    inputs.rollerStatorCurrent = rollerModel.getCurrentDrawAmps();
   }
 
   @Override
