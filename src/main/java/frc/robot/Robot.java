@@ -27,12 +27,16 @@ import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
 import frc.robot.subsystems.indexer.floor.Floor;
+import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
 import frc.robot.subsystems.indexer.floor.FloorIO_Real;
 import frc.robot.subsystems.indexer.floor.FloorIO_Sim;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
+import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
+import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -175,20 +179,20 @@ public class Robot extends LoggedRobot {
             () -> superstructure.isShooting));
 
     // -- Test Bindings --
-    // driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
-    // driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
-    // driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
-    // driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
-    // driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
-    // driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
-    // driver.y().onTrue(flywheel.changeSetpointC(3000));
-    // driver.y().onFalse(flywheel.changeSetpointC(0));
-    // driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
-    // driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
-    // driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
-    // driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
-    // driver.leftTrigger().onTrue(hood.changeSetpointC(40));
-    // driver.leftTrigger().onFalse(hood.changeSetpointC(10));
+    driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
+    driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+    driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
+    driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
+    driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
+    driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
+    driver.y().onTrue(flywheel.changeSetpointC(3000));
+    driver.y().onFalse(flywheel.changeSetpointC(0));
+    driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
+    driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
+    driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+    driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
+    driver.leftTrigger().onTrue(hood.changeSetpointC(40));
+    driver.leftTrigger().onFalse(hood.changeSetpointC(10));
 
     driver
         .rightTrigger()
