@@ -16,7 +16,7 @@ j = pyvjoy.VJoyDevice(1)
 print("vJoy ready")
 
 # Serial setup
-COM_PORT = 'COM19'
+COM_PORT = 'COM3' # in arduino IDE check select board menue to find what it is for your computer for the specific usb you are using
 print(f"Opening {COM_PORT}...")
 ser = serial.Serial(COM_PORT, 9600, timeout=0.1)
 time.sleep(2)
