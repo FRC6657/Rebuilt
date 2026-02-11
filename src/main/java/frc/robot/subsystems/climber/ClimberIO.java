@@ -16,6 +16,12 @@ public interface ClimberIO {
     public double motorVelocity = 0.0;
     public double motorAcceleration = 0.0;
     public double positionSetpoint = 0.0;
+    public double motorTwoVoltage = 0.0;
+    public double motorTwoCurrent = 0.0;
+    public double motorTwoPosition = 0.0;
+    public double motorTwoVelocity = 0.0;
+    public double motorTwoAcceleration = 0.0;
+    public double positionTwoSetpoint = 0.0;
   }
 
   public default void updateInputs(ClimberIOInputs inputs) {}

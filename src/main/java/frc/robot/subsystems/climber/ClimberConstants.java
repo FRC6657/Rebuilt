@@ -51,5 +51,29 @@ public class ClimberConstants {
                     .withSupplyCurrentLimit(40)
                     .withStatorCurrentLimit(60)
                     .withSupplyCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true));   
+                    .withSupplyCurrentLimitEnable(true));  
+                    
+    public class Pedal {
+        
+        public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
+        public static final double PEDAL_GEAR_RATIO = 1; //Find later bois
+
+        public static final double PEDAL_MIN_ANGLE = 0.0;
+        public static final double PEDAL_MAX_ANGLE = 120.0;
+        public static final double ANGLE_TOLERANCE = 2.0;
+
+        public static final int PEDAL_MOTOR_CANID = 2;
+
+        public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
+            new TalonFXConfiguration()
+                .withMotorOutput(
+                    new MotorOutputConfigs()
+                        .withInverted(InvertedValue.CounterClockwise_Positive)
+                        .withNeutralMode(NeutralModeValue.Brake))
+                .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
+                .withMotionMagic(
+                    new MotionMagicConfigs()
+                        .withMotionMagicCruiseVelocity(360d / 360d).withMotionMagicAcceleration(1080d / 360d)
+                        ); //Continue Configuration Here
+    }
 }
