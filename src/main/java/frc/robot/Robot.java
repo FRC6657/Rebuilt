@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -215,6 +217,9 @@ public class Robot extends LoggedRobot {
 
     driver.leftTrigger().whileTrue(superstructure.sotfTracking());
 
+    operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
+    operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
+
     Logger.start();
   }
 
@@ -235,6 +240,28 @@ public class Robot extends LoggedRobot {
     // Logger.recordOutput(
     //     "White2Transform",
     //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
+
+    // Publishes all code from the SmartDashboard to the keypad screen
+    SmartDashboard.putBoolean("RobotEnabled", isEnabled());
+    SmartDashboard.putBoolean("Autonomous", isAutonomous());
+    SmartDashboard.putBoolean("Teleop", isTeleop());
+    SmartDashboard.putBoolean("Test", isTest());
+    SmartDashboard.putBoolean("Disabled", isDisabled());
+    SmartDashboard.putBoolean("isTracking", superstructure.isTracking);
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+
+    // Helpful combined string
+    String mode = "DISABLED";
+    if (isEnabled()) {
+      if (isAutonomous()) {
+        mode = "AUTO";
+      } else if (isTeleop()) {
+        mode = "TELEOP";
+      } else if (isTest()) {
+        mode = "TEST";
+      }
+    }
+    SmartDashboard.putString("RobotMode", mode);
   }
 
   @Override
