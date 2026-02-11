@@ -64,7 +64,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
 
   private CommandXboxController driver = new CommandXboxController(0);
-  private CommandGenericHID operator = new CommandGenericHID(1); // arduino buttons 1 to 16, left to right, then top to bottom
+  private CommandGenericHID operator =
+      new CommandGenericHID(1); // arduino buttons 1 to 16, left to right, then top to bottom
 
   private final Drivebase drivebase;
   private final Turret turret;
