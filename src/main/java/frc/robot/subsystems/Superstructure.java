@@ -42,6 +42,7 @@ public class Superstructure {
   Tunnel tunnel;
 
   public boolean isShooting = false;
+  public boolean isTracking = false;
 
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
@@ -220,5 +221,13 @@ public class Superstructure {
             hood,
             flywheel)
         .finallyDo(() -> isShooting = false);
+  }
+
+  public Command tempSetTrackingOn() {
+    return Commands.run(() -> isTracking = true);
+  }
+
+  public Command tempSetTrackingOff() {
+    return Commands.run(() -> isTracking = false);
   }
 }
