@@ -43,8 +43,7 @@ public class TurretIO_Real implements TurretIO {
     inputs.temp = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorCurrent = turretMotor.getStatorCurrent().getValueAsDouble();
     inputs.voltage = turretMotor.getMotorVoltage().getValueAsDouble();
-    position =
-        turretMotor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
+    position = turretMotor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
     inputs.position = position;
     inputs.velocity =
         turretMotor.getVelocity().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;

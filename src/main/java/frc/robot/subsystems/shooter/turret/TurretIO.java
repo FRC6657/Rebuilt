@@ -19,8 +19,11 @@ public interface TurretIO {
   /** Reads the latest sensor values and applies the position control output. */
   public default void updateInputs(TurretIOInputs inputs) {}
 
-  /** Sets the turret to the target heading in degrees (wrapped to 0-360).
-   * This method will tell the turret to rotate to the correct angle optimizing for minimal motion while also keeping the position within tolerance.
+  /**
+   * Sets the turret to the target heading in degrees (wrapped to 0-360). This method will tell the
+   * turret to rotate to the correct angle optimizing for minimal motion while also keeping the
+   * position within tolerance.
+   *
    * @param setpoint the target angle relative to the turret.
    */
   public default void changeSetpoint(double setpoint) {}
