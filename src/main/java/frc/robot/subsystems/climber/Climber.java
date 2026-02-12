@@ -19,8 +19,12 @@ public class Climber extends SubsystemBase {
     this.io = io;
   }
 
-  public Command changeSetpoint(double newSetpoint) {
-    return runOnce(() -> io.changeSetpoint(newSetpoint));
+  public Command changeSetpoints(double newClimberSetpoint, double newPedalSetpoint) {
+    return runOnce(
+        () -> {
+          io.changeClimberSetpoint(newClimberSetpoint);
+          io.changePedalSetpoint(newPedalSetpoint);
+        });
   }
 
   @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
