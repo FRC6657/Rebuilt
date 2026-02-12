@@ -1,5 +1,5 @@
 List of Computers set up to be a driverstation compatible with this keypad:
 
-Luke F COM_PORT = 'COM something'
+Luke F COM_PORT = 'COM19'
 
 Andrew F COM_PORT = 'COM3'
