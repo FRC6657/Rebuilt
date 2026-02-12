@@ -253,7 +253,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Teleop", isTeleop());
     SmartDashboard.putBoolean("Test", isTest());
     SmartDashboard.putBoolean("Disabled", isDisabled());
-    SmartDashboard.putBoolean("isTracking", superstructure.isTracking);
+    SmartDashboard.putBoolean("isShooting", superstructure.isShooting);
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     // Helpful combined string
