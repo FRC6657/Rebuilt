@@ -6,13 +6,13 @@ package frc.robot.subsystems.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.climber.ClimberConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
   private ClimberIO io;
+
   private ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
   public Climber(ClimberIO io) {
@@ -26,7 +26,7 @@ public class Climber extends SubsystemBase {
   @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
   public boolean atSetpoint() {
     return Math.abs(inputs.positionSetpoint - inputs.motorPosition)
-      < ClimberConstants.HEIGHT_TOLERANCE;
+        < ClimberConstants.HEIGHT_TOLERANCE;
   }
 
   @Override

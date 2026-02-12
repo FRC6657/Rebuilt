@@ -6,17 +6,16 @@ package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberIO_Real implements ClimberIO {
   /** Creates a new ClimberIO_Real. */
   private TalonFX motor;
+
   private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
 
   public ClimberIO_Real() {
-    
+
     motor = new TalonFX(ClimberConstants.MOTOR_CANID);
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
 
@@ -43,21 +42,16 @@ public class ClimberIO_Real implements ClimberIO {
     inputs.motorVoltage = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorCurrent = motor.getSupplyCurrent().getValueAsDouble();
     inputs.motorPosition =
-      motor.getPosition().getValueAsDouble()
-        * ClimberConstants.CONVERSION_FACTOR;
+        motor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
     inputs.motorVelocity =
-      motor.getVelocity().getValueAsDouble()
-        * ClimberConstants.CONVERSION_FACTOR;
-    inputs.positionSetpoint =
-      setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
+        motor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
+    inputs.positionSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
   }
 
   @Override
   public void changeSetpoint(double newSetpoint) {
     var inches =
-      MathUtil.clamp(
-        newSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);
-      setpoint.Position =
-        inches / ClimberConstants.CONVERSION_FACTOR;
+        MathUtil.clamp(newSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);
+    setpoint.Position = inches / ClimberConstants.CONVERSION_FACTOR;
   }
 }

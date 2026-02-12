@@ -221,5 +221,4 @@ public class Superstructure {
             flywheel)
         .finallyDo(() -> isShooting = false);
   }
-
 }

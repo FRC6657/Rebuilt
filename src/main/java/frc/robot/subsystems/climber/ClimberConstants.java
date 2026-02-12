@@ -8,72 +8,86 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 
 public class ClimberConstants {
-    
-    public static final DCMotor CLIMBER_MOTOR = DCMotor.getFalcon500(2);
-    public static final double GEAR_RATIO = 1; //Calculate Later
 
-    public static final double SPROCKET_PD = 1; //Get from Recalc
-    
-    public static final double CONVERSION_FACTOR = 
-        (Math.PI * SPROCKET_PD);
+  public static final DCMotor CLIMBER_MOTOR = DCMotor.getFalcon500(2);
+  public static final double GEAR_RATIO = 1; // Calculate Later
 
-    //TODO Figure Out Units
-    public static final double MIN_HEIGHT = 0.0;
-    public static final double MAX_HEIGHT = 1;
-    public static final double LOW_SETPOINT = MIN_HEIGHT;
-    public static final double HOOK_SETPOINT = MAX_HEIGHT - 0.5;
-    public static final double DRIVEIN_SETPOINT = MAX_HEIGHT;
+  public static final double SPROCKET_PD = 1; // Get from Recalc
 
-    public static final double HEIGHT_TOLERANCE = 1.0;
+  public static final double CONVERSION_FACTOR = (Math.PI * SPROCKET_PD);
 
-    public static final int MOTOR_CANID = 1; //Find later
+  // TODO Figure Out Units
+  public static final double MIN_HEIGHT = 0.0;
+  public static final double MAX_HEIGHT = 1;
+  public static final double LOW_SETPOINT = MIN_HEIGHT;
+  public static final double HOOK_SETPOINT = MAX_HEIGHT - 0.5;
+  public static final double DRIVEIN_SETPOINT = MAX_HEIGHT;
 
-    public static final TalonFXConfiguration MOTOR_CONFIGURATION =
+  public static final double HEIGHT_TOLERANCE = 1.0;
+
+  public static final int MOTOR_CANID = 1; // Find later
+
+  public static final TalonFXConfiguration MOTOR_CONFIGURATION =
+      new TalonFXConfiguration()
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withInverted(InvertedValue.CounterClockwise_Positive)
+                  .withNeutralMode(NeutralModeValue.Brake))
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicCruiseVelocity(100 / CONVERSION_FACTOR)
+                  .withMotionMagicAcceleration(200 / CONVERSION_FACTOR))
+          .withSlot0(new Slot0Configs().withKP(10))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withSupplyCurrentLimit(40)
+                  .withStatorCurrentLimit(60)
+                  .withSupplyCurrentLimitEnable(true)
+                  .withSupplyCurrentLimitEnable(true));
+
+  public class Pedal {
+
+    public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
+    public static final double PEDAL_GEAR_RATIO = 1; // Find later bois
+
+    public static final double PEDAL_MIN_ANGLE = 0.0;
+    public static final double PEDAL_MAX_ANGLE = 120.0;
+    public static final double ANGLE_TOLERANCE = 2.0;
+
+    public static final int PEDAL_MOTOR_CANID = 2;
+
+    public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
         new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
             .withMotionMagic(
                 new MotionMagicConfigs()
-                    .withMotionMagicCruiseVelocity(100 / CONVERSION_FACTOR)
-                    .withMotionMagicAcceleration(
-                        200 / CONVERSION_FACTOR)
-                ) 
-            .withSlot0(new Slot0Configs().withKP(10))
+                    .withMotionMagicCruiseVelocity(360d / 360d)
+                    .withMotionMagicAcceleration(1080d / 360d))
+            .withSlot0(new Slot0Configs().withKP(40))
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
                     .withSupplyCurrentLimit(40)
                     .withStatorCurrentLimit(60)
                     .withSupplyCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true));  
-                    
-    public class Pedal {
-        
-        public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
-        public static final double PEDAL_GEAR_RATIO = 1; //Find later bois
+                    .withStatorCurrentLimitEnable(true));
 
-        public static final double PEDAL_MIN_ANGLE = 0.0;
-        public static final double PEDAL_MAX_ANGLE = 120.0;
-        public static final double ANGLE_TOLERANCE = 2.0;
+    public static enum PedalSetpoint {
+      PEDAL_HOME(0.0),
+      COUNTER_PHASE(90.0);
 
-        public static final int PEDAL_MOTOR_CANID = 2;
+      public final double degrees;
 
-        public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
-            new TalonFXConfiguration()
-                .withMotorOutput(
-                    new MotorOutputConfigs()
-                        .withInverted(InvertedValue.CounterClockwise_Positive)
-                        .withNeutralMode(NeutralModeValue.Brake))
-                .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
-                .withMotionMagic(
-                    new MotionMagicConfigs()
-                        .withMotionMagicCruiseVelocity(360d / 360d).withMotionMagicAcceleration(1080d / 360d)
-                        ); //Continue Configuration Here
+      private PedalSetpoint(double degrees) {
+        this.degrees = degrees;
+      }
     }
+  }
 }
