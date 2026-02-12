@@ -184,6 +184,7 @@ public class Robot extends LoggedRobot {
             () -> superstructure.isShooting));
 
     // -- Test Bindings --
+    /*
     driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
     driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
     driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
@@ -198,6 +199,7 @@ public class Robot extends LoggedRobot {
     driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
     driver.leftTrigger().onTrue(hood.changeSetpointC(40));
     driver.leftTrigger().onFalse(hood.changeSetpointC(10));
+    */
 
     driver
         .rightTrigger()
@@ -217,6 +219,9 @@ public class Robot extends LoggedRobot {
                 .until(() -> !driver.rightTrigger().getAsBoolean()));
 
     driver.leftTrigger().whileTrue(superstructure.sotfTracking());
+
+    driver.y().onTrue(superstructure.toggleShooting());
+    operator.button(16).onTrue(superstructure.toggleShooting());
 
     operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
     operator.button(2).whileTrue(superstructure.tempSetTrackingOff());

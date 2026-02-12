@@ -99,6 +99,11 @@ public class Superstructure {
     };
   }
 
+
+  public Command toggleShooting(){
+    return Commands.runOnce(() -> isShooting = !isShooting);
+  }
+
   /**
    * Calculates the turret's position in field coordinates by rotating the turret offset into the
    * field frame and adding it to the robot pose.
