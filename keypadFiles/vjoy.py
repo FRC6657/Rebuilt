@@ -3,11 +3,18 @@ import pyvjoy
 import time
 from networktables import NetworkTables
 
+CURRENT_DS = 'LukeF'
+
 KEY_MAP = {
     '1': 1, '2': 2, '3': 3, 'A': 4,
     '4': 5, '5': 6, '6': 7, 'B': 8,
     '7': 9, '8': 10, '9': 11, 'C': 12,
     '*': 13, '0': 14, '#': 15, 'D': 16
+}
+
+DS_LIST = {
+    'LukeF': 'COM19',
+    'AndrewF': 'COM3'
 }
 
 # vJoy setup
@@ -16,7 +23,7 @@ j = pyvjoy.VJoyDevice(1)
 print("vJoy ready")
 
 # Serial setup
-COM_PORT = 'COM3' # in arduino IDE check select board menue to find what it is for your computer for the specific usb you are using
+COM_PORT = DS_LIST[CURRENT_DS] # in arduino IDE check select board menue to find what it is for your computer for the specific usb you are using
 print(f"Opening {COM_PORT}...")
 ser = serial.Serial(COM_PORT, 9600, timeout=0.1)
 time.sleep(2)
