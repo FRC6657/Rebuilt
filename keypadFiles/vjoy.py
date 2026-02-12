@@ -13,7 +13,7 @@ KEY_MAP = {
     '*': 13, '0': 14, '#': 15, 'D': 16
 }
 
-DS_LIST = {
+DS_LIST = { # in arduino IDE check select board menue to find what it is for your computer for the specific usb you are using
     'LukeF': 'COM19',
     'AndrewF': 'COM3'
 }
@@ -24,7 +24,7 @@ j = pyvjoy.VJoyDevice(1)
 print("vJoy ready")
 
 # Serial setup
-COM_PORT = DS_LIST[CURRENT_DS] # in arduino IDE check select board menue to find what it is for your computer for the specific usb you are using
+COM_PORT = DS_LIST[CURRENT_DS]
 print(f"Opening {COM_PORT}...")
 ser = serial.Serial(COM_PORT, 9600, timeout=0.1)
 time.sleep(2)
