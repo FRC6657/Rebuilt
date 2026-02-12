@@ -4,6 +4,7 @@ import time
 from networktables import NetworkTables
 
 CURRENT_DS = 'LukeF'
+SIM = True
 
 KEY_MAP = {
     '1': 1, '2': 2, '3': 3, 'A': 4,
@@ -30,7 +31,10 @@ time.sleep(2)
 print("Serial ready")
 
 # NetworkTables setup
-ROBOT_IP = 'localhost'
+if(SIM):
+    ROBOT_IP = 'localhost'
+else:
+    ROBOT_IP = '10.66.57.1'
 print(f"Connecting to robot at {ROBOT_IP}...")
 NetworkTables.initialize(server=ROBOT_IP)
 time.sleep(1)
