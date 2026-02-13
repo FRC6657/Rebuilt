@@ -1,7 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
-import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 import org.littletonrobotics.junction.AutoLog;
 
 /**
@@ -33,7 +32,7 @@ public interface IntakeIO {
   public default void changeSetpoint(ExtensionSetpoint setpoint) {}
 
   /** Sets the roller motor to the given voltage setpoint. */
-  public default void changeSetpoint(RollerSetpoint setpoint) {}
+  public default void changeSetpoint(double setpoint) {}
 
   /**
    * @return true if the extension is within tolerance of its target position

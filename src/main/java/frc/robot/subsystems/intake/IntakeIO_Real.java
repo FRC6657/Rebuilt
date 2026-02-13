@@ -6,7 +6,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.GlobalConstants;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
-import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 
 /**
  * Real hardware implementation of IntakeIO using TalonFX motors. The extension uses a
@@ -102,7 +101,7 @@ public class IntakeIO_Real implements IntakeIO {
   }
 
   @Override
-  public void changeSetpoint(RollerSetpoint setpoint) {
-    rollerSetpoint.Output = setpoint.voltage;
+  public void changeSetpoint(double setpoint) {
+    rollerSetpoint.Output = setpoint;
   }
 }

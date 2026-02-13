@@ -10,7 +10,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.GlobalConstants;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
-import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 
 /**
  * Simulated implementation of IntakeIO using DCMotorSim models. Mirrors the real implementation's
@@ -124,7 +123,7 @@ public class IntakeIO_Sim implements IntakeIO {
   }
 
   @Override
-  public void changeSetpoint(RollerSetpoint setpoint) {
-    rollerSetpoint.Output = setpoint.voltage;
+  public void changeSetpoint(double setpoint) {
+    rollerSetpoint.Output = setpoint;
   }
 }
