@@ -214,7 +214,7 @@ public class Robot extends LoggedRobot {
                     Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
                 .until(() -> !driver.rightTrigger().getAsBoolean()));
 
-    driver.leftTrigger().whileTrue(superstructure.sotfTracking());
+    driver.leftTrigger().whileTrue(superstructure.softTracking());
 
     driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
