@@ -14,6 +14,11 @@ public class TunnelConstants {
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
   public static final double GEAR_RATIO = 24d / 11d; // Motor rotations per output rotation
 
+  public static final double Off = 0.0; // No power
+  public static final double FORWARD = 6; // 6V forward (feed game pieces to shooter)
+  public static final double REVERSE = -6; // 6V reverse (eject game pieces)
+  public static double voltage;
+
   public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()
           .withMotorOutput(
@@ -29,15 +34,4 @@ public class TunnelConstants {
                   .withStatorCurrentLimitEnable(true));
 
   /** Predefined voltage setpoints for the tunnel roller. */
-  public static enum TunnelSetpoint {
-    Off(0.0), // No power
-    FORWARD(6), // 6V forward (feed game pieces to shooter)
-    REVERSE(-6); // 6V reverse (eject game pieces)
-
-    public final double voltage;
-
-    private TunnelSetpoint(double voltage) {
-      this.voltage = voltage;
-    }
-  }
 }

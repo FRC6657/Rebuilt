@@ -3,7 +3,6 @@ package frc.robot.subsystems.indexer.tunnel;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.GlobalConstants;
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 
 /** Real hardware implementation of the tunnel indexer using a TalonFX with voltage control. */
 public class TunnelIO_Real implements TunnelIO {
@@ -37,7 +36,7 @@ public class TunnelIO_Real implements TunnelIO {
   }
 
   @Override
-  public void changeSetpoint(TunnelSetpoint setpoint) {
-    this.setpoint.Output = setpoint.voltage;
+  public void changeSetpoint(double setpoint) {
+    this.setpoint.Output = setpoint;
   }
 }

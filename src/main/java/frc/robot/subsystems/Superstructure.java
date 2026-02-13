@@ -17,7 +17,7 @@ import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
+import frc.robot.subsystems.indexer.tunnel.TunnelConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeConstants.Roller;
@@ -193,7 +193,7 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Home Robot"),
         flywheel.changeSetpointC(0),
-        tunnel.changeSetpoint(TunnelSetpoint.Off),
+        tunnel.changeSetpoint(TunnelConstants.Off),
         floor.changeSetpoint(FloorConstants.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
@@ -277,13 +277,13 @@ public class Superstructure {
 
   public Command tunnelLaunch() {
      return Commands.sequence(
-         logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+         logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
    }
 
   public Command tunnelOff() {
      return Commands.sequence(
       logMessage("Tunnel Off"),
-      tunnel.changeSetpoint(TunnelSetpoint.Off));
+      tunnel.changeSetpoint(TunnelConstants.Off));
    }
 
    public Command FloorOn(){

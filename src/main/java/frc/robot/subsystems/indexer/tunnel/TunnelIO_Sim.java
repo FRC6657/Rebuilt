@@ -10,7 +10,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.GlobalConstants;
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 
 /** Simulated tunnel indexer implementation using a DCMotorSim physics model. */
 public class TunnelIO_Sim implements TunnelIO {
@@ -55,7 +54,7 @@ public class TunnelIO_Sim implements TunnelIO {
   }
 
   @Override
-  public void changeSetpoint(TunnelSetpoint setpoint) {
-    this.setpoint.Output = setpoint.voltage;
+  public void changeSetpoint(double setpoint) {
+    this.setpoint.Output = setpoint;
   }
 }

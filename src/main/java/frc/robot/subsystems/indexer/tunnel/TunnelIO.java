@@ -1,6 +1,5 @@
 package frc.robot.subsystems.indexer.tunnel;
 
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Hardware abstraction interface for the tunnel indexer motor. */
@@ -18,5 +17,5 @@ public interface TunnelIO {
   public default void updateInputs(TunnelIOInputs inputs) {}
 
   /** Sets the tunnel roller to the given voltage setpoint. */
-  public default void changeSetpoint(TunnelSetpoint setpoint) {}
+  public default void changeSetpoint(double setpoint) {}
 }

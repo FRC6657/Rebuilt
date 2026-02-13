@@ -6,7 +6,6 @@ package frc.robot.subsystems.indexer.tunnel;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -31,7 +30,7 @@ public class Tunnel extends SubsystemBase {
    * @param setpoint the desired voltage setpoint (off, forward, reverse)
    * @return the command
    */
-  public Command changeSetpoint(TunnelSetpoint setpoint) {
+  public Command changeSetpoint(double setpoint) {
     return this.runOnce(
         () -> {
           io.changeSetpoint(setpoint);
