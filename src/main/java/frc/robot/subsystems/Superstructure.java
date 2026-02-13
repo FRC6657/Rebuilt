@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.util.LaunchCalculator;
+import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -47,7 +49,10 @@ public class Superstructure {
   public boolean isShooting = false;
   public boolean isTracking = false;
 
-  /** The field-relative position the turret aims at (blue alliance tower center). Keep this variable looking at Blue Alliance targets.*/
+  /**
+   * The field-relative position the turret aims at (blue alliance tower center). Keep this variable
+   * looking at Blue Alliance targets.
+   */
   Translation2d turretTarget =
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
@@ -124,6 +129,21 @@ public class Superstructure {
         .plus(offset.rotateBy(drivebase.getPose().getRotation()));
   }
 
+  @AutoLogOutput(key = "TurretTarget")
+  public Translation2d turretTarget(Pose2d robotPose) {
+    robotPose = AllianceFlipUtil.apply(robotPose);
+    if (robotPose.getX() < Units.inchesToMeters(150)) { // TODO: find proper values
+      return new Translation2d(
+          GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
+    } else {
+      if (robotPose.getY() > Units.inchesToMeters(150)) {
+        return new Translation2d(Units.inchesToMeters(75), Units.inchesToMeters(225));
+      } else {
+        return new Translation2d(Units.inchesToMeters(75), Units.inchesToMeters(75));
+      }
+    }
+  }
+
   /**
    * Calculates the field-relative heading from the turret to a goal position using atan2.
    *
@@ -167,7 +187,7 @@ public class Superstructure {
 
   // public Command shoot() {
   //  return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
-  // } 
+  // }
 
   public Command HomeRobot() {
     return Commands.sequence(
@@ -187,16 +207,15 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
         Commands.waitSeconds(0.5),
         intake.changeSetpoint(RollerSetpoint.FORWARD));
-  } 
+  }
 
-    public Command intakeRetract() {
+  public Command intakeRetract() {
     return Commands.sequence(
-      logMessage("Intake Retract"),
-      intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-      Commands.waitSeconds(0.5),
-      intake.changeSetpoint(ExtensionSetpoint.Off),
-      intake.changeSetpoint(RollerSetpoint.Off)
-    );
+        logMessage("Intake Retract"),
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        Commands.waitSeconds(0.5),
+        intake.changeSetpoint(ExtensionSetpoint.Off),
+        intake.changeSetpoint(RollerSetpoint.Off));
   }
 
   public Command fullClimb(){
@@ -240,7 +259,8 @@ public class Superstructure {
   // }
 
   // public Command tunnelOff() {
-  //   return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
+  //   return Commands.sequence(logMessage("Tunnel Off"),
+  // tunnel.changeSetpoint(TunnelSetpoint.Off));
   // }
 
   // public Command flywheelShoot() {
@@ -261,7 +281,7 @@ public class Superstructure {
               calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
               calc.clearLaunchingParameters();
 
-              var params = calc.getParameters(turretTarget);
+              var params = calc.getParameters(turretTarget(drivebase.getPose()));
 
               flywheel.changeSetpoint(
                   Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
