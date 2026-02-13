@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConstants;
@@ -49,6 +50,8 @@ public class Superstructure {
   public boolean isShooting = false;
   public boolean isTracking = false;
 
+  public Trigger shootingEnabled = new Trigger(() -> isTracking);
+
   /**
    * The field-relative position the turret aims at (blue alliance tower center). Keep this variable
    * looking at Blue Alliance targets.
@@ -75,6 +78,28 @@ public class Superstructure {
     this.intake = intake;
     this.tunnel = tunnel;
     this.climber = climber;
+
+    shootingEnabled.onTrue(startShooting());
+    shootingEnabled.onFalse(stopShooting());
+  }
+
+  Command startShooting(){
+    return Commands.parallel(FloorOn(),tunnelForward());
+  }
+
+  Command stopShooting(){
+    return Commands.parallel(
+      Commands.sequence(
+        FloorBackward(),
+        Commands.waitSeconds(1.5),
+        FloorOff()
+      ),
+      Commands.sequence(
+        tunnelBackward(),
+        Commands.waitSeconds(0.75),
+        tunnelOff()
+      )
+    );
   }
 
   /**
@@ -193,7 +218,7 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Home Robot"),
         flywheel.changeSetpointC(0),
-        tunnel.changeSetpoint(TunnelConstants.Off),
+        tunnel.changeSetpoint(TunnelConstants.OFF),
         floor.changeSetpoint(FloorConstants.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
@@ -280,12 +305,24 @@ public class Superstructure {
         logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
   }
 
+  public Command tunnelForward() {
+    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
+  }
+
   public Command tunnelOff() {
-    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.Off));
+    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.OFF));
+  }
+
+  public Command tunnelBackward() {
+    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.REVERSE));
   }
 
   public Command FloorOn() {
     return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
+  }
+
+  public Command FloorBackward() {
+    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.REVERSE));
   }
 
   public Command FloorOff() {
