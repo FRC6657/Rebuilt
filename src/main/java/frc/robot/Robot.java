@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
@@ -70,6 +71,7 @@ public class Robot extends LoggedRobot {
   private final Intake intake;
   private final Floor floor;
   private final Tunnel tunnel;
+  private final Climber climber;
   private final Superstructure superstructure;
 
   // private final ApriltagCameras cameras;
@@ -108,7 +110,7 @@ public class Robot extends LoggedRobot {
     floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim());
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
 
-    superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel);
+    superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
 
     // cameras =
     //     new ApriltagCameras(

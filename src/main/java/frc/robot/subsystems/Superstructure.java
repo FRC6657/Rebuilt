@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.simulation.GamePieceConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
@@ -42,6 +44,7 @@ public class Superstructure {
   Floor floor;
   Intake intake;
   Tunnel tunnel;
+  Climber climber;
 
   public boolean isShooting = false;
   public boolean isTracking = false;
@@ -62,7 +65,8 @@ public class Superstructure {
       Flywheel shoot,
       Intake intake,
       Floor floor,
-      Tunnel tunnel) {
+      Tunnel tunnel,
+      Climber climber) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
@@ -70,6 +74,7 @@ public class Superstructure {
     this.floor = floor;
     this.intake = intake;
     this.tunnel = tunnel;
+    this.climber = climber;
   }
 
   /**
@@ -213,6 +218,19 @@ public class Superstructure {
         intake.changeSetpoint(RollerSetpoint.Off));
   }
 
+  public Command climb(){
+    return Commands.sequence(
+      logMessage("Climbing"),
+      climber.changeSetpoints(ClimberConstants.MAX_HEIGHT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
+      Commands.waitSeconds(2.0),
+      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+      Commands.waitSeconds(3.0),
+      climber.changeSetpoints(ClimberConstants.MAX_HEIGHT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+      Commands.waitSeconds(3.0),
+      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
+    );
+  }
+  
   // public Command tunnelLaunch() {
   //   return Commands.sequence(
   //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
