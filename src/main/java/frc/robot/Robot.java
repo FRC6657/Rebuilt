@@ -113,7 +113,8 @@ public class Robot extends LoggedRobot {
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
     climber = new Climber(RobotBase.isReal() ? new ClimberIO_Real() : new ClimberIO_Sim());
 
-    superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
+    superstructure =
+        new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
 
     // cameras =
     //     new ApriltagCameras(
@@ -266,14 +267,14 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     // Helpful combined string
-    String mode = "DISABLED";
+    String mode = "PASSIVE";
     if (isEnabled()) {
       if (isAutonomous()) {
-        mode = "AUTO";
+        mode = "AUTO   ";
       } else if (isTeleop()) {
-        mode = "TELEOP";
+        mode = "TELEOP ";
       } else if (isTest()) {
-        mode = "TEST";
+        mode = "TEST   ";
       }
     }
     SmartDashboard.putString("RobotMode", mode);

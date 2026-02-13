@@ -218,35 +218,40 @@ public class Superstructure {
         intake.changeSetpoint(RollerSetpoint.Off));
   }
 
-  public Command fullClimb(){
+  public Command fullClimb() {
     return Commands.sequence(
-      logMessage("Full Climb"),
-      climber.changeSetpoints(ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
-      Commands.waitSeconds(2.0),
-      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-      Commands.waitSeconds(3.0),
-      climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-      Commands.waitSeconds(3.0),
-      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-      Commands.waitSeconds(3.0),
-      climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-      Commands.waitSeconds(3.0), 
-       climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
-    );
+        logMessage("Full Climb"),
+        climber.changeSetpoints(
+            ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
+        Commands.waitSeconds(2.0),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE));
   }
-  
-  public Command driveInClimber(){
+
+  public Command driveInClimber() {
     return Commands.sequence(
-      logMessage("Drive-in"),
-      climber.changeSetpoints(ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE)
-    );
+        logMessage("Drive-in"),
+        climber.changeSetpoints(
+            ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE));
   }
 
   public Command bringDownClimber() {
     return Commands.sequence(
-      logMessage("Bring-Down"),
-      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT,ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
-    );
+        logMessage("Bring-Down"),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE));
   }
 
   public Command bringUpClimber(){
@@ -258,14 +263,16 @@ public class Superstructure {
 
   public Command firstRungAutoClimb() {
     return Commands.sequence(
-    logMessage("First-rung climb"),
-     climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-     Commands.waitSeconds(3.0),
-     climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-     Commands.waitSeconds(3.0),
-     climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
-     Commands.waitSeconds(3.0)
-    );
+        logMessage("First-rung climb"),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0),
+        climber.changeSetpoints(
+            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+        Commands.waitSeconds(3.0));
   }
 
   public Command tunnelLaunch() {
