@@ -184,6 +184,16 @@ public class Superstructure {
  //       intake.changeSetpoint(RollerSetpoint.FORWARD));
  // } 
 
+    public Command intakeRetract() {
+    return Commands.sequence(
+      logMessage("Intake Retract"),
+      intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+      Commands.waitSeconds(0.5),
+      intake.changeSetpoint(ExtensionSetpoint.Off),
+      intake.changeSetpoint(RollerSetpoint.Off)
+    );
+  }
+
   // public Command tunnelLaunch() {
   //   return Commands.sequence(
   //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
