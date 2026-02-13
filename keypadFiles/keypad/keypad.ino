@@ -18,7 +18,7 @@ byte colPins[COLS] = {5, 4, 3, 2};
 Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 // LCD setup
-LiquidCrystal lcd(22, 23, 24, 25, 26, 27);
+LiquidCrystal lcd(23, 22, 24, 25, 26, 27);
 
 bool keyStates[16] = {false};
 
