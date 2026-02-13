@@ -234,4 +234,13 @@ public class Superstructure {
   public Command tempSetTrackingOff() {
     return Commands.run(() -> isTracking = false);
   }
+  
+  public Command intakeRetract() {
+    return Commands.sequence(
+      logMessage("Intake Retract"),
+      intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+      Commands.waitSeconds(0.5),
+      intake.changeSetpoint(ExtensionSetpoint.Off)
+    );
+  }
 }
