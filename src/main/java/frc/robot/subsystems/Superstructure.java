@@ -99,8 +99,7 @@ public class Superstructure {
     };
   }
 
-
-  public Command toggleShooting(){
+  public Command toggleShooting() {
     return Commands.runOnce(() -> isShooting = !isShooting);
   }
 

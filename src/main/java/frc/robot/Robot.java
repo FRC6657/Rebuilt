@@ -30,16 +30,12 @@ import frc.robot.subsystems.drivebase.ModuleIO;
 import frc.robot.subsystems.drivebase.ModuleIO_Real;
 import frc.robot.subsystems.drivebase.ModuleIO_Sim;
 import frc.robot.subsystems.indexer.floor.Floor;
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
 import frc.robot.subsystems.indexer.floor.FloorIO_Real;
 import frc.robot.subsystems.indexer.floor.FloorIO_Sim;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
-import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
-import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -223,8 +219,8 @@ public class Robot extends LoggedRobot {
     driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
 
-    operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
-    operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
+    // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
+    // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
 
     Logger.start();
   }
