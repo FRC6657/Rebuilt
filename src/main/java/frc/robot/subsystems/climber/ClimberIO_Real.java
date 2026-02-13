@@ -7,6 +7,7 @@ package frc.robot.subsystems.climber;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
+import frc.robot.GlobalConstants;
 
 public class ClimberIO_Real implements ClimberIO {
   /** Creates a new ClimberIO_Real. */
@@ -18,7 +19,7 @@ public class ClimberIO_Real implements ClimberIO {
 
   public ClimberIO_Real() {
 
-    motor = new TalonFX(ClimberConstants.MOTOR_CANID);
+    motor = new TalonFX(GlobalConstants.CAN.Climber.id);
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
 
     var motorVoltageSignal = motor.getMotorVoltage();
@@ -36,7 +37,7 @@ public class ClimberIO_Real implements ClimberIO {
     motor.optimizeBusUtilization();
 
     // Pedal
-    motorTwo = new TalonFX(ClimberConstants.Pedal.PEDAL_MOTOR_CANID);
+    motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
     motorTwo.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
 
     var motorTwoVoltageSignal = motorTwo.getMotorVoltage();
