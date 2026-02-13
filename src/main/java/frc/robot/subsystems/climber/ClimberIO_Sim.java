@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.GlobalConstants;
 
 public class ClimberIO_Sim implements ClimberIO {
 
@@ -32,10 +33,10 @@ public class ClimberIO_Sim implements ClimberIO {
   /** Creates a new ClimberIO_Sim. */
   public ClimberIO_Sim() {
 
-    motor = new TalonFX(ClimberConstants.MOTOR_CANID);
+    motor = new TalonFX(GlobalConstants.CAN.Climber.id);
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
 
-    motorTwo = new TalonFX(ClimberConstants.Pedal.PEDAL_MOTOR_CANID);
+    motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
     motorTwo.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
   }
 
