@@ -160,9 +160,9 @@ public class Superstructure {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
 
-  public Command shoot() {
-    return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
-  }
+  // public Command shoot() {
+  //  return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
+  // } 
 
   public Command HomeRobot() {
     return Commands.sequence(
@@ -176,30 +176,30 @@ public class Superstructure {
         hood.changeSetpointC(0));
   }
 
-  public Command intakeFuel() {
-    return Commands.sequence(
-        logMessage("Fuel Intake"),
-        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        Commands.waitSeconds(0.5),
-        intake.changeSetpoint(RollerSetpoint.FORWARD));
-  }
+ // public Command intakeFuel() {
+ //   return Commands.sequence(
+ //       logMessage("Fuel Intake"),
+ //       intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+ //       Commands.waitSeconds(0.5),
+ //       intake.changeSetpoint(RollerSetpoint.FORWARD));
+ // } 
 
-  public Command tunnelLaunch() {
-    return Commands.sequence(
-        logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
-  }
+  // public Command tunnelLaunch() {
+  //   return Commands.sequence(
+  //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+  // }
 
-  public Command tunnelOff() {
-    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
-  }
+  // public Command tunnelOff() {
+  //   return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
+  // }
 
-  public Command flywheelShoot() {
-    return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
-  }
+  // public Command flywheelShoot() {
+  //   return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
+  // }
 
-  public Command flywheelOff() {
-    return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
-  }
+  // public Command flywheelOff() {
+  //   return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
+  // }
 
   public Command sotfTracking() {
     return Commands.run(
