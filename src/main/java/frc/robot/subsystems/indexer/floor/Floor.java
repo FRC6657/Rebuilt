@@ -2,7 +2,6 @@ package frc.robot.subsystems.indexer.floor;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -28,7 +27,7 @@ public class Floor extends SubsystemBase {
    * @param setpoint the desired voltage setpoint (off, forward, reverse)
    * @return the command
    */
-  public Command changeSetpoint(FloorSetpoint setpoint) {
+  public Command changeSetpoint(double setpoint) {
     return this.runOnce(
         () -> {
           io.changeSetpoint(setpoint);

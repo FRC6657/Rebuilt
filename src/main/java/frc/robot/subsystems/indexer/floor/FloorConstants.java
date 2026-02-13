@@ -11,6 +11,12 @@ import edu.wpi.first.math.system.plant.DCMotor;
 /** Constants for the floor indexer, including motor config and voltage setpoints. */
 public class FloorConstants {
 
+  public static final double Off = 0.0; // No power
+  public static final double FORWARD = 6; // 6V forward (move game pieces toward tunnel)
+  public static final double REVERSE = -6; // 6V reverse (eject game pieces)
+
+  public final double voltage = 0.0;
+
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
   public static final double GEAR_RATIO = 32d / 11d; // Motor rotations per output rotation
 
@@ -27,17 +33,4 @@ public class FloorConstants {
                   .withStatorCurrentLimit(40)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
-
-  /** Predefined voltage setpoints for the floor roller. */
-  public static enum FloorSetpoint {
-    Off(0.0), // No power
-    FORWARD(6), // 6V forward (move game pieces toward tunnel)
-    REVERSE(-6); // 6V reverse (eject game pieces)
-
-    public final double voltage;
-
-    private FloorSetpoint(double voltage) {
-      this.voltage = voltage;
-    }
   }
-}
