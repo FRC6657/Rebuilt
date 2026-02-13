@@ -83,7 +83,7 @@ try:
                 
                 # Only update if something changed
                 if mode != last_mode or abs(battery - last_battery) > 0.1 or tracking != last_tracking:
-                    line1 = f"{mode}{'[S]' if tracking else ''}"
+                    line1 = f"{mode}{'[S]' if tracking else '[ ]'}"
                     line2 = f"Bat: {battery:.1f}V"
                     send_lcd(line1, line2)
                     

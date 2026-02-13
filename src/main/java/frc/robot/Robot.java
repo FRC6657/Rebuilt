@@ -203,7 +203,6 @@ public class Robot extends LoggedRobot {
     driver.leftTrigger().onFalse(hood.changeSetpointC(10));
     */
 
-    
     driver
         .rightTrigger()
         .onTrue(

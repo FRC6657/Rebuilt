@@ -26,7 +26,9 @@ public class GlobalConstants {
     Intake_Extension(19),
     Intake_Wheels(20),
     Intake_Encoder(21),
-    Tunnel(22);
+    Tunnel(22),
+    Climber(23),
+    Pedal(24);
 
     public int id;
 

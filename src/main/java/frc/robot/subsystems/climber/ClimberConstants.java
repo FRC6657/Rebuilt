@@ -28,8 +28,6 @@ public class ClimberConstants {
 
   public static final double HEIGHT_TOLERANCE = 1.0;
 
-  public static final int MOTOR_CANID = 1; // Find later
-
   public static final TalonFXConfiguration MOTOR_CONFIGURATION =
       new TalonFXConfiguration()
           .withMotorOutput(
@@ -57,8 +55,6 @@ public class ClimberConstants {
     public static final double PEDAL_MIN_ANGLE = 0.0;
     public static final double PEDAL_MAX_ANGLE = 120.0;
     public static final double ANGLE_TOLERANCE = 2.0;
-
-    public static final int PEDAL_MOTOR_CANID = 2;
 
     public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
         new TalonFXConfiguration()
