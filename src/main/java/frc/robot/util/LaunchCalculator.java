@@ -95,7 +95,11 @@ public class LaunchCalculator {
     timeOfFlightMap.put(5.6, 1.2);
   }
 
-  public LaunchingParameters getParameters() {
+  /**
+   * @param target make the target be from the perspective of the Blue Alliance, it will automatically be flipped
+   * @return
+   */
+  public LaunchingParameters getParameters(Translation2d target) {
     if (latestParameters != null) {
       return latestParameters;
     }
@@ -111,8 +115,8 @@ public class LaunchCalculator {
                 robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
 
     // Calculate distance from turret to target
-    Translation2d target =
-        AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint.toTranslation2d());
+    target =
+        AllianceFlipUtil.apply(target);
     Pose2d turretPosition = estimatedPose.transformBy(TurretConstants.robotToTurret);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
@@ -172,6 +176,7 @@ public class LaunchCalculator {
     // Log calculated values
     Logger.recordOutput("LaunchCalculator/LookaheadPose", lookaheadPose);
     Logger.recordOutput("LaunchCalculator/TurretToTargetDistance", lookaheadTurretToTargetDistance);
+    Logger.recordOutput("LaunchCalculator/TurretTarget", new Pose2d(target.getX(),target.getY(), new Rotation2d()));
 
     return latestParameters;
   }

@@ -44,7 +44,7 @@ public class Superstructure {
   public boolean isShooting = false;
   public boolean isTracking = false;
 
-  /** The field-relative position the turret aims at (blue alliance tower center). */
+  /** The field-relative position the turret aims at (blue alliance tower center). Keep this variable looking at Blue Alliance targets.*/
   Translation2d turretTarget =
       new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
@@ -221,7 +221,7 @@ public class Superstructure {
               calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
               calc.clearLaunchingParameters();
 
-              var params = calc.getParameters();
+              var params = calc.getParameters(turretTarget);
 
               flywheel.changeSetpoint(
                   Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
