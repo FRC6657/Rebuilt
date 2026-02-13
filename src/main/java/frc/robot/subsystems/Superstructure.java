@@ -242,6 +242,13 @@ public class Superstructure {
     );
   }
 
+  public Command bringDownClimber() {
+    return Commands.sequence(
+      logMessage("Bring-Down"),
+      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT,ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
+    );
+  }
+
   public Command firstRungAutoClimb() {
     return Commands.sequence(
     logMessage("First-rung climb"),
