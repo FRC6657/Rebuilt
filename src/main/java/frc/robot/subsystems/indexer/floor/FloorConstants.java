@@ -33,4 +33,4 @@ public class FloorConstants {
                   .withStatorCurrentLimit(40)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
-  }
+}

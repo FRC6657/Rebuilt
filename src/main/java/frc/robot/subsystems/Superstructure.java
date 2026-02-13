@@ -276,28 +276,21 @@ public class Superstructure {
   }
 
   public Command tunnelLaunch() {
-     return Commands.sequence(
-         logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
-   }
+    return Commands.sequence(
+        logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
+  }
 
   public Command tunnelOff() {
-     return Commands.sequence(
-      logMessage("Tunnel Off"),
-      tunnel.changeSetpoint(TunnelConstants.Off));
-   }
+    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.Off));
+  }
 
-   public Command FloorOn(){
-    return Commands.sequence(
-      logMessage("Floor On"),
-      floor.changeSetpoint(FloorConstants.FORWARD)
-      );
-   }
+  public Command FloorOn() {
+    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
+  }
 
-   public Command FloorOff() {
-     return Commands.sequence(
-         logMessage("Floor On"),
-         floor.changeSetpoint(FloorConstants.FORWARD));
-   }
+  public Command FloorOff() {
+    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
+  }
 
   // public Command flywheelShoot() {
   //   return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
