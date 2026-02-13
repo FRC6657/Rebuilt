@@ -254,6 +254,13 @@ public class Superstructure {
             ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE));
   }
 
+  public Command bringUpClimber(){
+    return Commands.sequence(
+      logMessage("Bring-Up"),
+      climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT,ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
+    );
+  }
+
   public Command firstRungAutoClimb() {
     return Commands.sequence(
         logMessage("First-rung climb"),
