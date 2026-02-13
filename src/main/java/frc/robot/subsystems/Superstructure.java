@@ -201,7 +201,7 @@ public class Superstructure {
 
   public Command fullClimb(){
     return Commands.sequence(
-      logMessage("Climbing"),
+      logMessage("Full Climb"),
       climber.changeSetpoints(ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
       Commands.waitSeconds(2.0),
       climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
@@ -216,6 +216,24 @@ public class Superstructure {
     );
   }
   
+  public Command driveInClimber(){
+    return Commands.sequence(
+      logMessage("Drive-in"),
+      climber.changeSetpoints(ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE)
+    );
+  }
+
+  public Command firstRungAutoClimb() {
+    return Commands.sequence(
+    logMessage("First-rung climb"),
+     climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+     Commands.waitSeconds(3.0),
+     climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+     Commands.waitSeconds(3.0),
+     climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+     Commands.waitSeconds(3.0)
+    );
+  }
   // public Command tunnelLaunch() {
   //   return Commands.sequence(
   //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
