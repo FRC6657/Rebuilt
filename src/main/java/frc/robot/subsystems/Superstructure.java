@@ -20,7 +20,7 @@ import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
-import frc.robot.subsystems.intake.IntakeConstants.Roller.RollerSetpoint;
+import frc.robot.subsystems.intake.IntakeConstants.Roller;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
@@ -197,7 +197,7 @@ public class Superstructure {
         floor.changeSetpoint(FloorConstants.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-        intake.changeSetpoint(RollerSetpoint.Off),
+        intake.changeSetpoint(Roller.Off),
         hood.changeSetpointC(0));
   }
 
@@ -206,7 +206,7 @@ public class Superstructure {
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
         Commands.waitSeconds(0.5),
-        intake.changeSetpoint(RollerSetpoint.FORWARD));
+        intake.changeSetpoint(Roller.FORWARD));
   }
 
   public Command intakeRetract() {
@@ -215,7 +215,7 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         Commands.waitSeconds(0.5),
         intake.changeSetpoint(ExtensionSetpoint.Off),
-        intake.changeSetpoint(RollerSetpoint.Off));
+        intake.changeSetpoint(Roller.Off));
   }
 
   public Command fullClimb() {

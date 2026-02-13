@@ -33,11 +33,6 @@ public class IntakeConstants {
     public static final double SUPPLY_LIMIT = 30; // Amps
     public static final double STATOR_LIMIT = 60; // Amps
 
-    public static final double Off = 0.0; // No power
-    public static final double FORWARD = 6;// 6V forward (intake)
-    public static final double REVERSE = -6; // 6V reverse (eject)
-    public static final double VOLTAGE = 0.0;
-
     public static final TalonFXConfiguration CONFIG =
         new TalonFXConfiguration()
             .withMotorOutput(
@@ -92,6 +87,10 @@ public class IntakeConstants {
                     .withStatorCurrentLimitEnable(true));
 
     /** Predefined roller voltage setpoints. */
+    public static final double Off = 0.0; // No power
+    public static final double FORWARD = 6;// 6V forward (intake)
+    public static final double REVERSE = -6; // 6V reverse (eject)
+    public static final double VOLTAGE = 0.0;
     
   }
 }
