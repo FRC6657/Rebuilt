@@ -211,7 +211,7 @@ public class Superstructure {
   //   return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
   // }
 
-  public Command sotfTracking() {
+  public Command softTracking() {
     return Commands.run(
             () -> {
               isShooting = true;
