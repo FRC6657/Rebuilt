@@ -42,6 +42,7 @@ public class Superstructure {
   Tunnel tunnel;
 
   public boolean isShooting = false;
+  public boolean isTracking = false;
 
   /** The field-relative position the turret aims at (blue alliance tower center). */
   Translation2d turretTarget =
@@ -96,6 +97,10 @@ public class Superstructure {
           -Math.sin(0.222900) * Units.inchesToMeters(intake.getPosition()),
           new Rotation3d())
     };
+  }
+
+  public Command toggleShooting() {
+    return Commands.runOnce(() -> isShooting = !isShooting);
   }
 
   /**
@@ -155,9 +160,9 @@ public class Superstructure {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
 
-  public Command shoot() {
-    return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
-  }
+  // public Command shoot() {
+  //  return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
+  // } 
 
   public Command HomeRobot() {
     return Commands.sequence(
@@ -177,24 +182,34 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
         Commands.waitSeconds(0.5),
         intake.changeSetpoint(RollerSetpoint.FORWARD));
-  }
+  } 
 
-  public Command tunnelLaunch() {
+    public Command intakeRetract() {
     return Commands.sequence(
-        logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+      logMessage("Intake Retract"),
+      intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+      Commands.waitSeconds(0.5),
+      intake.changeSetpoint(ExtensionSetpoint.Off),
+      intake.changeSetpoint(RollerSetpoint.Off)
+    );
   }
 
-  public Command tunnelOff() {
-    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
-  }
+  // public Command tunnelLaunch() {
+  //   return Commands.sequence(
+  //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+  // }
 
-  public Command flywheelShoot() {
-    return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
-  }
+  // public Command tunnelOff() {
+  //   return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelSetpoint.Off));
+  // }
 
-  public Command flywheelOff() {
-    return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
-  }
+  // public Command flywheelShoot() {
+  //   return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
+  // }
+
+  // public Command flywheelOff() {
+  //   return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
+  // }
 
   public Command sotfTracking() {
     return Commands.run(
@@ -220,5 +235,13 @@ public class Superstructure {
             hood,
             flywheel)
         .finallyDo(() -> isShooting = false);
+  }
+
+  public Command tempSetTrackingOn() {
+    return Commands.run(() -> isTracking = true);
+  }
+
+  public Command tempSetTrackingOff() {
+    return Commands.run(() -> isTracking = false);
   }
 }

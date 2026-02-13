@@ -52,7 +52,8 @@ public class IntakeConstants {
       RETRACTED_SLOW(MIN_SETPOINT, 5, 40),
       RETRACTED_FAST(MIN_SETPOINT, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
-      EXTENDED_FAST(MAX_SETPOINT, 80, 160);
+      EXTENDED_FAST(MAX_SETPOINT, 80, 160),
+      Off(MIN_SETPOINT, 0, 0);
 
       public final double position;
       public final double velocity;

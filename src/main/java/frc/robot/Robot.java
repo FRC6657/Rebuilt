@@ -12,9 +12,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
@@ -57,6 +60,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
 
   private CommandXboxController driver = new CommandXboxController(0);
+  private CommandGenericHID operator =
+      new CommandGenericHID(1); // arduino buttons 1 to 16, left to right, then top to bottom
 
   private final Drivebase drivebase;
   private final Turret turret;
@@ -175,20 +180,22 @@ public class Robot extends LoggedRobot {
             () -> superstructure.isShooting));
 
     // -- Test Bindings --
-    // driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
-    // driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
-    // driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
-    // driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
-    // driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
-    // driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
-    // driver.y().onTrue(flywheel.changeSetpoint(3000));
-    // driver.y().onFalse(flywheel.changeSetpoint(0));
-    // driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
-    // driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
-    // driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
-    // driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
-    // driver.leftTrigger().onTrue(hood.changeSetpoint(40));
-    // driver.leftTrigger().onFalse(hood.changeSetpoint(10));
+    /*
+    driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
+    driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+    driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
+    driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
+    driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
+    driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
+    driver.y().onTrue(flywheel.changeSetpointC(3000));
+    driver.y().onFalse(flywheel.changeSetpointC(0));
+    driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
+    driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
+    driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+    driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
+    driver.leftTrigger().onTrue(hood.changeSetpointC(40));
+    driver.leftTrigger().onFalse(hood.changeSetpointC(10));
+    */
 
     driver
         .rightTrigger()
@@ -208,6 +215,12 @@ public class Robot extends LoggedRobot {
                 .until(() -> !driver.rightTrigger().getAsBoolean()));
 
     driver.leftTrigger().whileTrue(superstructure.sotfTracking());
+
+    driver.y().onTrue(superstructure.toggleShooting());
+    operator.button(16).onTrue(superstructure.toggleShooting());
+
+    // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
+    // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
 
     Logger.start();
   }
@@ -229,6 +242,28 @@ public class Robot extends LoggedRobot {
     // Logger.recordOutput(
     //     "White2Transform",
     //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
+
+    // Publishes all code from the SmartDashboard to the keypad screen
+    SmartDashboard.putBoolean("RobotEnabled", isEnabled());
+    SmartDashboard.putBoolean("Autonomous", isAutonomous());
+    SmartDashboard.putBoolean("Teleop", isTeleop());
+    SmartDashboard.putBoolean("Test", isTest());
+    SmartDashboard.putBoolean("Disabled", isDisabled());
+    SmartDashboard.putBoolean("isShooting", superstructure.isShooting);
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+
+    // Helpful combined string
+    String mode = "DISABLED";
+    if (isEnabled()) {
+      if (isAutonomous()) {
+        mode = "AUTO";
+      } else if (isTeleop()) {
+        mode = "TELEOP";
+      } else if (isTest()) {
+        mode = "TEST";
+      }
+    }
+    SmartDashboard.putString("RobotMode", mode);
   }
 
   @Override
