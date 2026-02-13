@@ -23,6 +23,8 @@ import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO_Real;
+import frc.robot.subsystems.climber.ClimberIO_Sim;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
@@ -109,6 +111,7 @@ public class Robot extends LoggedRobot {
     intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
     floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim());
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
+    climber = new Climber(RobotBase.isReal() ? new ClimberIO_Real() : new ClimberIO_Sim());
 
     superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
 
