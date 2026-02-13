@@ -202,6 +202,7 @@ public class Robot extends LoggedRobot {
     driver.leftTrigger().onFalse(hood.changeSetpointC(10));
     */
 
+    
     driver
         .rightTrigger()
         .onTrue(
@@ -223,6 +224,13 @@ public class Robot extends LoggedRobot {
 
     driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
+    operator.button(1).onTrue(superstructure.HomeRobot());
+    operator.button(2).onTrue(superstructure.intakeFuel());
+    operator.button(3).onTrue(superstructure.intakeRetract());
+    operator.button(5).onTrue(superstructure.driveInClimber());
+    operator.button(6).whileTrue(superstructure.fullClimb());
+    operator.button(7).onTrue(superstructure.bringDownClimber());
+    operator.button(8).onTrue(superstructure.bringUpClimber());
 
     // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
     // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
