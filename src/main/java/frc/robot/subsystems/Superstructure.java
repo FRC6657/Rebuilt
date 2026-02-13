@@ -176,13 +176,13 @@ public class Superstructure {
         hood.changeSetpointC(0));
   }
 
- // public Command intakeFuel() {
- //   return Commands.sequence(
- //       logMessage("Fuel Intake"),
- //       intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
- //       Commands.waitSeconds(0.5),
- //       intake.changeSetpoint(RollerSetpoint.FORWARD));
- // } 
+  public Command intakeFuel() {
+    return Commands.sequence(
+        logMessage("Fuel Intake"),
+        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+        Commands.waitSeconds(0.5),
+        intake.changeSetpoint(RollerSetpoint.FORWARD));
+  } 
 
     public Command intakeRetract() {
     return Commands.sequence(
