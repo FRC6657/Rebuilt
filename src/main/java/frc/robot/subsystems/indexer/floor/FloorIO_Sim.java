@@ -10,7 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.GlobalConstants;
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
+import frc.robot.subsystems.indexer.floor.FloorConstants;
 
 /** Simulated floor indexer implementation using a DCMotorSim physics model. */
 public class FloorIO_Sim implements FloorIO {
@@ -55,7 +55,7 @@ public class FloorIO_Sim implements FloorIO {
   }
 
   @Override
-  public void changeSetpoint(FloorSetpoint setpoint) {
+  public void changeSetpoint(FloorConstants setpoint) {
     this.setpoint.Output = setpoint.voltage;
   }
 }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.indexer.floor;
 
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Hardware abstraction interface for the floor indexer motor. */
@@ -18,5 +17,5 @@ public interface FloorIO {
   public default void updateInputs(FloorIOInputs inputs) {}
 
   /** Sets the floor roller to the given voltage setpoint. */
-  public default void changeSetpoint(FloorSetpoint newSetpoint) {}
+  public default void changeSetpoint(double newSetpoint) {}
 }

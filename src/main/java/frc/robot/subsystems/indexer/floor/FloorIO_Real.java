@@ -3,7 +3,7 @@ package frc.robot.subsystems.indexer.floor;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.GlobalConstants;
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
+import frc.robot.subsystems.indexer.floor.FloorConstants;
 
 /** Real hardware implementation of the floor indexer using a TalonFX with voltage control. */
 public class FloorIO_Real implements FloorIO {
@@ -42,7 +42,7 @@ public class FloorIO_Real implements FloorIO {
   }
 
   @Override
-  public void changeSetpoint(FloorSetpoint setpoint) {
-    this.setpoint.Output = setpoint.voltage;
+  public void changeSetpoint(double setpoint) {
+    this.setpoint.Output = setpoint;
   }
 }

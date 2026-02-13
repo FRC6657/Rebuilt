@@ -15,7 +15,7 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.indexer.floor.Floor;
-import frc.robot.subsystems.indexer.floor.FloorConstants.FloorSetpoint;
+import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelConstants.TunnelSetpoint;
 import frc.robot.subsystems.intake.Intake;
@@ -194,7 +194,7 @@ public class Superstructure {
         logMessage("Home Robot"),
         flywheel.changeSetpointC(0),
         tunnel.changeSetpoint(TunnelSetpoint.Off),
-        floor.changeSetpoint(FloorSetpoint.Off),
+        floor.changeSetpoint(FloorConstants.Off),
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(RollerSetpoint.Off),
@@ -274,15 +274,30 @@ public class Superstructure {
             ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
         Commands.waitSeconds(3.0));
   }
-  // public Command tunnelLaunch() {
-  //   return Commands.sequence(
-  //       logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
-  // }
 
-  // public Command tunnelOff() {
-  //   return Commands.sequence(logMessage("Tunnel Off"),
-  // tunnel.changeSetpoint(TunnelSetpoint.Off));
-  // }
+  public Command tunnelLaunch() {
+     return Commands.sequence(
+         logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
+   }
+
+  public Command tunnelOff() {
+     return Commands.sequence(
+      logMessage("Tunnel Off"),
+      tunnel.changeSetpoint(TunnelSetpoint.Off));
+   }
+
+   public Command FloorOn(){
+    return Commands.sequence(
+      logMessage("Floor On"),
+      floor.changeSetpoint(FloorConstants.FORWARD)
+      );
+   }
+
+   public Command FloorOff() {
+     return Commands.sequence(
+         logMessage("Floor On"),
+         floor.changeSetpoint(FloorConstants.FORWARD));
+   }
 
   // public Command flywheelShoot() {
   //   return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
