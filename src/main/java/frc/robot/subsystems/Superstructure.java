@@ -199,16 +199,20 @@ public class Superstructure {
     );
   }
 
-  public Command climb(){
+  public Command fullClimb(){
     return Commands.sequence(
       logMessage("Climbing"),
-      climber.changeSetpoints(ClimberConstants.MAX_HEIGHT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
+      climber.changeSetpoints(ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE),
       Commands.waitSeconds(2.0),
       climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
       Commands.waitSeconds(3.0),
-      climber.changeSetpoints(ClimberConstants.MAX_HEIGHT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+      climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
       Commands.waitSeconds(3.0),
-      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
+      climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+      Commands.waitSeconds(3.0),
+      climber.changeSetpoints(ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE),
+      Commands.waitSeconds(3.0), 
+       climber.changeSetpoints(ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE)
     );
   }
   
