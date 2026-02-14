@@ -36,7 +36,7 @@ public class TurretConstants {
   public static final double STATOR_LIMIT = 60; // Amps
 
   public static final double KP = 25.0;
-  public static final double KD = 5.0;
+  public static final double KD = 0;
 
   public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()

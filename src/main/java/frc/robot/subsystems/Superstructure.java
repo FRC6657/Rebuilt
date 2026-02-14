@@ -83,23 +83,14 @@ public class Superstructure {
     shootingEnabled.onFalse(stopShooting());
   }
 
-  Command startShooting(){
-    return Commands.parallel(FloorOn(),tunnelForward());
+  Command startShooting() {
+    return Commands.parallel(FloorOn(), tunnelForward());
   }
 
-  Command stopShooting(){
+  Command stopShooting() {
     return Commands.parallel(
-      Commands.sequence(
-        FloorBackward(),
-        Commands.waitSeconds(1.5),
-        FloorOff()
-      ),
-      Commands.sequence(
-        tunnelBackward(),
-        Commands.waitSeconds(0.75),
-        tunnelOff()
-      )
-    );
+        Commands.sequence(FloorBackward(), Commands.waitSeconds(1.5), FloorOff()),
+        Commands.sequence(tunnelBackward(), Commands.waitSeconds(0.75), tunnelOff()));
   }
 
   /**
@@ -306,7 +297,8 @@ public class Superstructure {
   }
 
   public Command tunnelForward() {
-    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
+    return Commands.sequence(
+        logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
   }
 
   public Command tunnelOff() {
@@ -314,7 +306,8 @@ public class Superstructure {
   }
 
   public Command tunnelBackward() {
-    return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.REVERSE));
+    return Commands.sequence(
+        logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.REVERSE));
   }
 
   public Command FloorOn() {

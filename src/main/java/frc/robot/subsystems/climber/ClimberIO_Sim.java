@@ -13,10 +13,10 @@ import frc.robot.GlobalConstants;
 
 public class ClimberIO_Sim implements ClimberIO {
 
-  private TalonFX motor;
-  private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
+  private TalonFX motor = new TalonFX(GlobalConstants.CAN.Climber.id);
+  private TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
 
-  private TalonFX motorTwo;
+  private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
 
   private DCMotorSim motorModel =
       new DCMotorSim(
@@ -32,11 +32,7 @@ public class ClimberIO_Sim implements ClimberIO {
 
   /** Creates a new ClimberIO_Sim. */
   public ClimberIO_Sim() {
-
-    motor = new TalonFX(GlobalConstants.CAN.Climber.id);
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
-
-    motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
     motorTwo.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
   }
 
