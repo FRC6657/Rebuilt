@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -219,7 +220,7 @@ public class Robot extends LoggedRobot {
     //                 Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
     //             .until(() -> !driver.rightTrigger().getAsBoolean()));
 
-    //driver.leftTrigger().whileTrue(superstructure.softTracking());
+    // driver.leftTrigger().whileTrue(superstructure.softTracking());
 
     driver.leftTrigger().onTrue(superstructure.shootingOn());
     driver.leftTrigger().onFalse(superstructure.shootingOff());
@@ -230,16 +231,18 @@ public class Robot extends LoggedRobot {
     operator.button(14).onTrue(superstructure.trackingOff());
 
     driver.x().onTrue(superstructure.HomeRobot());
-    operator.button(1).onTrue(superstructure.HomeRobot());
+    operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
 
-    operator.button(2).onTrue(superstructure.intakeFuel());
-    operator.button(3).onTrue(superstructure.intakeRetract());
+    operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
+    operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
 
-    operator.button(5).whileTrue(superstructure.fullClimb());
-    operator.button(5).onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
-    operator.button(6).onTrue(superstructure.driveInClimber());
-    operator.button(7).onTrue(superstructure.bringDownClimber());
-    operator.button(8).onTrue(superstructure.bringUpClimber());
+    operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
+    operator
+        .button(opButtons.FullClimb.id)
+        .onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
+    operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
+    operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
+    operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
     // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
     // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());

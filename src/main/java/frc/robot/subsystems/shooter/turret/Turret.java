@@ -49,7 +49,7 @@ public class Turret extends SubsystemBase {
     return this.runOnce(() -> io.changeSetpoint(setpoint.getAsDouble()));
   }
 
-  public Command restingSetpoint(){
+  public Command restingSetpoint() {
     return changeSetpoint(TurretConstants.restingSetpoint);
   }
 

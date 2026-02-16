@@ -91,9 +91,7 @@ public class Superstructure {
     fuelSim = GamePieceSimulation.getInstance();
 
     shootingEnabled.onTrue(
-      Commands.parallel(
-        startShooting(),
-        Commands.runOnce(() -> isTracking = true)));
+        Commands.parallel(startShooting(), Commands.runOnce(() -> isTracking = true)));
     shootingEnabled.onFalse(stopShooting());
 
     trackingEnabled.whileTrue(softTracking());
@@ -173,9 +171,7 @@ public class Superstructure {
   }
 
   public Command trackingOff() {
-    return Commands.parallel(
-      Commands.runOnce(() -> isTracking = false),
-      shootingOff());
+    return Commands.parallel(Commands.runOnce(() -> isTracking = false), shootingOff());
   }
 
   /**
@@ -282,8 +278,6 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.Off),
         intake.changeSetpoint(Roller.Off));
   }
-
-  
 
   public Command driveInClimber() {
     return Commands.sequence(

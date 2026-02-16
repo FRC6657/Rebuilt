@@ -43,7 +43,7 @@ public class GlobalConstants {
     disableHAL = true;
   }
 
-  public static enum operatorButtons {
+  public static enum opButtons {
     HomeRobot(1),
     Intake(2),
     StopIntake(3),
@@ -52,10 +52,10 @@ public class GlobalConstants {
     ManualClimberDown(7),
     ManualClimberUp(8);
 
-    public int button;
+    public int id;
 
-    operatorButtons(int button){
-      this.button = button;
+    opButtons(int button) {
+      this.id = button;
     }
   }
 }
