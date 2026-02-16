@@ -53,9 +53,11 @@ public class Superstructure {
   @AutoLogOutput(key = "RobotStates/isShooting")
   public boolean isShooting = false;
 
+  @AutoLogOutput(key = "RobotStates/isTracking")
   public boolean isTracking = false;
 
   public Trigger shootingEnabled = new Trigger(() -> isShooting);
+  public Trigger trackingEnabled = new Trigger(() -> isTracking);
 
   private final GamePieceSimulation fuelSim;
 
@@ -88,10 +90,13 @@ public class Superstructure {
 
     fuelSim = GamePieceSimulation.getInstance();
 
-    shootingEnabled.onTrue(startShooting());
+    shootingEnabled.onTrue(
+      Commands.parallel(
+        startShooting(),
+        Commands.runOnce(() -> isTracking = true)));
     shootingEnabled.onFalse(stopShooting());
 
-    shootingEnabled.whileTrue(softTracking());
+    trackingEnabled.whileTrue(softTracking());
 
     shootingEnabled.whileTrue(
         Commands.repeatingSequence(
@@ -162,6 +167,15 @@ public class Superstructure {
     return Commands.runOnce(() -> isShooting = false);
   }
 
+  public Command trackingOn() {
+    return Commands.runOnce(() -> isTracking = true);
+  }
+
+  public Command trackingOff() {
+    return Commands.parallel(
+      Commands.runOnce(() -> isTracking = false),
+      shootingOff());
+  }
 
   /**
    * Calculates the turret's position in field coordinates by rotating the turret offset into the

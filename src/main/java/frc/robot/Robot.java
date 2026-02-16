@@ -226,6 +226,9 @@ public class Robot extends LoggedRobot {
     driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
 
+    operator.button(15).onTrue(superstructure.trackingOn());
+    operator.button(14).onTrue(superstructure.trackingOff());
+
     driver.x().onTrue(superstructure.HomeRobot());
     operator.button(1).onTrue(superstructure.HomeRobot());
 
