@@ -97,6 +97,7 @@ public class Superstructure {
     shootingEnabled.onFalse(stopShooting());
 
     trackingEnabled.whileTrue(softTracking());
+    trackingEnabled.onFalse(turret.restingSetpoint());
 
     shootingEnabled.whileTrue(
         Commands.repeatingSequence(

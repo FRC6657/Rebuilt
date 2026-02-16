@@ -49,6 +49,10 @@ public class Turret extends SubsystemBase {
     return this.runOnce(() -> io.changeSetpoint(setpoint.getAsDouble()));
   }
 
+  public Command restingSetpoint(){
+    return changeSetpoint(TurretConstants.restingSetpoint);
+  }
+
   /**
    * @return true if the turret is within tolerance of its target angle
    */
