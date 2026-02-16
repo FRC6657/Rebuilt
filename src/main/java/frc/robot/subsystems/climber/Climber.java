@@ -29,7 +29,7 @@ public class Climber extends SubsystemBase {
 
   @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
   public boolean atSetpoint() {
-    return Math.abs(inputs.positionSetpoint - inputs.motorPosition)
+    return Math.abs(inputs.climberSetpoint - inputs.climberMotorPosition)
         < ClimberConstants.HEIGHT_TOLERANCE;
   }
 
