@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.simulation.GamePieceConstants;
+import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
@@ -52,6 +53,8 @@ public class Superstructure {
 
   public Trigger shootingEnabled = new Trigger(() -> isTracking);
 
+  private final GamePieceSimulation fuelSim;
+
   /**
    * The field-relative position the turret aims at (blue alliance tower center). Keep this variable
    * looking at Blue Alliance targets.
@@ -79,8 +82,24 @@ public class Superstructure {
     this.tunnel = tunnel;
     this.climber = climber;
 
+    fuelSim = GamePieceSimulation.getInstance();
+
     shootingEnabled.onTrue(startShooting());
     shootingEnabled.onFalse(stopShooting());
+
+    // shootingEnabled.whileTrue(
+    //     Commands.repeatingSequence(
+    //         Commands.runOnce(
+    //             () -> {
+    //               BallLaunchHelper.spawnWithLaunchCharacteristics(
+    //                   fuelSim,
+    //                   flywheel.getVelocity(),
+    //                   hood.getPosition(),
+    //                   turret.getPosition(),
+    //                   drivebase.getPose(),
+    //                   drivebase.getVelocityRobotRelative());
+    //             }),
+    //         Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
   }
 
   Command startShooting() {
