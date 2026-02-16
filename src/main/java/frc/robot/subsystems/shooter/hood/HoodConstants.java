@@ -21,6 +21,7 @@ public class HoodConstants {
 
   /** Total gear reduction from motor to hood output. */
   public static final double GEAR_RATIO = (70d / 14d) * (180d / 10d);
+
   /** Degrees of hood travel per output shaft rotation. */
   public static final double CONVERSION_FACTOR = 360.0; // Degrees Per Rotation
 

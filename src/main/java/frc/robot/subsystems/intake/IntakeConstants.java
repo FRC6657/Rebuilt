@@ -27,6 +27,7 @@ public class IntakeConstants {
 
     /** Overall gear reduction from motor to output. */
     public static final double GEAR_RATIO = (5d / 1d) * (50d / 28d);
+
     /** Linear inches of travel per output shaft rotation (circumference of drive pulley). */
     public static final double CONVERSION_FACTOR = Math.PI; // Linear Inches Per Rotation
 

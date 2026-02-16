@@ -31,6 +31,7 @@ public class TurretConstants {
 
   /** Total gear reduction from motor to turret output. */
   public static final double GEAR_RATIO = (140d / 24d) * (66d / 14d);
+
   /** Degrees of turret travel per output shaft rotation. */
   public static final double CONVERSION_FACTOR = 360.0; // Degrees Per Rotation
 
