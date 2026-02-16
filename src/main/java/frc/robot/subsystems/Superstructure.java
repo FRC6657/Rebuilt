@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.GlobalConstants;
+import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.climber.Climber;
@@ -48,10 +50,12 @@ public class Superstructure {
   Tunnel tunnel;
   Climber climber;
 
+  @AutoLogOutput(key = "RobotStates/isShooting")
   public boolean isShooting = false;
+
   public boolean isTracking = false;
 
-  public Trigger shootingEnabled = new Trigger(() -> isTracking);
+  public Trigger shootingEnabled = new Trigger(() -> isShooting);
 
   private final GamePieceSimulation fuelSim;
 
@@ -87,19 +91,19 @@ public class Superstructure {
     shootingEnabled.onTrue(startShooting());
     shootingEnabled.onFalse(stopShooting());
 
-    // shootingEnabled.whileTrue(
-    //     Commands.repeatingSequence(
-    //         Commands.runOnce(
-    //             () -> {
-    //               BallLaunchHelper.spawnWithLaunchCharacteristics(
-    //                   fuelSim,
-    //                   flywheel.getVelocity(),
-    //                   hood.getPosition(),
-    //                   turret.getPosition(),
-    //                   drivebase.getPose(),
-    //                   drivebase.getVelocityRobotRelative());
-    //             }),
-    //         Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
+    shootingEnabled.whileTrue(
+        Commands.repeatingSequence(
+            Commands.runOnce(
+                () -> {
+                  BallLaunchHelper.spawnWithLaunchCharacteristics(
+                      fuelSim,
+                      flywheel.getVelocity(),
+                      hood.getPosition(),
+                      turret.getPosition(),
+                      drivebase.getPose(),
+                      drivebase.getVelocityRobotRelative());
+                }),
+            Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
   }
 
   Command startShooting() {
@@ -351,28 +355,29 @@ public class Superstructure {
 
   public Command softTracking() {
     return Commands.run(
-            () -> {
-              isShooting = true;
-              var calc = LaunchCalculator.getInstance();
+        () -> {
+          // isShooting = true;
+          var calc = LaunchCalculator.getInstance();
 
-              calc.setEstimatedPose(drivebase.getPose());
-              calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
-              calc.clearLaunchingParameters();
+          calc.setEstimatedPose(drivebase.getPose());
+          calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
+          calc.clearLaunchingParameters();
 
-              var params = calc.getParameters(turretTarget(drivebase.getPose()));
+          var params = calc.getParameters(turretTarget(drivebase.getPose()));
 
-              flywheel.changeSetpoint(
-                  Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
-              hood.changeSetpoint(Math.toDegrees(params.hoodAngle()));
-              Rotation2d turretHeading = getRelativeTurretHeading(params.turretAngle());
-              double omega = drivebase.getVelocityFieldRelative().omegaRadiansPerSecond;
-              double feedforward = Math.toDegrees(params.turretVelocity() - omega);
-              turret.changeSetpoint(turretHeading.getDegrees(), feedforward);
-            },
-            turret,
-            hood,
-            flywheel)
-        .finallyDo(() -> isShooting = false);
+          flywheel.changeSetpoint(
+              Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
+          hood.changeSetpoint(Math.toDegrees(params.hoodAngle()));
+          Rotation2d turretHeading = getRelativeTurretHeading(params.turretAngle());
+          double omega = drivebase.getVelocityFieldRelative().omegaRadiansPerSecond;
+          double feedforward = Math.toDegrees(params.turretVelocity() - omega);
+          turret.changeSetpoint(turretHeading.getDegrees(), feedforward);
+        },
+        turret,
+        hood,
+        flywheel)
+    // .finallyDo(() -> isShooting = false);
+    ;
   }
 
   public Command tempSetTrackingOn() {

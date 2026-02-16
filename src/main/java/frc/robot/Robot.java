@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -203,22 +202,22 @@ public class Robot extends LoggedRobot {
     driver.leftTrigger().onFalse(hood.changeSetpointC(10));
     */
 
-    driver
-        .rightTrigger()
-        .onTrue(
-            Commands.repeatingSequence(
-                    Commands.runOnce(
-                        () -> {
-                          BallLaunchHelper.spawnWithLaunchCharacteristics(
-                              fuelSim,
-                              flywheel.getVelocity(),
-                              hood.getPosition(),
-                              turret.getPosition(),
-                              drivebase.getPose(),
-                              drivebase.getVelocityRobotRelative());
-                        }),
-                    Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
-                .until(() -> !driver.rightTrigger().getAsBoolean()));
+    // driver
+    //     .rightTrigger()
+    //     .onTrue(
+    //         Commands.repeatingSequence(
+    //                 Commands.runOnce(
+    //                     () -> {
+    //                       BallLaunchHelper.spawnWithLaunchCharacteristics(
+    //                           fuelSim,
+    //                           flywheel.getVelocity(),
+    //                           hood.getPosition(),
+    //                           turret.getPosition(),
+    //                           drivebase.getPose(),
+    //                           drivebase.getVelocityRobotRelative());
+    //                     }),
+    //                 Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
+    //             .until(() -> !driver.rightTrigger().getAsBoolean()));
 
     driver.leftTrigger().whileTrue(superstructure.softTracking());
 
