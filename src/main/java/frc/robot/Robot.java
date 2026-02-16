@@ -234,8 +234,10 @@ public class Robot extends LoggedRobot {
 
     operator.button(2).onTrue(superstructure.intakeFuel());
     operator.button(3).onTrue(superstructure.intakeRetract());
-    operator.button(5).onTrue(superstructure.driveInClimber());
-    operator.button(6).whileTrue(superstructure.fullClimb());
+
+    operator.button(5).whileTrue(superstructure.fullClimb());
+    operator.button(5).onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
+    operator.button(6).onTrue(superstructure.driveInClimber());
     operator.button(7).onTrue(superstructure.bringDownClimber());
     operator.button(8).onTrue(superstructure.bringUpClimber());
 
