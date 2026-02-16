@@ -11,72 +11,72 @@ import frc.robot.GlobalConstants;
 
 public class ClimberIO_Real implements ClimberIO {
   /** Creates a new ClimberIO_Real. */
-  private TalonFX motor;
+  private TalonFX climberMotor;
 
-  private TalonFX motorTwo;
+  private TalonFX pedalMotor;
 
   private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
 
   public ClimberIO_Real() {
 
-    motor = new TalonFX(GlobalConstants.CAN.Climber.id);
-    motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
+    climberMotor = new TalonFX(GlobalConstants.CAN.Climber.id);
+    climberMotor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
 
-    var motorVoltageSignal = motor.getMotorVoltage();
-    var motorCurrentSignal = motor.getSupplyCurrent();
-    var motorPositionSignal = motor.getPosition();
-    var motorVelocitySignal = motor.getVelocity();
-    var motorAccelerationSignal = motor.getAcceleration();
+    var climberMotorVoltageSignal = climberMotor.getMotorVoltage();
+    var climberMotorCurrentSignal = climberMotor.getSupplyCurrent();
+    var climberMotorPositionSignal = climberMotor.getPosition();
+    var climberMotorVelocitySignal = climberMotor.getVelocity();
+    var climberMotorAccelerationSignal = climberMotor.getAcceleration();
 
-    motorVoltageSignal.setUpdateFrequency(50);
-    motorCurrentSignal.setUpdateFrequency(50);
-    motorPositionSignal.setUpdateFrequency(50);
-    motorVelocitySignal.setUpdateFrequency(50);
-    motorAccelerationSignal.setUpdateFrequency(50);
+    climberMotorVoltageSignal.setUpdateFrequency(50);
+    climberMotorCurrentSignal.setUpdateFrequency(50);
+    climberMotorPositionSignal.setUpdateFrequency(50);
+    climberMotorVelocitySignal.setUpdateFrequency(50);
+    climberMotorAccelerationSignal.setUpdateFrequency(50);
 
-    motor.optimizeBusUtilization();
+    climberMotor.optimizeBusUtilization();
 
     // Pedal
-    motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
-    motorTwo.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
+    pedalMotor = new TalonFX(GlobalConstants.CAN.Pedal.id);
+    pedalMotor.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
 
-    var motorTwoVoltageSignal = motorTwo.getMotorVoltage();
-    var motorTwoCurrentSignal = motorTwo.getSupplyCurrent();
-    var motorTwoPositionSignal = motorTwo.getPosition();
-    var motorTwoVelocitySignal = motorTwo.getVelocity();
-    var motorTwoAccelerationSignal = motorTwo.getAcceleration();
+    var pedalMotorVoltageSignal = pedalMotor.getMotorVoltage();
+    var pedalMotorCurrentSignal = pedalMotor.getSupplyCurrent();
+    var pedalMotorPositionSignal = pedalMotor.getPosition();
+    var pedalMotorVelocitySignal = pedalMotor.getVelocity();
+    var pedalMotorAccelerationSignal = pedalMotor.getAcceleration();
 
-    motorTwoVoltageSignal.setUpdateFrequency(50);
-    motorTwoCurrentSignal.setUpdateFrequency(50);
-    motorTwoPositionSignal.setUpdateFrequency(50);
-    motorTwoVelocitySignal.setUpdateFrequency(50);
-    motorTwoAccelerationSignal.setUpdateFrequency(50);
+    pedalMotorVoltageSignal.setUpdateFrequency(50);
+    pedalMotorCurrentSignal.setUpdateFrequency(50);
+    pedalMotorPositionSignal.setUpdateFrequency(50);
+    pedalMotorVelocitySignal.setUpdateFrequency(50);
+    pedalMotorAccelerationSignal.setUpdateFrequency(50);
 
-    motorTwo.optimizeBusUtilization();
+    pedalMotor.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(ClimberIOInputs inputs) {
     // This method will be called once per scheduler run
-    motor.setControl(setpoint);
+    climberMotor.setControl(setpoint);
 
-    inputs.motorVoltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorCurrent = motor.getSupplyCurrent().getValueAsDouble();
-    inputs.motorPosition =
-        motor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.motorVelocity =
-        motor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.positionSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
+    inputs.climberMotorVoltage = climberMotor.getMotorVoltage().getValueAsDouble();
+    inputs.climberMotorCurrent = climberMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.climberMotorPosition =
+        climberMotor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
+    inputs.climberMotorVelocity =
+        climberMotor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
+    inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
 
     // Pedal
-    motorTwo.setControl(setpoint);
+    pedalMotor.setControl(setpoint);
 
-    inputs.motorTwoVoltage = motorTwo.getMotorVoltage().getValueAsDouble();
-    inputs.motorTwoCurrent = motorTwo.getSupplyCurrent().getValueAsDouble();
-    inputs.motorTwoPosition = motorTwo.getPosition().getValueAsDouble() * 360;
-    inputs.motorTwoVelocity = motorTwo.getVelocity().getValueAsDouble() * 360;
-    inputs.motorTwoAcceleration = motorTwo.getAcceleration().getValueAsDouble() * 360;
-    inputs.positionTwoSetpoint = setpoint.Position * 360;
+    inputs.pedalMotorVoltage = pedalMotor.getMotorVoltage().getValueAsDouble();
+    inputs.pedalMotorCurrent = pedalMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.pedalMotorPosition = pedalMotor.getPosition().getValueAsDouble() * 360;
+    inputs.pedalMotorVelocity = pedalMotor.getVelocity().getValueAsDouble() * 360;
+    inputs.pedalMotorAcceleration = pedalMotor.getAcceleration().getValueAsDouble() * 360;
+    inputs.pedalSetpoint = setpoint.Position * 360;
   }
 
   @Override

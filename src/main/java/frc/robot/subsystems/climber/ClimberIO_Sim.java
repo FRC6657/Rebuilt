@@ -14,7 +14,7 @@ import frc.robot.GlobalConstants;
 public class ClimberIO_Sim implements ClimberIO {
 
   private TalonFX motor = new TalonFX(GlobalConstants.CAN.Climber.id);
-  private TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Pedal.id);
+  private TalonFX pedalMotor = new TalonFX(GlobalConstants.CAN.Pedal.id);
 
   private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
 
@@ -24,7 +24,7 @@ public class ClimberIO_Sim implements ClimberIO {
               ClimberConstants.CLIMBER_MOTOR, 0.001, ClimberConstants.GEAR_RATIO),
           ClimberConstants.CLIMBER_MOTOR);
 
-  private DCMotorSim motorTwoModel =
+  private DCMotorSim pedalMotorModel =
       new DCMotorSim(
           LinearSystemId.createDCMotorSystem(
               ClimberConstants.Pedal.PEDAL_MOTOR, 0.001, ClimberConstants.Pedal.PEDAL_GEAR_RATIO),
@@ -33,7 +33,7 @@ public class ClimberIO_Sim implements ClimberIO {
   /** Creates a new ClimberIO_Sim. */
   public ClimberIO_Sim() {
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
-    motorTwo.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
+    pedalMotor.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
   }
 
   @Override
@@ -53,34 +53,34 @@ public class ClimberIO_Sim implements ClimberIO {
     motorSim.setRotorVelocity(motorModel.getAngularVelocity().times(ClimberConstants.GEAR_RATIO));
 
     // Update inputs
-    inputs.motorVoltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorCurrent = motor.getSupplyCurrent().getValueAsDouble();
-    inputs.motorPosition =
+    inputs.climberMotorVoltage = motor.getMotorVoltage().getValueAsDouble();
+    inputs.climberMotorCurrent = motor.getSupplyCurrent().getValueAsDouble();
+    inputs.climberMotorPosition =
         motor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.motorVelocity =
+    inputs.climberMotorVelocity =
         motor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.motorAcceleration =
+    inputs.climberMotorAcceleration =
         motor.getAcceleration().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.positionSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
+    inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
 
     // Pedal
-    motorTwo.setControl(setpoint);
+    pedalMotor.setControl(setpoint);
 
-    var motorTwoSim = motorTwo.getSimState();
-    motorTwoSim.setSupplyVoltage(12);
-    motorTwoModel.setInputVoltage(motorTwoSim.getMotorVoltage());
-    motorTwoModel.update(0.02);
-    motorTwoSim.setRawRotorPosition(
-        motorTwoModel.getAngularPosition().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
-    motorTwoSim.setRotorVelocity(
-        motorTwoModel.getAngularVelocity().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
+    var pedalMotorSim = pedalMotor.getSimState();
+    pedalMotorSim.setSupplyVoltage(12);
+    pedalMotorModel.setInputVoltage(pedalMotorSim.getMotorVoltage());
+    pedalMotorModel.update(0.02);
+    pedalMotorSim.setRawRotorPosition(
+        pedalMotorModel.getAngularPosition().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
+    pedalMotorSim.setRotorVelocity(
+        pedalMotorModel.getAngularVelocity().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
 
-    inputs.motorTwoVoltage = motorTwo.getMotorVoltage().getValueAsDouble();
-    inputs.motorTwoCurrent = motorTwo.getSupplyCurrent().getValueAsDouble();
-    inputs.motorTwoPosition = motorTwo.getPosition().getValueAsDouble() * 360;
-    inputs.motorTwoVelocity = motorTwo.getVelocity().getValueAsDouble();
-    inputs.motorTwoAcceleration = motorTwo.getAcceleration().getValueAsDouble() * 360;
-    inputs.positionTwoSetpoint = setpoint.Position * 360;
+    inputs.pedalMotorVoltage = pedalMotor.getMotorVoltage().getValueAsDouble();
+    inputs.pedalMotorCurrent = pedalMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.pedalMotorPosition = pedalMotor.getPosition().getValueAsDouble() * 360;
+    inputs.pedalMotorVelocity = pedalMotor.getVelocity().getValueAsDouble();
+    inputs.pedalMotorAcceleration = pedalMotor.getAcceleration().getValueAsDouble() * 360;
+    inputs.pedalSetpoint = setpoint.Position * 360;
   }
 
   @Override
