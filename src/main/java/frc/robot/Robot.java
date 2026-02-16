@@ -219,11 +219,16 @@ public class Robot extends LoggedRobot {
     //                 Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
     //             .until(() -> !driver.rightTrigger().getAsBoolean()));
 
-    driver.leftTrigger().whileTrue(superstructure.softTracking());
+    //driver.leftTrigger().whileTrue(superstructure.softTracking());
 
+    driver.leftTrigger().onTrue(superstructure.shootingOn());
+    driver.leftTrigger().onFalse(superstructure.shootingOff());
     driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
+
+    driver.x().onTrue(superstructure.HomeRobot());
     operator.button(1).onTrue(superstructure.HomeRobot());
+
     operator.button(2).onTrue(superstructure.intakeFuel());
     operator.button(3).onTrue(superstructure.intakeRetract());
     operator.button(5).onTrue(superstructure.driveInClimber());

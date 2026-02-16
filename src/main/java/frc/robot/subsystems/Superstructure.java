@@ -91,6 +91,8 @@ public class Superstructure {
     shootingEnabled.onTrue(startShooting());
     shootingEnabled.onFalse(stopShooting());
 
+    shootingEnabled.whileTrue(softTracking());
+
     shootingEnabled.whileTrue(
         Commands.repeatingSequence(
             Commands.runOnce(
@@ -151,6 +153,15 @@ public class Superstructure {
   public Command toggleShooting() {
     return Commands.runOnce(() -> isShooting = !isShooting);
   }
+
+  public Command shootingOn() {
+    return Commands.runOnce(() -> isShooting = true);
+  }
+
+  public Command shootingOff() {
+    return Commands.runOnce(() -> isShooting = false);
+  }
+
 
   /**
    * Calculates the turret's position in field coordinates by rotating the turret offset into the
