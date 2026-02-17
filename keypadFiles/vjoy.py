@@ -84,7 +84,14 @@ try:
                 
                 # Only update if something changed
                 if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking:
-                    line1 = f"{mode}{'[S]' if shooting else '[ ]'}"
+                    if(tracking):
+                        status = '[T]'
+                    elif(shooting):
+                        status = '[S]'
+                    else:
+                        status = '[ ]'
+                    
+                    line1 = f"{mode}{status}"
                     line2 = f"Bat: {battery:.1f}V"
                     send_lcd(line1, line2)
                     
