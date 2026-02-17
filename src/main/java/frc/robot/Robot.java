@@ -77,14 +77,11 @@ public class Robot extends LoggedRobot {
   private final Superstructure superstructure;
 
   // private final ApriltagCameras cameras;
-  private final GamePieceSimulation fuelSim;
 
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
   public Robot() {
-
-    fuelSim = GamePieceSimulation.getInstance();
 
     DriverStation.silenceJoystickConnectionWarning(true);
 
