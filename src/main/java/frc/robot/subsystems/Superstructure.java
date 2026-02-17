@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+//import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -399,4 +402,13 @@ public class Superstructure {
   public Command tempSetTrackingOff() {
     return Commands.run(() -> isTracking = false);
   }
+
+  
+  public AutoRoutine Taxi(AutoFactory factory, boolean mirror){
+    final AutoRoutine routine = factory.newRoutine("Taxi");
+
+
+    return routine;
+  }
+
 }
