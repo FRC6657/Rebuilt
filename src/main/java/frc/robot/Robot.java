@@ -276,6 +276,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Disabled", isDisabled());
     SmartDashboard.putBoolean("isShooting", superstructure.isShooting);
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+    SmartDashboard.putBoolean("isTracking", superstructure.isTracking);
 
     // Helpful combined string
     String mode = "PASSIVE";

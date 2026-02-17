@@ -79,16 +79,18 @@ try:
             try:
                 mode = sd.getString('RobotMode', 'DISCONNECTED')
                 battery = sd.getNumber('Battery Voltage', 0.0)
-                tracking = sd.getBoolean('isShooting', False)
+                shooting = sd.getBoolean('isShooting', False)
+                tracking = sd.getBoolean('isTracking', False)
                 
                 # Only update if something changed
-                if mode != last_mode or abs(battery - last_battery) > 0.1 or tracking != last_tracking:
-                    line1 = f"{mode}{'[S]' if tracking else '[ ]'}"
+                if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking:
+                    line1 = f"{mode}{'[S]' if shooting else '[ ]'}"
                     line2 = f"Bat: {battery:.1f}V"
                     send_lcd(line1, line2)
                     
                     last_mode = mode
                     last_battery = battery
+                    last_shooting = shooting
                     last_tracking = tracking
                 
             except Exception as e:
