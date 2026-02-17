@@ -84,12 +84,12 @@ try:
                 
                 # Only update if something changed
                 if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking:
-                    if(tracking):
-                        status = '[T]'
-                    elif(shooting):
-                        status = '[S]'
-                    else:
+                    if(not tracking):
                         status = '[ ]'
+                    elif(not shooting):
+                        status = '[T]'
+                    else:
+                        status = '[S]'
                     
                     line1 = f"{mode}{status}"
                     line2 = f"Bat: {battery:.1f}V"
