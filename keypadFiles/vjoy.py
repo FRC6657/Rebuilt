@@ -91,8 +91,13 @@ try:
                     else:
                         status = '[S]'
                     
-                    line1 = f"{mode}{status}"
-                    line2 = f"Bat: {battery:.1f}V"
+                    if (mode == 'DISCONNECTED'):
+                        line1 = f"DISCONNECTED :("
+                        line2 = f"Connect me!"
+                    else:
+                        line1 = f"{mode}{status}"
+                        line2 = f"Bat: {battery:.1f}V"
+                    
                     send_lcd(line1, line2)
                     
                     last_mode = mode
