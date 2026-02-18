@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
+import edu.wpi.first.math.MathUtil;
 // import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -21,6 +23,7 @@ import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
+import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
@@ -34,6 +37,9 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.util.LaunchCalculator;
 import frc.robot.util.geometry.AllianceFlipUtil;
+
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -319,13 +325,21 @@ public class Superstructure {
         bringDownClimber());
   }
 
-  public Command firstRungAutoClimb() {
+  public Command firstRungAutoClimb(double prepSeconds) {
     return Commands.sequence(
-        logMessage("First-rung climb"),
-        bringDownClimber(),
-        Commands.waitSeconds(3.0),
-        bringUpClimber(),
-        Commands.waitSeconds(3.0),
+        logMessage("First-rung climb auto"),
+        trackingOff(),
+        driveInClimber(),
+        Commands.waitSeconds(prepSeconds),
+        Commands.race(
+          drivebase.driveTeleop(
+            () -> new ChassisSpeeds(
+                    0.2,
+                    0.0,
+                    0.0),
+          () -> false),
+          Commands.waitSeconds(0.2)
+        ),
         bringDownClimber());
   }
 
