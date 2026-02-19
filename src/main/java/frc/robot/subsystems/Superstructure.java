@@ -37,9 +37,7 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.util.LaunchCalculator;
 import frc.robot.util.geometry.AllianceFlipUtil;
-
 import java.util.function.BooleanSupplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
