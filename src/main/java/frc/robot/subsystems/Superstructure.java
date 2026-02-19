@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.MathUtil;
 // import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -415,9 +416,22 @@ public class Superstructure {
     return Commands.run(() -> isTracking = false);
   }
 
-  public AutoRoutine Taxi(AutoFactory factory, boolean mirror) {
-    final AutoRoutine routine = factory.newRoutine("Taxi");
+  public AutoRoutine TaxiShoot(AutoFactory factory, boolean mirror) {
+    final AutoRoutine routine = factory.newRoutine("Taxi & Shoot");
+    
+    String mirrorFlag = mirror ? "mirrored_" : "";
 
+    final AutoTrajectory Start = routine.trajectory(mirrorFlag + "Taxi & Shoot", 0);
+    final AutoTrajectory Turn = routine.trajectory(mirrorFlag + "Taxi & Shoot", 1);
+    final AutoTrajectory End = routine.trajectory(mirrorFlag + "Taxi & Shoot", 2);
+
+    Start.done().onTrue(Turn.cmd().asProxy());
+    Turn.done().onTrue(End.cmd().asProxy());
+    End.done().onTrue(
+      Commands.sequence(
+        Commands.waitSeconds(1) //TODO: replace with real command
+      )
+    );
     return routine;
   }
 }
