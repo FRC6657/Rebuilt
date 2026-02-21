@@ -335,7 +335,7 @@ public class Superstructure {
         Commands.waitSeconds(prepSeconds),
         Commands.race(
             drivebase.driveTeleop(() -> new ChassisSpeeds(0.2, 0.0, 0.0), () -> false),
-            Commands.waitSeconds(0.2)),
+            Commands.waitSeconds(0.5)),
         bringDownClimber());
   }
 
