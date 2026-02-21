@@ -307,5 +307,6 @@ public class Robot extends LoggedRobot {
     if (autoChooser.get() != null) {
       autoChooser.get().cancel();
     }
+    superstructure.shootingOff();
   }
 }
