@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-import edu.wpi.first.math.MathUtil;
 // import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -24,7 +23,6 @@ import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
-import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
@@ -38,7 +36,6 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.util.LaunchCalculator;
 import frc.robot.util.geometry.AllianceFlipUtil;
-import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -331,14 +328,8 @@ public class Superstructure {
         driveInClimber(),
         Commands.waitSeconds(prepSeconds),
         Commands.race(
-          drivebase.driveTeleop(
-            () -> new ChassisSpeeds(
-                    0.2,
-                    0.0,
-                    0.0),
-          () -> false),
-          Commands.waitSeconds(0.2)
-        ),
+            drivebase.driveTeleop(() -> new ChassisSpeeds(0.2, 0.0, 0.0), () -> false),
+            Commands.waitSeconds(0.2)),
         bringDownClimber());
   }
 
@@ -417,21 +408,15 @@ public class Superstructure {
   }
 
   public AutoRoutine TaxiShoot(AutoFactory factory, boolean mirror) {
-    final AutoRoutine routine = factory.newRoutine("Taxi & Shoot");
-    
+    final AutoRoutine routine = factory.newRoutine("TaxiShoot");
+
     String mirrorFlag = mirror ? "mirrored_" : "";
 
-    final AutoTrajectory Start = routine.trajectory(mirrorFlag + "Taxi & Shoot", 0);
-    final AutoTrajectory Turn = routine.trajectory(mirrorFlag + "Taxi & Shoot", 1);
-    final AutoTrajectory End = routine.trajectory(mirrorFlag + "Taxi & Shoot", 2);
+    final AutoTrajectory Start = routine.trajectory(mirrorFlag + "TaxiShoot", 0);
 
-    Start.done().onTrue(Turn.cmd().asProxy());
-    Turn.done().onTrue(End.cmd().asProxy());
-    End.done().onTrue(
-      Commands.sequence(
-        Commands.waitSeconds(1) //TODO: replace with real command
-      )
-    );
+    Start.done().onTrue(shootingOn());
+    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+
     return routine;
   }
 }

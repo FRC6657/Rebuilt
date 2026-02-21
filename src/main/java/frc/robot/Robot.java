@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
@@ -78,6 +79,8 @@ public class Robot extends LoggedRobot {
 
   // private final ApriltagCameras cameras;
 
+  private final AutoFactory autoFactory;
+
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
@@ -130,6 +133,10 @@ public class Robot extends LoggedRobot {
     //               new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
     //             });
 
+    autoFactory =
+        new AutoFactory(
+            drivebase::getPose, drivebase::resetPose, drivebase::followTrajectory, true, drivebase);
+
     AutoBuilder.configure(
         drivebase::getPose,
         drivebase::resetPose,
@@ -141,6 +148,7 @@ public class Robot extends LoggedRobot {
         drivebase);
 
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
+    autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory, false).cmd());
   }
 
   public static boolean replay = false;
