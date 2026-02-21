@@ -61,6 +61,7 @@ public class Superstructure {
   @AutoLogOutput(key = "RobotStates/isTracking")
   public boolean isTracking = false;
 
+  @AutoLogOutput(key = "RobotStates/manualOverride")
   public boolean manualOverride = false;
 
   public Trigger shootingEnabled = new Trigger(() -> isShooting);
