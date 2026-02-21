@@ -248,7 +248,9 @@ public class Robot extends LoggedRobot {
     operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
     operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
     operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
-
+    
+    operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
+    
     // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
     // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
 

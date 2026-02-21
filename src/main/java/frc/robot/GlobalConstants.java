@@ -50,7 +50,9 @@ public class GlobalConstants {
     FullClimb(5),
     ManualClimberInit(6),
     ManualClimberDown(7),
-    ManualClimberUp(8);
+    ManualClimberUp(8),
+    ManualOverride(9),
+    ManualTurret(10);
 
     public int id;
 

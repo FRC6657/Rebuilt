@@ -61,6 +61,8 @@ public class Superstructure {
   @AutoLogOutput(key = "RobotStates/isTracking")
   public boolean isTracking = false;
 
+  public boolean manualOverride = false;
+
   public Trigger shootingEnabled = new Trigger(() -> isShooting);
   public Trigger trackingEnabled = new Trigger(() -> isTracking);
 
@@ -177,6 +179,10 @@ public class Superstructure {
 
   public Command trackingOff() {
     return Commands.parallel(Commands.runOnce(() -> isTracking = false), shootingOff());
+  }
+
+  public Command ManualOverrideToggle(){
+    return Commands.runOnce(() -> manualOverride = !manualOverride);
   }
 
   /**
