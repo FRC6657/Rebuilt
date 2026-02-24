@@ -20,7 +20,7 @@ public class TurretConstants {
 
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
 
-  public static final double INITIAL_SETPOINT = 0.0; // degrees (home/startup position)
+  public static final double ORIGIN_POSITION = 0.0; // degrees (home/startup position)
   public static double restingSetpoint =
       205.0; // degrees (where the turret will go when it is not tracking)
 

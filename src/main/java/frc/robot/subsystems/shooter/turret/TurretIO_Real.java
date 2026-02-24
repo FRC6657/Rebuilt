@@ -14,7 +14,7 @@ public class TurretIO_Real implements TurretIO {
   double position = 0.0;
   private TalonFX turretMotor = new TalonFX(GlobalConstants.CAN.Turret.id);
   private PositionVoltage positionVoltage =
-      new PositionVoltage(TurretConstants.INITIAL_SETPOINT / TurretConstants.CONVERSION_FACTOR);
+      new PositionVoltage(TurretConstants.ORIGIN_POSITION / TurretConstants.CONVERSION_FACTOR);
 
   public TurretIO_Real() {
 
@@ -69,7 +69,7 @@ public class TurretIO_Real implements TurretIO {
     }
     // Add initial offset and convert degrees to motor rotations
     positionVoltage.Position =
-        (clampedInput + TurretConstants.INITIAL_SETPOINT) / TurretConstants.CONVERSION_FACTOR;
+        (clampedInput + TurretConstants.ORIGIN_POSITION) / TurretConstants.CONVERSION_FACTOR;
     positionVoltage.FeedForward = 0;
   }
 

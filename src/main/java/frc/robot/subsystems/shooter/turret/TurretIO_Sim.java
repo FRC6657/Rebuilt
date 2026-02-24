@@ -18,7 +18,7 @@ public class TurretIO_Sim implements TurretIO {
   private double position = 0.0; // in degrees
   private TalonFX motor = new TalonFX(GlobalConstants.CAN.Turret.id);
   private PositionVoltage setpoint =
-      new PositionVoltage(TurretConstants.INITIAL_SETPOINT / TurretConstants.CONVERSION_FACTOR);
+      new PositionVoltage(TurretConstants.ORIGIN_POSITION / TurretConstants.CONVERSION_FACTOR);
 
   private DCMotorSim motorSim =
       new DCMotorSim(
@@ -75,7 +75,7 @@ public class TurretIO_Sim implements TurretIO {
 
     // Add initial offset and convert degrees to motor rotations
     this.setpoint.Position =
-        (clampedInput + TurretConstants.INITIAL_SETPOINT) / TurretConstants.CONVERSION_FACTOR;
+        (clampedInput + TurretConstants.ORIGIN_POSITION) / TurretConstants.CONVERSION_FACTOR;
     this.setpoint.FeedForward = 0;
   }
 
