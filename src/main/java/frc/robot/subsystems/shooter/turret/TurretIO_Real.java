@@ -35,6 +35,8 @@ public class TurretIO_Real implements TurretIO {
     statorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
     turretMotor.optimizeBusUtilization();
+
+    changeSetpoint(0);
   }
 
   @Override
@@ -61,7 +63,7 @@ public class TurretIO_Real implements TurretIO {
       clampedInput = clampedInput + 360;
     }
 
-    if (Math.abs(clampedInput - position) > 180) {
+    if (Math.abs(clampedInput - (position - TurretConstants.ORIGIN_POSITION)) > 180) {
       /*if the desired position is that far away from the current position, then we want to check if we can go the other way! */
       if (clampedInput + 360 < TurretConstants.ROTATION_RANGE) {
         clampedInput += 360;

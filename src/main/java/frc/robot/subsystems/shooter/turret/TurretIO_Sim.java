@@ -34,6 +34,7 @@ public class TurretIO_Sim implements TurretIO {
                 new CurrentLimitsConfigs()
                     .withStatorCurrentLimitEnable(false)
                     .withSupplyCurrentLimitEnable(false)));
+    changeSetpoint(0);
   }
 
   @Override
