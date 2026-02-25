@@ -22,12 +22,12 @@ public class TurretConstants {
 
   public static final double ORIGIN_POSITION = 0.0; // degrees (home/startup position)
   public static double restingSetpoint =
-      205.0; // degrees (where the turret will go when it is not tracking)
+      195.0; // degrees (where the turret will go when it is not tracking)
 
   public static final double POSITION_TOLERANCE = 2.0; // degrees
 
-  public static final double FULL_ROTATION_RANGE = 460.0; // degrees
-  public static final double ROTATION_RANGE = FULL_ROTATION_RANGE - 50.0; // degrees
+  public static final double FULL_ROTATION_RANGE = 420.0; // degrees
+  public static final double ROTATION_RANGE = FULL_ROTATION_RANGE - 30.0; // degrees
 
   /** Total gear reduction from motor to turret output. */
   public static final double GEAR_RATIO = (140d / 24d) * (66d / 14d);
