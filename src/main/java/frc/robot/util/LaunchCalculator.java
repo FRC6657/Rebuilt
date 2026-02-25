@@ -73,6 +73,8 @@ public class LaunchCalculator {
     maxDistance = 5.5;
     phaseDelay = 0.08;
 
+    // TODO: key is in meters right?
+    
     launchHoodAngleMap.put(0.9, Rotation2d.fromDegrees(10));
     launchHoodAngleMap.put(1.7, Rotation2d.fromDegrees(17));
     launchHoodAngleMap.put(2.7, Rotation2d.fromDegrees(27));
