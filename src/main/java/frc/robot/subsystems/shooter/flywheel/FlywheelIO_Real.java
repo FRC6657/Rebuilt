@@ -19,6 +19,8 @@ public class FlywheelIO_Real implements FlywheelIO {
 
   private VelocityVoltage setpoint = new VelocityVoltage(0);
 
+  private VoltageOut voltage = new VoltageOut(0);
+
   public FlywheelIO_Real() {
 
     leader.getConfigurator().apply(FlywheelConstants.CONFIG);
@@ -52,11 +54,14 @@ public class FlywheelIO_Real implements FlywheelIO {
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
 
-    if (setpoint.Velocity == 0) {
-      leader.setControl(new VoltageOut(0));
-    } else {
-      leader.setControl(setpoint);
-    }
+    // if (setpoint.Velocity == 0) {
+    //   leader.setControl(new VoltageOut(0));
+    // } else {
+    //   leader.setControl(setpoint);
+    // }
+
+    // leader.setControl(voltage);
+
     follower.setControl(
         new Follower(GlobalConstants.CAN.Shooter_Leader.id, MotorAlignmentValue.Opposed));
 
@@ -74,7 +79,8 @@ public class FlywheelIO_Real implements FlywheelIO {
 
   @Override
   public void changeSetpoint(double setpoint) {
-    this.setpoint.Velocity = (setpoint / 60d); // Convert RPM to rotations per second
+    // this.setpoint.Velocity = (setpoint / 60d); // Convert RPM to rotations per second
+    this.voltage.Output = setpoint;
   }
 
   @Override

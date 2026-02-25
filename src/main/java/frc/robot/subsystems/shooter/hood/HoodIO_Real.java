@@ -38,12 +38,12 @@ public class HoodIO_Real implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
 
+    // hoodMotor.setControl(positionVoltage);
+
     inputs.temp = hoodMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorCurrent = hoodMotor.getStatorCurrent().getValueAsDouble();
     inputs.voltage = hoodMotor.getMotorVoltage().getValueAsDouble();
     inputs.position = hoodMotor.getPosition().getValueAsDouble() * HoodConstants.CONVERSION_FACTOR;
-
-    hoodMotor.setControl(positionVoltage);
   }
 
   @Override

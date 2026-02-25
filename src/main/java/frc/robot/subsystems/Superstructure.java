@@ -417,8 +417,6 @@ public class Superstructure {
   public AutoRoutine TaxiShoot(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("TaxiShoot");
 
-    
-
     final AutoTrajectory Start = routine.trajectory("TaxiShoot", 0);
 
     Start.done().onTrue(shootingOn());
@@ -426,9 +424,9 @@ public class Superstructure {
 
     return routine;
   }
+
   public AutoRoutine ClimbOnly(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("ClimbOnly");
-
 
     final AutoTrajectory Start = routine.trajectory("ClimbOnly", 0);
 

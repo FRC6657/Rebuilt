@@ -1,7 +1,15 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -55,5 +63,33 @@ public class Flywheel extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter/Flywheel", inputs);
+  }
+
+  public Command sysIdRoutine() {
+    var routine = makeSysIdRoutine();
+    return Commands.sequence(
+        routine.quasistatic(Direction.kForward).withTimeout(12),
+        waitSeconds(5),
+        routine.dynamic(Direction.kForward).withTimeout(5),
+        waitSeconds(5),
+        routine.quasistatic(Direction.kReverse).withTimeout(12),
+        waitSeconds(5),
+        routine.dynamic(Direction.kReverse).withTimeout(5),
+        waitSeconds(5));
+  }
+
+  private SysIdRoutine makeSysIdRoutine() {
+    return new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,
+            Volts.of(4),
+            Seconds.of(12),
+            state -> SignalLogger.writeString("ShooterSysIDState", state.toString())),
+        new SysIdRoutine.Mechanism(
+            volts -> {
+              changeSetpoint((volts.in(Volts)));
+            },
+            log -> {},
+            this));
   }
 }

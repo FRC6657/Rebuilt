@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -40,6 +39,7 @@ import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -192,22 +192,44 @@ public class Robot extends LoggedRobot {
             () -> superstructure.isShooting));
 
     // -- Test Bindings --
-    /*
-    driver.a().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST));
-    driver.a().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
-    driver.b().onTrue(intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW));
-    driver.b().onFalse(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW));
-    driver.x().onTrue(intake.changeSetpoint(RollerSetpoint.FORWARD));
-    driver.x().onFalse(intake.changeSetpoint(RollerSetpoint.Off));
-    driver.y().onTrue(flywheel.changeSetpointC(3000));
-    driver.y().onFalse(flywheel.changeSetpointC(0));
-    driver.leftBumper().onTrue(floor.changeSetpoint(FloorSetpoint.FORWARD));
-    driver.leftBumper().onFalse(floor.changeSetpoint(FloorSetpoint.Off));
-    driver.rightBumper().onTrue(tunnel.changeSetpoint(TunnelSetpoint.FORWARD));
-    driver.rightBumper().onFalse(tunnel.changeSetpoint(TunnelSetpoint.Off));
-    driver.leftTrigger().onTrue(hood.changeSetpointC(40));
-    driver.leftTrigger().onFalse(hood.changeSetpointC(10));
-    */
+
+    // driver.a().onTrue(floor.changeSetpoint(0.4));
+    // driver.a().onChange(floor.changeSetpoint(0));
+
+    // driver.b().onTrue(tunnel.changeSetpoint(1));
+    // driver.b().onFalse(tunnel.changeSetpoint(0));
+
+    // driver
+    //     .x()
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
+    //             .alongWith(intake.changeSetpoint(1)));
+    // driver
+    //     .x()
+    //     .onFalse(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
+    //             .alongWith(intake.changeSetpoint(0)));
+    // driver
+    //     .y()
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
+    //             .alongWith(intake.changeSetpoint(1)));
+    // driver
+    //     .y()
+    //     .onFalse(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
+    //             .alongWith(intake.changeSetpoint(0)));
+
+    // driver.leftBumper().onTrue(flywheel.sysIdRoutine());
+    // driver.leftBumper().onTrue(flywheel.changeSetpointC(3000));
+    // driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
+
+    // driver.rightBumper().onTrue(hood.changeSetpointC(35));
+    // driver.rightBumper().onFalse(hood.changeSetpointC(0));
 
     // driver
     //     .rightTrigger()
@@ -226,34 +248,31 @@ public class Robot extends LoggedRobot {
     //                 Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
     //             .until(() -> !driver.rightTrigger().getAsBoolean()));
 
-    // driver.leftTrigger().whileTrue(superstructure.softTracking());
+    // REAL BINDINGS
 
-    driver.leftTrigger().onTrue(superstructure.shootingOn());
-    driver.leftTrigger().onFalse(superstructure.shootingOff());
-    driver.y().onTrue(superstructure.toggleShooting());
-    operator.button(16).onTrue(superstructure.toggleShooting());
+    // driver.leftTrigger().onTrue(superstructure.shootingOn());
+    // driver.leftTrigger().onFalse(superstructure.shootingOff());
+    // driver.y().onTrue(superstructure.toggleShooting());
+    // operator.button(16).onTrue(superstructure.toggleShooting());
 
-    operator.button(15).onTrue(superstructure.trackingOn());
-    operator.button(14).onTrue(superstructure.trackingOff());
+    // operator.button(15).onTrue(superstructure.trackingOn());
+    // operator.button(14).onTrue(superstructure.trackingOff());
 
-    driver.x().onTrue(superstructure.HomeRobot());
-    operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
+    // driver.x().onTrue(superstructure.HomeRobot());
+    // operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
 
-    operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
-    operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
+    // operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
+    // operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
 
-    operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
-    operator
-        .button(opButtons.FullClimb.id)
-        .onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
-    operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
-    operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
-    operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
+    // operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
+    // operator
+    //     .button(opButtons.FullClimb.id)
+    //     .onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
+    // operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
+    // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
+    // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
-    operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
-
-    // operator.button(1).whileTrue(superstructure.tempSetTrackingOn());
-    // operator.button(2).whileTrue(superstructure.tempSetTrackingOff());
+    // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
 
     Logger.start();
   }
