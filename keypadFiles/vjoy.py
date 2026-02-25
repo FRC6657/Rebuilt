@@ -81,15 +81,21 @@ try:
                 battery = sd.getNumber('Battery Voltage', 0.0)
                 shooting = sd.getBoolean('isShooting', False)
                 tracking = sd.getBoolean('isTracking', False)
+                override = sd.getBoolean('isOverridden', False)
                 
                 # Only update if something changed
-                if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking:
-                    if(not tracking):
-                        status = '[ ]'
-                    elif(not shooting):
-                        status = '[T]'
-                    else:
-                        status = '[S]'
+                if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking or override != last_override:
+                    match (tracking, shooting, override):
+                        case (False, _, False):
+                            status = '[ ]'
+                        case (_, False, True):
+                            status = '[O]'
+                        case (_, False, False):
+                            status = '[T]'
+                        case (_, True, True):
+                            status = '[S/O]'
+                        case (_, True, False):
+                            status = '[S]'
                     
                     if (mode == 'DISCONNECTED'):
                         line1 = f"DISCONNECTED :("
@@ -104,6 +110,7 @@ try:
                     last_battery = battery
                     last_shooting = shooting
                     last_tracking = tracking
+                    last_override = override
                 
             except Exception as e:
                 print(f"Error: {e}")

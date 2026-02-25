@@ -182,7 +182,7 @@ public class Superstructure {
     return Commands.parallel(Commands.runOnce(() -> isTracking = false), shootingOff());
   }
 
-  public Command ManualOverrideToggle(){
+  public Command ManualOverrideToggle() {
     return Commands.runOnce(() -> manualOverride = !manualOverride);
   }
 
