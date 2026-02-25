@@ -414,14 +414,25 @@ public class Superstructure {
     return Commands.run(() -> isTracking = false);
   }
 
-  public AutoRoutine TaxiShoot(AutoFactory factory, boolean mirror) {
+  public AutoRoutine TaxiShoot(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("TaxiShoot");
 
-    String mirrorFlag = mirror ? "mirrored_" : "";
+    
 
-    final AutoTrajectory Start = routine.trajectory(mirrorFlag + "TaxiShoot", 0);
+    final AutoTrajectory Start = routine.trajectory("TaxiShoot", 0);
 
     Start.done().onTrue(shootingOn());
+    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+
+    return routine;
+  }
+  public AutoRoutine ClimbOnly(AutoFactory factory) {
+    final AutoRoutine routine = factory.newRoutine("ClimbOnly");
+
+
+    final AutoTrajectory Start = routine.trajectory("ClimbOnly", 0);
+
+    Start.done().onTrue(firstRungAutoClimb(2));
     routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
 
     return routine;

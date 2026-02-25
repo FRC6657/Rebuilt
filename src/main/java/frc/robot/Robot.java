@@ -148,8 +148,8 @@ public class Robot extends LoggedRobot {
         drivebase);
 
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
-    autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory, false).cmd());
-    autoChooser.addOption("ClimbOnly", superstructure.firstRungAutoClimb(0.5));
+    autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
+    autoChooser.addOption("ClimbOnly", superstructure.ClimbOnly(autoFactory).cmd());
   }
 
   public static boolean replay = false;
