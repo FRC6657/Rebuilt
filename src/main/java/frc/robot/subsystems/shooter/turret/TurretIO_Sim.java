@@ -16,6 +16,7 @@ import frc.robot.GlobalConstants;
 public class TurretIO_Sim implements TurretIO {
 
   private double position = 0.0; // in degrees
+  private double currentSetpoint = 0.0; // in degrees
   private TalonFX motor = new TalonFX(GlobalConstants.CAN.Turret.id);
   private PositionVoltage setpoint =
       new PositionVoltage(TurretConstants.ORIGIN_POSITION / TurretConstants.CONVERSION_FACTOR);
@@ -56,6 +57,7 @@ public class TurretIO_Sim implements TurretIO {
         motor.getAcceleration().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR;
     inputs.temp = 0;
     inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
+    inputs.setpoint = currentSetpoint;
     inputs.statorCurrent = motorSim.getCurrentDrawAmps();
   }
 
@@ -67,7 +69,9 @@ public class TurretIO_Sim implements TurretIO {
       clampedInput = clampedInput + 360;
     }
 
-    if (Math.abs(clampedInput - position) > 180) {
+    currentSetpoint = clampedInput;
+
+    if (Math.abs(clampedInput - (position - TurretConstants.ORIGIN_POSITION)) > 180) {
       /*if the desired position is that far away from the current position, then we want to check if we can go the other way! */
       if (clampedInput + 360 < TurretConstants.ROTATION_RANGE) {
         clampedInput += 360;

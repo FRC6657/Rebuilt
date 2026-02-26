@@ -52,7 +52,9 @@ public class GlobalConstants {
     ManualClimberDown(7),
     ManualClimberUp(8),
     ManualOverride(9),
-    ManualTurret(10);
+    OverrideTargetToggle(10),
+    OverrideIncrease(11),
+    OverrideDecrease(12);
 
     public int id;
 

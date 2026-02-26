@@ -64,6 +64,9 @@ public class Superstructure {
   @AutoLogOutput(key = "RobotStates/manualOverride")
   public boolean manualOverride = false;
 
+  @AutoLogOutput(key = "RobotStates/manualOverride")
+  public boolean manualTurret = true;
+
   public Trigger shootingEnabled = new Trigger(() -> isShooting);
   public Trigger trackingEnabled = new Trigger(() -> isTracking);
 
@@ -186,6 +189,10 @@ public class Superstructure {
     return Commands.runOnce(() -> manualOverride = !manualOverride);
   }
 
+  public Command OverrideTargetToggle() {
+    return Commands.runOnce(() -> manualTurret = !manualTurret);
+  }
+
   /**
    * Calculates the turret's position in field coordinates by rotating the turret offset into the
    * field frame and adding it to the robot pose.
@@ -272,6 +279,17 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
         hood.changeSetpointC(0));
+  }
+
+  public Command moveTurret(double magnitude){
+    return Commands.either(
+    Commands.either(
+      turret.changeSetpoint(turret.getSetpoint() + 10 * magnitude), // in degrees
+       hood.changeSetpointC(hood.getPosition() + 2 * magnitude), // in degrees
+      () -> manualTurret
+    ),
+    Commands.none(),
+    () -> manualOverride);
   }
 
   public Command intakeFuel() {
