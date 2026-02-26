@@ -42,22 +42,22 @@ sd = NetworkTables.getTable('SmartDashboard')
 print("NetworkTables ready")
 
 # Track state
-last_mode = ""
-last_battery = 0
-last_tracking = False
+# last_mode = ""
+# last_battery = 0
+# last_tracking = False
 
-def send_lcd(line1, line2):
-    """Send LCD update"""
-    msg = f"LCD:{line1[:16]}|{line2[:16]}\n"
-    ser.write(msg.encode())
-    print(f"LCD: {line1[:16]} | {line2[:16]}")
+# def send_lcd(line1, line2):
+#     """Send LCD update"""
+#     msg = f"LCD:{line1[:16]}|{line2[:16]}\n"
+#     ser.write(msg.encode())
+#     print(f"LCD: {line1[:16]} | {line2[:16]}")
 
-send_lcd("Bridge Ready", "Connecting...")
-time.sleep(1)
+# send_lcd("Bridge Ready", "Connecting...")
+# time.sleep(1)
 
 print("\nRunning...\n")
 
-last_lcd_update = 0
+# last_lcd_update = 0
 
 try:
     while True:
@@ -74,54 +74,54 @@ try:
                 pass
         
         # Update LCD every 1 second
-        now = time.time()
-        if now - last_lcd_update > 1.0:
-            try:
-                mode = sd.getString('RobotMode', 'DISCONNECTED')
-                battery = sd.getNumber('Battery Voltage', 0.0)
-                shooting = sd.getBoolean('isShooting', False)
-                tracking = sd.getBoolean('isTracking', False)
-                override = sd.getBoolean('isOverridden', False)
+        # now = time.time()
+        # if now - last_lcd_update > 1.0:
+        #     try:
+        #         mode = sd.getString('RobotMode', 'DISCONNECTED')
+        #         battery = sd.getNumber('Battery Voltage', 0.0)
+        #         shooting = sd.getBoolean('isShooting', False)
+        #         tracking = sd.getBoolean('isTracking', False)
+        #         override = sd.getBoolean('isOverridden', False)
                 
-                # Only update if something changed
-                if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking or override != last_override:
-                    match (tracking, shooting, override):
-                        case (False, _, False):
-                            status = '[ ]'
-                        case (_, False, True):
-                            status = '[O]'
-                        case (_, False, False):
-                            status = '[T]'
-                        case (_, True, True):
-                            status = '[S/O]'
-                        case (_, True, False):
-                            status = '[S]'
+        #         # Only update if something changed
+        #         if mode != last_mode or abs(battery - last_battery) > 0.1 or shooting != last_shooting or tracking != last_tracking or override != last_override:
+        #             match (tracking, shooting, override):
+        #                 case (False, _, False):
+        #                     status = '[ ]'
+        #                 case (_, False, True):
+        #                     status = '[O]'
+        #                 case (_, False, False):
+        #                     status = '[T]'
+        #                 case (_, True, True):
+        #                     status = '[S/O]'
+        #                 case (_, True, False):
+        #                     status = '[S]'
                     
-                    if (mode == 'DISCONNECTED'):
-                        line1 = f"DISCONNECTED :("
-                        line2 = f"Connect me!"
-                    else:
-                        line1 = f"{mode}{status}"
-                        line2 = f"Bat: {battery:.1f}V"
+        #             if (mode == 'DISCONNECTED'):
+        #                 line1 = f"DISCONNECTED :("
+        #                 line2 = f"Connect me!"
+        #             else:
+        #                 line1 = f"{mode}{status}"
+        #                 line2 = f"Bat: {battery:.1f}V"
                     
-                    send_lcd(line1, line2)
+        #             send_lcd(line1, line2)
                     
-                    last_mode = mode
-                    last_battery = battery
-                    last_shooting = shooting
-                    last_tracking = tracking
-                    last_override = override
+        #             last_mode = mode
+        #             last_battery = battery
+        #             last_shooting = shooting
+        #             last_tracking = tracking
+        #             last_override = override
                 
-            except Exception as e:
-                print(f"Error: {e}")
+        #     except Exception as e:
+        #         print(f"Error: {e}")
             
-            last_lcd_update = now
+        #     last_lcd_update = now
         
         time.sleep(0.01)
 
 except KeyboardInterrupt:
     print("\nShutdown...")
-    send_lcd("Goodbye!", "")
+    # send_lcd("Goodbye!", "")
     time.sleep(1)
     for i in range(1, 17):
         j.set_button(i, 0)
