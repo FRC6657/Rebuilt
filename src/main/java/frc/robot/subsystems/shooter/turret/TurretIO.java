@@ -14,6 +14,7 @@ public interface TurretIO {
     public double temp = 0.0; // Celsius
     public double voltage = 0.0; // Volts
     public double statorCurrent = 0.0; // Amps
+    public double setpoint = 0.0; // degrees
   }
 
   /** Reads the latest sensor values and applies the position control output. */

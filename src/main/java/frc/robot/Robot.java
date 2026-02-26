@@ -59,6 +59,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import frc.robot.GlobalConstants.opButtons;
 
 @SuppressWarnings("resource")
 public class Robot extends LoggedRobot {
@@ -272,7 +273,11 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
-    // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
+    operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
+    // operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
+    // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
+    // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
+
 
     Logger.start();
   }

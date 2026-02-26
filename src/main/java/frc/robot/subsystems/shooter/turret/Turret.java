@@ -67,6 +67,13 @@ public class Turret extends SubsystemBase {
     return inputs.position;
   }
 
+  /**
+   * @return the current turret heading in degrees
+   */
+  public double getSetpoint() {
+    return inputs.setpoint;
+  }
+
   /** Updates sensor inputs and logs them to AdvantageKit each cycle. */
   @Override
   public void periodic() {
