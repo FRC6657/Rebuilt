@@ -25,10 +25,9 @@ public class GlobalConstants {
     Turret(18),
     Intake_Extension(19),
     Intake_Wheels(20),
-    Intake_Encoder(21),
-    Tunnel(22),
-    Climber(23),
-    Pedal(24);
+    Tunnel(21),
+    Climber(22),
+    Pedal(23);
 
     public int id;
 
