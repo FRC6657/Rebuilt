@@ -274,9 +274,9 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
     operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
-    operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
-    operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
-    operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
+    // operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
+    // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
+    // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
 
 
     Logger.start();
