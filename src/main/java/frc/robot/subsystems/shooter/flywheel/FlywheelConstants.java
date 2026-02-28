@@ -23,7 +23,7 @@ public class FlywheelConstants {
       new TalonFXConfiguration()
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withInverted(InvertedValue.CounterClockwise_Positive)
+                  .withInverted(InvertedValue.Clockwise_Positive)
                   .withNeutralMode(NeutralModeValue.Coast))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withCurrentLimits(

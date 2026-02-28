@@ -3,7 +3,6 @@ package frc.robot.subsystems.indexer.floor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 /**
  * Floor indexer subsystem - a belt/roller mechanism at the bottom of the indexer that moves game
@@ -38,6 +37,6 @@ public class Floor extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Floor", (LoggableInputs) inputs);
+    Logger.processInputs("Floor", inputs);
   }
 }

@@ -24,13 +24,13 @@ public class FloorConstants {
       new TalonFXConfiguration()
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withInverted(InvertedValue.CounterClockwise_Positive)
+                  .withInverted(InvertedValue.Clockwise_Positive)
                   .withNeutralMode(NeutralModeValue.Coast))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(20)
-                  .withStatorCurrentLimit(40)
+                  .withSupplyCurrentLimit(40)
+                  .withStatorCurrentLimit(80)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
 }

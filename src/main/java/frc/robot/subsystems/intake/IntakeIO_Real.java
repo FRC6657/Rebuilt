@@ -23,7 +23,7 @@ public class IntakeIO_Real implements IntakeIO {
   // WPILib profiled PID for smooth trapezoidal extension motion
   private ProfiledPIDController extensionPID =
       new ProfiledPIDController(
-          13.5, 0, 0, new Constraints(extensionSetpoint.velocity, extensionSetpoint.velocity * 2));
+          1, 0, 0, new Constraints(extensionSetpoint.velocity, extensionSetpoint.velocity * 2));
 
   public IntakeIO_Real() {
 
@@ -58,6 +58,8 @@ public class IntakeIO_Real implements IntakeIO {
     rollerVoltage.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     rollerStatorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
+    extensionMotor.setPosition(0);
+
     rollerMotor.optimizeBusUtilization();
   }
 
@@ -66,11 +68,11 @@ public class IntakeIO_Real implements IntakeIO {
 
     // Run extension PID controller and apply voltage output
 
-    // extensionMotor.setControl(
-    //     new VoltageOut(
-    //         extensionPID.calculate(
-    //             extensionMotor.getPosition().getValueAsDouble()
-    //                 * IntakeConstants.Extension.CONVERSION_FACTOR)));
+    extensionMotor.setControl(
+        new VoltageOut(
+            extensionPID.calculate(
+                extensionMotor.getPosition().getValueAsDouble()
+                    * IntakeConstants.Extension.CONVERSION_FACTOR)));
 
     // Apply roller voltage each cycle
     rollerMotor.setControl(rollerSetpoint);

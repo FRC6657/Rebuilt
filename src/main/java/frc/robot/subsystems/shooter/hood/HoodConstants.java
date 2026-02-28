@@ -32,7 +32,7 @@ public class HoodConstants {
       new TalonFXConfiguration()
           .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
-          .withSlot0(new Slot0Configs().withKS(0).withKP(100.0).withKD(0))
+          .withSlot0(new Slot0Configs().withKS(0).withKP(250.0).withKD(0))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimit(STATOR_LIMIT)

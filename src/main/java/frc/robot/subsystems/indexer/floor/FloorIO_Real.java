@@ -23,9 +23,6 @@ public class FloorIO_Real implements FloorIO {
     temp.setUpdateFrequency(GlobalConstants.mainLoopFrequency / 4);
     voltage.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     statorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
-
-    // Turn down not used status signals.
-    motor.optimizeBusUtilization();
   }
 
   @Override

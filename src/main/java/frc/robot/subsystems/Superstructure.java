@@ -281,15 +281,14 @@ public class Superstructure {
         hood.changeSetpointC(0));
   }
 
-  public Command moveTurret(double magnitude){
+  public Command moveTurret(double magnitude) {
     return Commands.either(
-    Commands.either(
-      turret.changeSetpoint(turret.getSetpoint() + 10 * magnitude), // in degrees
-       hood.changeSetpointC(hood.getPosition() + 2 * magnitude), // in degrees
-      () -> manualTurret
-    ),
-    Commands.none(),
-    () -> manualOverride);
+        Commands.either(
+            turret.changeSetpoint(turret.getSetpoint() + 10 * magnitude), // in degrees
+            hood.changeSetpointC(hood.getPosition() + 2 * magnitude), // in degrees
+            () -> manualTurret),
+        Commands.none(),
+        () -> manualOverride);
   }
 
   public Command intakeFuel() {

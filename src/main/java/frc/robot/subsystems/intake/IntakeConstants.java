@@ -38,8 +38,8 @@ public class IntakeConstants {
         new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake))
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Coast))
             .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
@@ -53,7 +53,7 @@ public class IntakeConstants {
       RETRACTED_SLOW(MIN_SETPOINT, 5, 40),
       RETRACTED_FAST(MIN_SETPOINT, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
-      EXTENDED_FAST(MAX_SETPOINT, 80, 160),
+      EXTENDED_FAST(MAX_SETPOINT, 160, 320),
       Off(MIN_SETPOINT, 0, 0);
 
       public final double position;

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -59,7 +60,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import frc.robot.GlobalConstants.opButtons;
 
 @SuppressWarnings("resource")
 public class Robot extends LoggedRobot {
@@ -194,43 +194,47 @@ public class Robot extends LoggedRobot {
 
     // -- Test Bindings --
 
-    // driver.a().onTrue(floor.changeSetpoint(0.4));
-    // driver.a().onChange(floor.changeSetpoint(0));
+    driver.a().onTrue(floor.changeSetpoint(12));
+    driver.a().onFalse(floor.changeSetpoint(0));
 
-    // driver.b().onTrue(tunnel.changeSetpoint(1));
-    // driver.b().onFalse(tunnel.changeSetpoint(0));
+    driver.b().onTrue(tunnel.changeSetpoint(12));
+    driver.b().onFalse(tunnel.changeSetpoint(0));
 
-    // driver
-    //     .x()
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
-    //             .alongWith(intake.changeSetpoint(1)));
-    // driver
-    //     .x()
-    //     .onFalse(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
-    //             .alongWith(intake.changeSetpoint(0)));
-    // driver
-    //     .y()
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
-    //             .alongWith(intake.changeSetpoint(1)));
-    // driver
-    //     .y()
-    //     .onFalse(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
-    //             .alongWith(intake.changeSetpoint(0)));
+    driver
+        .x()
+        .onTrue(
+            intake
+                .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
+                .andThen(intake.changeSetpoint(12)));
+    driver
+        .x()
+        .onFalse(
+            intake
+                .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
+                .andThen(intake.changeSetpoint(12))
+                .andThen(Commands.waitSeconds(2))
+                .andThen(intake.changeSetpoint(0)));
+    driver
+        .y()
+        .onTrue(
+            intake
+                .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
+                .andThen(intake.changeSetpoint(12)));
+    driver
+        .y()
+        .onFalse(
+            intake
+                .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
+                .andThen(intake.changeSetpoint(12))
+                .andThen(Commands.waitSeconds(2))
+                .andThen(intake.changeSetpoint(0)));
 
     // driver.leftBumper().onTrue(flywheel.sysIdRoutine());
-    // driver.leftBumper().onTrue(flywheel.changeSetpointC(3000));
-    // driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
+    driver.leftBumper().onTrue(flywheel.changeSetpointC(2000));
+    driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
 
-    // driver.rightBumper().onTrue(hood.changeSetpointC(35));
-    // driver.rightBumper().onFalse(hood.changeSetpointC(0));
+    driver.rightBumper().onTrue(hood.changeSetpointC(35));
+    driver.rightBumper().onFalse(hood.changeSetpointC(0));
 
     // driver
     //     .rightTrigger()
@@ -277,7 +281,6 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
     // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
     // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
-
 
     Logger.start();
   }
