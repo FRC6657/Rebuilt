@@ -5,6 +5,7 @@
 package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.GlobalConstants;
@@ -15,7 +16,10 @@ public class ClimberIO_Real implements ClimberIO {
 
   private TalonFX pedalMotor;
 
-  private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
+  // private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
+
+  private VoltageOut climbVoltage = new VoltageOut(0);
+  private VoltageOut pedalVoltage = new VoltageOut(0);
 
   public ClimberIO_Real() {
 
@@ -67,7 +71,7 @@ public class ClimberIO_Real implements ClimberIO {
         climberMotor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
     inputs.climberMotorVelocity =
         climberMotor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
+    //inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
 
     // Pedal
     // pedalMotor.setControl(setpoint);
@@ -77,24 +81,34 @@ public class ClimberIO_Real implements ClimberIO {
     inputs.pedalMotorPosition = pedalMotor.getPosition().getValueAsDouble() * 360;
     inputs.pedalMotorVelocity = pedalMotor.getVelocity().getValueAsDouble() * 360;
     inputs.pedalMotorAcceleration = pedalMotor.getAcceleration().getValueAsDouble() * 360;
-    inputs.pedalSetpoint = setpoint.Position * 360;
+     //inputs.pedalSetpoint = setpoint.Position * 360;
   }
 
-  @Override
+  // @Override
+  // public void changeClimberSetpoint(double newClimberSetpoint) {
+  //   var inches =
+  //       MathUtil.clamp(
+  //           newClimberSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);
+  //   setpoint.Position = inches / ClimberConstants.CONVERSION_FACTOR;
+  // }
+
+  // @Override
+  // public void changePedalSetpoint(double newPedalSetpoint) {
+  //   double degrees =
+  //       MathUtil.clamp(
+  //           newPedalSetpoint,
+  //           ClimberConstants.Pedal.PEDAL_MIN_ANGLE,
+  //           ClimberConstants.Pedal.PEDAL_MAX_ANGLE);
+  //   setpoint.Position = degrees / 360.0;
+  // }
+
+    @Override
   public void changeClimberSetpoint(double newClimberSetpoint) {
-    var inches =
-        MathUtil.clamp(
-            newClimberSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);
-    setpoint.Position = inches / ClimberConstants.CONVERSION_FACTOR;
+    climbVoltage.Output = newClimberSetpoint;
+  }
+      @Override
+  public void changePedalSetpoint(double newPedalSetpoint) {
+    pedalVoltage.Output = newPedalSetpoint;
   }
 
-  @Override
-  public void changePedalSetpoint(double newPedalSetpoint) {
-    double degrees =
-        MathUtil.clamp(
-            newPedalSetpoint,
-            ClimberConstants.Pedal.PEDAL_MIN_ANGLE,
-            ClimberConstants.Pedal.PEDAL_MAX_ANGLE);
-    setpoint.Position = degrees / 360.0;
-  }
 }

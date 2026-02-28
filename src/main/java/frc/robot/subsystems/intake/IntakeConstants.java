@@ -90,8 +90,9 @@ public class IntakeConstants {
     /** Predefined roller voltage setpoints. */
     public static final double Off = 0.0; // No power
 
-    public static final double FORWARD = 6; // 6V forward (intake)
-    public static final double REVERSE = -6; // 6V reverse (eject)
+    public static final double FORWARD = 12; // 6V forward (intake)
+    public static final double REVERSE = -12; // 6V reverse (eject)
+    public static final double IDLE = 6;
     public static final double VOLTAGE = 0.0;
   }
 }

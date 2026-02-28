@@ -14,7 +14,7 @@ public class FlywheelConstants {
 
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
   public static final double GEAR_RATIO = 1.0; // Direct drive (1:1)
-  public static final double VELOCITY_TOLERANCE = 250; // RPM tolerance for "at setpoint" check
+  public static final double VELOCITY_TOLERANCE = 100; // RPM tolerance for "at setpoint" check
 
   public static final double SUPPLY_LIMIT = 60; // Amps
   public static final double STATOR_LIMIT = 80; // Amps

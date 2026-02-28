@@ -6,6 +6,8 @@ package frc.robot.subsystems.shooter.hood;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -41,6 +43,7 @@ public class Hood extends SubsystemBase {
   /**
    * @return true if the hood is within tolerance of its target angle
    */
+  @AutoLogOutput(key = "AtSetpoint/Hood")
   public boolean atSetpoint() {
     return io.atSetpoint();
   }

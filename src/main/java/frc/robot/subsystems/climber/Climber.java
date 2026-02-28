@@ -27,6 +27,20 @@ public class Climber extends SubsystemBase {
         });
   }
 
+  public Command changeClimbSetpoint(double setpoint){
+        return runOnce(
+        () -> {
+          io.changeClimberSetpoint(setpoint);
+        });
+  }
+
+    public Command changePedalSetpoint(double setpoint){
+        return runOnce(
+        () -> {
+          io.changePedalSetpoint(setpoint);
+        });
+  }
+
   @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
   public boolean atSetpoint() {
     return Math.abs(inputs.climberSetpoint - inputs.climberMotorPosition)

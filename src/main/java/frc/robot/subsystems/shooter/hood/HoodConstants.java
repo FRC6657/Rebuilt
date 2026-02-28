@@ -17,7 +17,7 @@ public class HoodConstants {
 
   public static final double MIN_SETPOINT = 10.0; // degrees (lowest angle)
   public static final double MAX_SETPOINT = 40.0; // degrees (highest angle)
-  public static final double POSITION_TOLERANCE = 1; // degrees
+  public static final double POSITION_TOLERANCE = 0.25; // degrees
 
   /** Total gear reduction from motor to hood output. */
   public static final double GEAR_RATIO = (70d / 14d) * (180d / 10d);

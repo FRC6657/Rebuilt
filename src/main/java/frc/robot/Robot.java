@@ -40,6 +40,7 @@ import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
@@ -53,6 +54,7 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
 import frc.robot.util.LocalADStarAK;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -77,6 +79,12 @@ public class Robot extends LoggedRobot {
   private final Tunnel tunnel;
   private final Climber climber;
   private final Superstructure superstructure;
+
+  @AutoLogOutput(key = "TestValues/Angle")
+  private double testHoodAngle = 10;
+
+  @AutoLogOutput(key = "TestValues/RPM")
+  private double testFlywheelRPM = 2000;
 
   // private final ApriltagCameras cameras;
 
@@ -192,49 +200,141 @@ public class Robot extends LoggedRobot {
                         * 0.375),
             () -> superstructure.isShooting));
 
-    // -- Test Bindings --
+    // Sanger Bindings
 
-    driver.a().onTrue(floor.changeSetpoint(12));
-    driver.a().onFalse(floor.changeSetpoint(0));
+    // RPM and Hood Trim
+    operator
+        .button(28)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  if (operator.button(27).getAsBoolean()) {
+                    testHoodAngle -= 0.25;
+                  } else {
+                    testFlywheelRPM -= 50;
+                  }
+                }));
+    operator
+        .button(29)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  if (operator.button(27).getAsBoolean()) {
+                    testHoodAngle += 0.25;
+                  } else {
+                    testFlywheelRPM += 50;
+                  }
+                }));
 
-    driver.b().onTrue(tunnel.changeSetpoint(12));
-    driver.b().onFalse(tunnel.changeSetpoint(0));
+    // Enable Dial Controled Flywheel And Hood
+    operator
+        .button(15)
+        .toggleOnTrue(
+            Commands.repeatingSequence(
+                Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
+                Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
+        .toggleOnFalse(
+            Commands.sequence(
+                hood.changeSetpointC(10),
+                flywheel.changeSetpointC(0),
+                tunnel.changeSetpoint(0),
+                floor.changeSetpoint(0)));
 
-    driver
-        .x()
+    operator
+        .button(25)
+        .onTrue(
+            Commands.sequence(
+                tunnel.changeSetpoint(12),
+                floor.changeSetpoint(8),
+                intake.changeSetpoint(6),
+                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+                Commands.waitUntil(intake::atSetpoint),
+                Commands.repeatingSequence(
+                    intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+                    Commands.waitSeconds(0.5),
+                    intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW),
+                    Commands.waitSeconds(0.5))))
+        .onFalse(
+            Commands.sequence(
+                tunnel.changeSetpoint(0),
+                floor.changeSetpoint(0),
+                intake.changeSetpoint(0),
+                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)));
+
+    operator
+        .button(20)
         .onTrue(
             intake
                 .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
-                .andThen(intake.changeSetpoint(12)));
-    driver
-        .x()
-        .onFalse(
-            intake
-                .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
-                .andThen(intake.changeSetpoint(12))
-                .andThen(Commands.waitSeconds(2))
-                .andThen(intake.changeSetpoint(0)));
-    driver
-        .y()
+                .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
+
+         operator
+        .button(24)
         .onTrue(
             intake
-                .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
-                .andThen(intake.changeSetpoint(12)));
-    driver
-        .y()
-        .onFalse(
-            intake
-                .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
-                .andThen(intake.changeSetpoint(12))
-                .andThen(Commands.waitSeconds(2))
-                .andThen(intake.changeSetpoint(0)));
+                .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
+                .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
 
-    // driver.leftBumper().onTrue(flywheel.sysIdRoutine());
-    driver.leftBumper().onTrue(flywheel.changeSetpointC(2000));
-    driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
 
-    driver.rightBumper().onTrue(hood.changeSetpointC(35));
-    driver.rightBumper().onFalse(hood.changeSetpointC(0));
+    operator.button(6).onTrue(
+      climber.changeClimbSetpoint(6)
+    ).onFalse(climber.changeClimbSetpoint(0));
+
+    operator.button(11).onTrue(
+      climber.changeClimbSetpoint(-6)
+    ).onFalse(climber.changeClimbSetpoint(0));
+    
+    operator.button(16).onTrue(
+      climber.changePedalSetpoint(2)
+    ).onFalse(climber.changeClimbSetpoint(0));
+    operator.button(20).onTrue(
+      climber.changePedalSetpoint(-2)
+    ).onFalse(climber.changeClimbSetpoint(0));
+
+
+    // -- Test Bindings --
+
+    // driver.a().onTrue(floor.changeSetpoint(12));
+    // driver.a().onFalse(floor.changeSetpoint(0));
+
+    // driver.b().onTrue(tunnel.changeSetpoint(12));
+    // driver.b().onFalse(tunnel.changeSetpoint(0));
+
+    // driver
+    //     .x()
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
+    //             .andThen(intake.changeSetpoint(12)));
+    // driver
+    //     .x()
+    //     .onFalse(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
+    //             .andThen(intake.changeSetpoint(12))
+    //             .andThen(Commands.waitSeconds(2))
+    //             .andThen(intake.changeSetpoint(0)));
+    // driver
+    //     .y()
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
+    //             .andThen(intake.changeSetpoint(12)));
+    // driver
+    //     .y()
+    //     .onFalse(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
+    //             .andThen(intake.changeSetpoint(12))
+    //             .andThen(Commands.waitSeconds(2))
+    //             .andThen(intake.changeSetpoint(0)));
+
+    // // driver.leftBumper().onTrue(flywheel.sysIdRoutine());
+    // driver.leftBumper().onTrue(flywheel.changeSetpointC(2000));
+    // driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
+
+    // driver.rightBumper().onTrue(hood.changeSetpointC(35));
+    // driver.rightBumper().onFalse(hood.changeSetpointC(0));
 
     // driver
     //     .rightTrigger()
