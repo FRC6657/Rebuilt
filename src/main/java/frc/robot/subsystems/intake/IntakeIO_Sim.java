@@ -3,7 +3,6 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -111,7 +110,6 @@ public class IntakeIO_Sim implements IntakeIO {
     inputs.rollerTemp = 0;
     inputs.rollerVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
     inputs.rollerStatorCurrent = rollerModel.getCurrentDrawAmps();
-
   }
 
   @Override
@@ -131,7 +129,11 @@ public class IntakeIO_Sim implements IntakeIO {
   }
 
   @Override
-  public boolean atSetpoint(){
-    return MathUtil.isNear(extensionPID.getGoal().position, extensionMotor.getPosition().getValueAsDouble() * IntakeConstants.Extension.CONVERSION_FACTOR, IntakeConstants.Extension.POSITION_TOLERANCE);
+  public boolean atSetpoint() {
+    return MathUtil.isNear(
+        extensionPID.getGoal().position,
+        extensionMotor.getPosition().getValueAsDouble()
+            * IntakeConstants.Extension.CONVERSION_FACTOR,
+        IntakeConstants.Extension.POSITION_TOLERANCE);
   }
 }

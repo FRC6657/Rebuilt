@@ -268,29 +268,31 @@ public class Robot extends LoggedRobot {
                 .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
                 .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
 
-         operator
+    operator
         .button(24)
         .onTrue(
             intake
                 .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
                 .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
 
+    operator
+        .button(6)
+        .onTrue(climber.changeClimbSetpoint(6))
+        .onFalse(climber.changeClimbSetpoint(0));
 
-    operator.button(6).onTrue(
-      climber.changeClimbSetpoint(6)
-    ).onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(11)
+        .onTrue(climber.changeClimbSetpoint(-6))
+        .onFalse(climber.changeClimbSetpoint(0));
 
-    operator.button(11).onTrue(
-      climber.changeClimbSetpoint(-6)
-    ).onFalse(climber.changeClimbSetpoint(0));
-    
-    operator.button(16).onTrue(
-      climber.changePedalSetpoint(2)
-    ).onFalse(climber.changeClimbSetpoint(0));
-    operator.button(20).onTrue(
-      climber.changePedalSetpoint(-2)
-    ).onFalse(climber.changeClimbSetpoint(0));
-
+    operator
+        .button(16)
+        .onTrue(climber.changePedalSetpoint(2))
+        .onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(20)
+        .onTrue(climber.changePedalSetpoint(-2))
+        .onFalse(climber.changeClimbSetpoint(0));
 
     // -- Test Bindings --
 

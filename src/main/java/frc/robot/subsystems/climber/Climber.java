@@ -27,15 +27,15 @@ public class Climber extends SubsystemBase {
         });
   }
 
-  public Command changeClimbSetpoint(double setpoint){
-        return runOnce(
+  public Command changeClimbSetpoint(double setpoint) {
+    return runOnce(
         () -> {
           io.changeClimberSetpoint(setpoint);
         });
   }
 
-    public Command changePedalSetpoint(double setpoint){
-        return runOnce(
+  public Command changePedalSetpoint(double setpoint) {
+    return runOnce(
         () -> {
           io.changePedalSetpoint(setpoint);
         });
