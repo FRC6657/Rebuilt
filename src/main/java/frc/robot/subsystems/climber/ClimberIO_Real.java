@@ -4,10 +4,8 @@
 
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.MathUtil;
 import frc.robot.GlobalConstants;
 
 public class ClimberIO_Real implements ClimberIO {
@@ -71,7 +69,7 @@ public class ClimberIO_Real implements ClimberIO {
         climberMotor.getPosition().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
     inputs.climberMotorVelocity =
         climberMotor.getVelocity().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
-    //inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
+    // inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
 
     // Pedal
     // pedalMotor.setControl(setpoint);
@@ -81,7 +79,7 @@ public class ClimberIO_Real implements ClimberIO {
     inputs.pedalMotorPosition = pedalMotor.getPosition().getValueAsDouble() * 360;
     inputs.pedalMotorVelocity = pedalMotor.getVelocity().getValueAsDouble() * 360;
     inputs.pedalMotorAcceleration = pedalMotor.getAcceleration().getValueAsDouble() * 360;
-     //inputs.pedalSetpoint = setpoint.Position * 360;
+    // inputs.pedalSetpoint = setpoint.Position * 360;
   }
 
   // @Override
@@ -102,13 +100,13 @@ public class ClimberIO_Real implements ClimberIO {
   //   setpoint.Position = degrees / 360.0;
   // }
 
-    @Override
+  @Override
   public void changeClimberSetpoint(double newClimberSetpoint) {
     climbVoltage.Output = newClimberSetpoint;
   }
-      @Override
+
+  @Override
   public void changePedalSetpoint(double newPedalSetpoint) {
     pedalVoltage.Output = newPedalSetpoint;
   }
-
 }

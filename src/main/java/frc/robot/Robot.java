@@ -51,9 +51,11 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO_Real;
 import frc.robot.subsystems.shooter.hood.HoodIO_Sim;
 import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -268,29 +270,31 @@ public class Robot extends LoggedRobot {
                 .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
                 .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
 
-         operator
+    operator
         .button(24)
         .onTrue(
             intake
                 .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
                 .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
 
+    operator
+        .button(6)
+        .onTrue(climber.changeClimbSetpoint(6))
+        .onFalse(climber.changeClimbSetpoint(0));
 
-    operator.button(6).onTrue(
-      climber.changeClimbSetpoint(6)
-    ).onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(11)
+        .onTrue(climber.changeClimbSetpoint(-6))
+        .onFalse(climber.changeClimbSetpoint(0));
 
-    operator.button(11).onTrue(
-      climber.changeClimbSetpoint(-6)
-    ).onFalse(climber.changeClimbSetpoint(0));
-    
-    operator.button(16).onTrue(
-      climber.changePedalSetpoint(2)
-    ).onFalse(climber.changeClimbSetpoint(0));
-    operator.button(20).onTrue(
-      climber.changePedalSetpoint(-2)
-    ).onFalse(climber.changeClimbSetpoint(0));
-
+    operator
+        .button(16)
+        .onTrue(climber.changePedalSetpoint(2))
+        .onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(20)
+        .onTrue(climber.changePedalSetpoint(-2))
+        .onFalse(climber.changeClimbSetpoint(0));
 
     // -- Test Bindings --
 
@@ -426,6 +430,12 @@ public class Robot extends LoggedRobot {
       }
     }
     SmartDashboard.putString("RobotMode", mode);
+
+    Logger.recordOutput(
+        "TurretDistance",
+        AllianceFlipUtil.apply(superstructure.turretTarget(drivebase.getPose()))
+            .getDistance(
+                drivebase.getPose().transformBy(TurretConstants.robotToTurret).getTranslation()));
   }
 
   @Override
