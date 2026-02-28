@@ -51,9 +51,11 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO_Real;
 import frc.robot.subsystems.shooter.hood.HoodIO_Sim;
 import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -428,6 +430,12 @@ public class Robot extends LoggedRobot {
       }
     }
     SmartDashboard.putString("RobotMode", mode);
+
+    Logger.recordOutput(
+        "TurretDistance",
+        AllianceFlipUtil.apply(superstructure.turretTarget(drivebase.getPose()))
+            .getDistance(
+                drivebase.getPose().transformBy(TurretConstants.robotToTurret).getTranslation()));
   }
 
   @Override
