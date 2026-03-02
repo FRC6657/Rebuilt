@@ -76,13 +76,13 @@ public class LaunchCalculator {
     // key is in meters
 
     launchHoodAngleMap.put(1.534, Rotation2d.fromDegrees(10));
-    //launchHoodAngleMap.put(2.0, Rotation2d.fromDegrees(17));
+    // launchHoodAngleMap.put(2.0, Rotation2d.fromDegrees(17));
     launchHoodAngleMap.put(2.5, Rotation2d.fromDegrees(15));
     launchHoodAngleMap.put(3.0, Rotation2d.fromDegrees(18));
     launchHoodAngleMap.put(3.5, Rotation2d.fromDegrees(19));
 
     launchFlywheelSpeedMap.put(1.534, Units.rotationsPerMinuteToRadiansPerSecond(1850));
-    //launchFlywheelSpeedMap.put(2.0, Units.rotationsPerMinuteToRadiansPerSecond(2500));
+    // launchFlywheelSpeedMap.put(2.0, Units.rotationsPerMinuteToRadiansPerSecond(2500));
     launchFlywheelSpeedMap.put(2.5, Units.rotationsPerMinuteToRadiansPerSecond(2150));
     launchFlywheelSpeedMap.put(3.0, Units.rotationsPerMinuteToRadiansPerSecond(2200));
     launchFlywheelSpeedMap.put(3.5, Units.rotationsPerMinuteToRadiansPerSecond(2250));
