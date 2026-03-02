@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -54,6 +53,11 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
+import frc.robot.subsystems.vision.ApriltagCameraIO;
+import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
+import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
+import frc.robot.subsystems.vision.ApriltagCameras;
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -88,7 +92,7 @@ public class Robot extends LoggedRobot {
   @AutoLogOutput(key = "TestValues/RPM")
   private double testFlywheelRPM = 2000;
 
-  // private final ApriltagCameras cameras;
+  private final ApriltagCameras cameras;
 
   private final AutoFactory autoFactory;
 
@@ -127,22 +131,22 @@ public class Robot extends LoggedRobot {
     superstructure =
         new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
 
-    // cameras =
-    //     new ApriltagCameras(
-    //         drivebase::addVisionMeasurement,
-    //         RobotBase.isReal() || replay
-    //             ? new ApriltagCameraIO[] {
-    //               new ApriltagCameraIO_Real(VisionConstants.Black1),
-    //               new ApriltagCameraIO_Real(VisionConstants.Black2),
-    //               new ApriltagCameraIO_Real(VisionConstants.White1),
-    //               new ApriltagCameraIO_Real(VisionConstants.White2),
-    //             }
-    //             : new ApriltagCameraIO[] {
-    //               new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
-    //               new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
-    //               new ApriltagCameraIO_Sim(VisionConstants.White1, drivebase::getPose),
-    //               new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
-    //             });
+    cameras =
+        new ApriltagCameras(
+            drivebase::addVisionMeasurement,
+            RobotBase.isReal() || replay
+                ? new ApriltagCameraIO[] {
+                  new ApriltagCameraIO_Real(VisionConstants.Black1),
+                  new ApriltagCameraIO_Real(VisionConstants.Black2),
+                  new ApriltagCameraIO_Real(VisionConstants.White1),
+                  new ApriltagCameraIO_Real(VisionConstants.White2),
+                }
+                : new ApriltagCameraIO[] {
+                  new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
+                  new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
+                  new ApriltagCameraIO_Sim(VisionConstants.White1, drivebase::getPose),
+                  new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
+                });
 
     autoFactory =
         new AutoFactory(
@@ -201,6 +205,15 @@ public class Robot extends LoggedRobot {
                         * DrivebaseConstants.kMaxAngularSpeed
                         * 0.375),
             () -> superstructure.isShooting));
+
+    // drivebase.setDefaultCommand(
+    //     drivebase.driveTeleop(
+    //         () ->
+    //             new ChassisSpeeds(
+    //                 -MathUtil.applyDeadband(driver.getLeftY(), 0.1) * 3,
+    //                 -MathUtil.applyDeadband(driver.getLeftX(), 0.1) * 3,
+    //                 -MathUtil.applyDeadband(driver.getRightX(), 0.1) * Math.PI),
+    //         () -> superstructure.isShooting));
 
     // Sanger Bindings
 
@@ -277,24 +290,24 @@ public class Robot extends LoggedRobot {
                 .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
                 .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
 
-    operator
-        .button(6)
-        .onTrue(climber.changeClimbSetpoint(6))
-        .onFalse(climber.changeClimbSetpoint(0));
+    // operator
+    //     .button(6)
+    //     .onTrue(climber.changeClimbSetpoint(12))
+    //     .onFalse(climber.changeClimbSetpoint(0));
 
-    operator
-        .button(11)
-        .onTrue(climber.changeClimbSetpoint(-6))
-        .onFalse(climber.changeClimbSetpoint(0));
+    // operator
+    //     .button(11)
+    //     .onTrue(climber.changeClimbSetpoint(-12))
+    //     .onFalse(climber.changeClimbSetpoint(0));
 
-    operator
-        .button(16)
-        .onTrue(climber.changePedalSetpoint(2))
-        .onFalse(climber.changeClimbSetpoint(0));
-    operator
-        .button(20)
-        .onTrue(climber.changePedalSetpoint(-2))
-        .onFalse(climber.changeClimbSetpoint(0));
+    // operator
+    //     .button(16)
+    //     .onTrue(climber.changePedalSetpoint(2))
+    //     .onFalse(climber.changeClimbSetpoint(0));
+    // operator
+    //     .button(20)
+    //     .onTrue(climber.changePedalSetpoint(-2))
+    //     .onFalse(climber.changeClimbSetpoint(0));
 
     // -- Test Bindings --
 
@@ -381,7 +394,7 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
-    operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
+    // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
     // operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
     // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
     // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));

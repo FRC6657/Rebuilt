@@ -1,11 +1,12 @@
 package frc.robot.subsystems.drivebase;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.reduxrobotics.sensors.canandmag.Canandmag;
+import com.reduxrobotics.sensors.canandmag.CanandmagSettings;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -41,7 +42,7 @@ public class ModuleIO_Real implements ModuleIO {
   // Control Signals
   private final VelocityVoltage drivePID = new VelocityVoltage(0.0);
   private final VoltageOut driveOpenLoop = new VoltageOut(0);
-  private final MotionMagicVoltage turnPID = new MotionMagicVoltage(0.0);
+  private final PositionVoltage turnPID = new PositionVoltage(0.0);
 
   private final Queue<Double> timestampQueue;
   private final Queue<Double> drivePositionQueue;
@@ -89,6 +90,22 @@ public class ModuleIO_Real implements ModuleIO {
     // Optimize Bus Utilization
     drive.optimizeBusUtilization();
     turn.optimizeBusUtilization();
+
+    // if (constants.encoderID() == 12) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(1.4733885467641583)));
+    // } else if (constants.encoderID() == 11) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(4.6644520807632635)));
+    // } else if (constants.encoderID() == 10) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(4.6383744073692075)));
+    // } else if (constants.encoderID() == 9) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(1.564660403643354)));
+    // }
+
+    encoder.setSettings(new CanandmagSettings().setInvertDirection(true));
 
     // Seed relative encoder
     turn.setPosition(encoder.getAbsPosition());

@@ -34,5 +34,5 @@ public class FlywheelConstants {
                   .withSupplyCurrentLimitEnable(true)
                   .withSupplyCurrentLowerLimit(SUPPLY_LIMIT)
                   .withSupplyCurrentLowerTime(0))
-          .withSlot0(new Slot0Configs().withKV(12d / (6380d / 60d)).withKP(0).withKD(0));
+          .withSlot0(new Slot0Configs().withKV(12d / (6380d / 60d)).withKP(0.5).withKD(0));
 }

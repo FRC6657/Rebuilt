@@ -21,8 +21,7 @@ public class VisionConstants {
   // Standard deviation baselines at 1 meter distance with 1 tag.
   // Scaled automatically by (distance^2 / tagCount) at runtime.
   public static double linearStdDevBaseline = 0.02; // Meters
-  public static double angularStdDevBaseline =
-      Double.POSITIVE_INFINITY; // Radians (rotation ignored)
+  public static double angularStdDevBaseline = 1; // Radians (rotation ignored)
 
   // Per-camera standard deviation multipliers (lower = more trusted)
   public static double[] cameraStdDevFactors =
@@ -56,7 +55,7 @@ public class VisionConstants {
   // Camera definitions (transforms are placeholders - update with real CAD values)
   public static CameraInfo Black1 =
       new CameraInfo(
-          "FRC6657-9281-1-Black",
+          "6657-9281-2",
           new Transform3d(
               new Translation3d(0.253248, -0.331830, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(240))),
@@ -65,7 +64,7 @@ public class VisionConstants {
 
   public static CameraInfo Black2 =
       new CameraInfo(
-          "FRC6657-9281-2-Black",
+          "6657-9281-3",
           new Transform3d(
               new Translation3d(0.331989, -0.254149, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-10))),
@@ -74,7 +73,7 @@ public class VisionConstants {
 
   public static CameraInfo White1 =
       new CameraInfo(
-          "FRC6657-9281-1-White",
+          "6657-9281-2",
           new Transform3d(
               new Translation3d(0.253248, 0.331830, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-240))),
@@ -83,7 +82,7 @@ public class VisionConstants {
 
   public static CameraInfo White2 =
       new CameraInfo(
-          "FRC6657-9281-2-White",
+          "6657-9281-4",
           new Transform3d(
               new Translation3d(0.331989, 0.254149, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(10))),

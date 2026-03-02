@@ -101,12 +101,14 @@ public class DrivebaseConstants {
   public static final double kTurnRatio = (150d / 7d);
   public static final double kDriveRotorToMeters = kDriveRatio / (kDriveWheelDiameter * Math.PI);
 
-  public static final double kMaxLinearSpeed =
-      (Units.radiansPerSecondToRotationsPerMinute(kDriveMotor.freeSpeedRadPerSec) / 60d)
-          * 1d
-          / kDriveRatio
-          * (kDriveWheelDiameter * Math.PI)
-          * 0.8; // Meters Per Second
+  //   public static final double kMaxLinearSpeed =
+  //       (Units.radiansPerSecondToRotationsPerMinute(kDriveMotor.freeSpeedRadPerSec) / 60d)
+  //           * (1d / kDriveRatio)
+  //           * (kDriveWheelDiameter * Math.PI)
+  //           * 0.8; // Meters Per Second
+
+  public static final double kMaxLinearSpeed = Units.feetToMeters(15.5);
+
   public static final double kMaxLinearAcceleration =
       8; // Meters per second per second (rough underestimate of the traction limit)
   public static final double kMaxAngularSpeed =
@@ -127,8 +129,8 @@ public class DrivebaseConstants {
                   .withStatorCurrentLimitEnable(true))
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withInverted(InvertedValue.Clockwise_Positive)
-                  .withNeutralMode(NeutralModeValue.Brake))
+                  .withInverted(InvertedValue.CounterClockwise_Positive)
+                  .withNeutralMode(NeutralModeValue.Coast))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kDriveRotorToMeters))
           .withSlot0(new Slot0Configs().withKV(12d / kMaxLinearSpeed).withKS(0).withKP(2.25));
 
@@ -143,7 +145,7 @@ public class DrivebaseConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withInverted(InvertedValue.Clockwise_Positive)
-                  .withNeutralMode(NeutralModeValue.Brake))
+                  .withNeutralMode(NeutralModeValue.Coast))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kTurnRatio))
           .withSlot0(new Slot0Configs().withKS(0.27).withKP(25).withKD(0.7))
           .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true));

@@ -227,7 +227,7 @@ public class Drivebase extends SubsystemBase {
                   DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
                       ? getPose().getRotation()
                       : getPose().getRotation().minus(Rotation2d.fromDegrees(180)));
-          this.drive(speed, false, isShooting.getAsBoolean());
+          this.drive(speed, true, isShooting.getAsBoolean());
         });
   }
 
