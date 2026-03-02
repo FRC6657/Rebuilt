@@ -61,7 +61,7 @@ public class ClimberIO_Real implements ClimberIO {
   public void updateInputs(ClimberIOInputs inputs) {
     // This method will be called once per scheduler run
 
-    climberMotor.set((climbVoltage.Output * 10) / 12);
+    climberMotor.set((climbVoltage.Output * 10) * 12);
 
     inputs.climberMotorVoltage = climberMotor.getMotorVoltage().getValueAsDouble();
     inputs.climberMotorCurrent = climberMotor.getSupplyCurrent().getValueAsDouble();
