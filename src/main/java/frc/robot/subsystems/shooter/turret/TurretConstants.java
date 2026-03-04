@@ -20,13 +20,13 @@ public class TurretConstants {
 
   public static final DCMotor MOTOR = DCMotor.getFalcon500(1);
 
-  public static final double ORIGIN_POSITION = 0.0;
+  public static final double ORIGIN_POSITION = 10.0;
   public static double restingSetpoint =
       195.0; // degrees (where the turret will go when it is not tracking)
 
   public static final double POSITION_TOLERANCE = 2.0; // degrees
 
-  public static final double FULL_ROTATION_RANGE = 420.0; // degrees
+  public static final double FULL_ROTATION_RANGE = 410.0; // degrees
   public static final double ROTATION_RANGE = FULL_ROTATION_RANGE - 20.0; // degrees
 
   /** Total gear reduction from motor to turret output. */
@@ -38,7 +38,7 @@ public class TurretConstants {
   public static final double SUPPLY_LIMIT = 30; // Amps
   public static final double STATOR_LIMIT = 60; // Amps
 
-  public static final double KP = 25.0;
+  public static final double KP = 55.0;
   public static final double KD = 0;
 
   public static final TalonFXConfiguration CONFIG =

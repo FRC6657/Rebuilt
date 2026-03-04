@@ -8,6 +8,8 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -207,7 +209,7 @@ public class Robot extends LoggedRobot {
     // operator.button(29).onTrue(turret.changeSetpoint(180));
     // operator.button(28).onTrue(turret.changeSetpoint(90));
 
-    //#region Sanger
+    // #region Sanger
     // // RPM and Hood Trim
     // operator
     //     .button(28)
@@ -300,15 +302,14 @@ public class Robot extends LoggedRobot {
     //     .onTrue(climber.changePedalSetpoint(-2))
     //     .onFalse(climber.changeClimbSetpoint(0));
 
-    //#endregion
-    
+    // #endregion
+
     // REAL BINDINGS
 
     // driver.leftTrigger().onTrue(superstructure.shootingOn());
     // driver.leftTrigger().onFalse(superstructure.shootingOff());
     // driver.y().onTrue(superstructure.toggleShooting());
     // operator.button(16).onTrue(superstructure.toggleShooting());
-
     // operator.button(15).onTrue(superstructure.trackingOn());
     // operator.button(14).onTrue(superstructure.trackingOff());
 
@@ -327,10 +328,16 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
     // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
-    // operator.button(opButtons.OverrideTargetToggle.id).onTrue(superstructure.OverrideTargetToggle());
+    // operator
+    //     .button(opButtons.OverrideTargetToggle.id)
+    //     .onTrue(superstructure.OverrideTargetToggle());
     // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
     // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
-
+    operator
+        .button(13)
+        .onTrue(
+            Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 4, new Rotation2d()))));
+    operator.button(14).onTrue(superstructure.softTracking());
     Logger.start();
   }
 
