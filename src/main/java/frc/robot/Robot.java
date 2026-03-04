@@ -337,7 +337,7 @@ public class Robot extends LoggedRobot {
         .button(13)
         .onTrue(
             Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 5, new Rotation2d()))));
-    operator.button(14).onTrue(superstructure.softTracking());
+    driver.a().onTrue(superstructure.softTracking());
     Logger.start();
   }
 

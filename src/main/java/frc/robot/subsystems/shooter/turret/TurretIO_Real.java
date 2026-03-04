@@ -46,9 +46,7 @@ public class TurretIO_Real implements TurretIO {
   @Override
   public void updateInputs(TurretIOInputs inputs) {
 
-    // if (enableControl) {
     turretMotor.setControl(positionVoltage);
-    // }
 
     inputs.temp = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorCurrent = turretMotor.getStatorCurrent().getValueAsDouble();
@@ -79,8 +77,7 @@ public class TurretIO_Real implements TurretIO {
       }
     }
     // Add initial offset and convert degrees to motor rotations
-    positionVoltage.Position =
-        (clampedInput + TurretConstants.ORIGIN_POSITION) / TurretConstants.CONVERSION_FACTOR;
+    positionVoltage.Position = clampedInput / TurretConstants.CONVERSION_FACTOR;
     positionVoltage.FeedForward = 0;
   }
 

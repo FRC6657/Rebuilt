@@ -188,6 +188,7 @@ public class LaunchCalculator {
 
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
+
     hoodAngle = launchHoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
     if (lastTurretAngle == null) lastTurretAngle = turretAngle;
     if (Double.isNaN(lastHoodAngle)) lastHoodAngle = hoodAngle;
