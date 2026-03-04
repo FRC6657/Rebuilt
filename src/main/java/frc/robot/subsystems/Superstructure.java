@@ -144,7 +144,7 @@ public class Superstructure {
   public Pose3d[] get3DComponents() {
 
     // Compute turret yaw rotation from current turret position
-    Rotation3d turretRotation = new Rotation3d(0, 0, Units.degreesToRadians(turret.getPosition()));
+    Rotation3d turretRotation = new Rotation3d(0, 0, -Units.degreesToRadians(turret.getPosition()));
 
     // Rotate the hood offset by turret yaw to get the hood's position in robot frame
     Translation3d rotatedHoodOffset = TurretConstants.HOOD_OFFSET.rotateBy(turretRotation);
@@ -411,6 +411,9 @@ public class Superstructure {
 
           flywheel.changeSetpoint(
               Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
+
+          Logger.recordOutput("Test", params.turretAngle());
+
           hood.changeSetpoint(Math.toDegrees(params.hoodAngle()));
           Rotation2d turretHeading = getRelativeTurretHeading(params.turretAngle());
           double omega = drivebase.getVelocityFieldRelative().omegaRadiansPerSecond;

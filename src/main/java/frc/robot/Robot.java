@@ -336,7 +336,7 @@ public class Robot extends LoggedRobot {
     operator
         .button(13)
         .onTrue(
-            Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 4, new Rotation2d()))));
+            Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 5, new Rotation2d()))));
     operator.button(14).onTrue(superstructure.softTracking());
     Logger.start();
   }
@@ -376,6 +376,9 @@ public class Robot extends LoggedRobot {
         AllianceFlipUtil.apply(superstructure.turretTarget(drivebase.getPose()))
             .getDistance(
                 drivebase.getPose().transformBy(TurretConstants.robotToTurret).getTranslation()));
+
+    Logger.recordOutput(
+        "TurretPose", drivebase.getPose().transformBy(TurretConstants.robotToTurret));
   }
 
   @Override
