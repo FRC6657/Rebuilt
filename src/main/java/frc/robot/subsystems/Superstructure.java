@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.GlobalConstants;
 import frc.robot.simulation.BallLaunchHelper;
@@ -423,21 +424,13 @@ public class Superstructure {
     ;
   }
 
-  public Command tempSetTrackingOn() {
-    return Commands.run(() -> isTracking = true);
-  }
-
-  public Command tempSetTrackingOff() {
-    return Commands.run(() -> isTracking = false);
-  }
-
   public AutoRoutine TaxiShoot(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("TaxiShoot");
 
     final AutoTrajectory Start = routine.trajectory("TaxiShoot", 0);
 
     Start.done().onTrue(shootingOn());
-    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), trackingOn(), Start.cmd()));
 
     return routine;
   }
@@ -449,6 +442,33 @@ public class Superstructure {
 
     Start.done().onTrue(firstRungAutoClimb(2));
     routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+
+    return routine;
+  }
+
+  public AutoRoutine GreedyAuto(AutoFactory factory) {
+    final AutoRoutine routine = factory.newRoutine("GreedyAuto");
+
+    final AutoTrajectory start = routine.trajectory("Start", 0);
+    final AutoTrajectory crossover1 = routine.trajectory("crossover1", 1);
+    final AutoTrajectory intake = routine.trajectory("intake", 2);
+    final AutoTrajectory crossover2 = routine.trajectory("crossover2", 3);
+    final AutoTrajectory end = routine.trajectory("end", 4);
+
+    start
+        .atTimeBeforeEnd(0.4)
+        .onTrue(
+            Commands.sequence(
+                shootingOn(),
+                Commands.waitSeconds(2.5),
+                new ScheduleCommand(crossover1.cmd()),
+                trackingOff()));
+
+    crossover1.done().onTrue(Commands.parallel(intakeFuel(), new ScheduleCommand(intake.cmd())));
+
+    intake.done().onTrue(Commands.parallel(intakeRetract(), new ScheduleCommand(crossover2.cmd())));
+
+    crossover2.done().onTrue(Commands.parallel(shootingOn(), new ScheduleCommand(end.cmd())));
 
     return routine;
   }
