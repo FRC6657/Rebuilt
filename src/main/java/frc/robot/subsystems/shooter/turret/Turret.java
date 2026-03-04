@@ -74,6 +74,10 @@ public class Turret extends SubsystemBase {
     return inputs.setpoint;
   }
 
+  public void toggleControl() {
+    io.toggleControl();
+  }
+
   /** Updates sensor inputs and logs them to AdvantageKit each cycle. */
   @Override
   public void periodic() {

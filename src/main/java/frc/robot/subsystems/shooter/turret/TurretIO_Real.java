@@ -17,6 +17,8 @@ public class TurretIO_Real implements TurretIO {
   private PositionVoltage positionVoltage =
       new PositionVoltage(TurretConstants.ORIGIN_POSITION / TurretConstants.CONVERSION_FACTOR);
 
+  private boolean enableControl = false;
+
   public TurretIO_Real() {
 
     turretMotor.getConfigurator().apply(TurretConstants.CONFIG);
@@ -43,7 +45,9 @@ public class TurretIO_Real implements TurretIO {
   @Override
   public void updateInputs(TurretIOInputs inputs) {
 
-    // turretMotor.setControl(positionVoltage);
+    if (enableControl) {
+      turretMotor.setControl(positionVoltage);
+    }
 
     inputs.temp = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorCurrent = turretMotor.getStatorCurrent().getValueAsDouble();
@@ -91,5 +95,10 @@ public class TurretIO_Real implements TurretIO {
         positionVoltage.Position * TurretConstants.CONVERSION_FACTOR,
         turretMotor.getPosition().getValueAsDouble() * TurretConstants.CONVERSION_FACTOR,
         TurretConstants.POSITION_TOLERANCE);
+  }
+
+  @Override
+  public void toggleControl() {
+    enableControl = !enableControl;
   }
 }

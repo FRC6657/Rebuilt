@@ -39,8 +39,6 @@ import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -73,8 +71,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
 
   private CommandXboxController driver = new CommandXboxController(0);
-  private CommandGenericHID operator =
-      new CommandGenericHID(1); // arduino buttons 1 to 16, left to right, then top to bottom
+  private CommandGenericHID operator = new CommandGenericHID(1);
 
   private final Drivebase drivebase;
   private final Turret turret;
@@ -206,89 +203,83 @@ public class Robot extends LoggedRobot {
                         * 0.375),
             () -> superstructure.isShooting));
 
-    // drivebase.setDefaultCommand(
-    //     drivebase.driveTeleop(
-    //         () ->
-    //             new ChassisSpeeds(
-    //                 -MathUtil.applyDeadband(driver.getLeftY(), 0.1) * 3,
-    //                 -MathUtil.applyDeadband(driver.getLeftX(), 0.1) * 3,
-    //                 -MathUtil.applyDeadband(driver.getRightX(), 0.1) * Math.PI),
-    //         () -> superstructure.isShooting));
+    // Turret Tuning Bindings
+    // operator.button(29).onTrue(turret.changeSetpoint(180));
+    // operator.button(28).onTrue(turret.changeSetpoint(90));
 
-    // Sanger Bindings
+    //#region Sanger
+    // // RPM and Hood Trim
+    // operator
+    //     .button(28)
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.button(27).getAsBoolean()) {
+    //                 testHoodAngle -= 0.25;
+    //               } else {
+    //                 testFlywheelRPM -= 50;
+    //               }
+    //             }));
+    // operator
+    //     .button(29)
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.button(27).getAsBoolean()) {
+    //                 testHoodAngle += 0.25;
+    //               } else {
+    //                 testFlywheelRPM += 50;
+    //               }
+    //             }));
 
-    // RPM and Hood Trim
-    operator
-        .button(28)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  if (operator.button(27).getAsBoolean()) {
-                    testHoodAngle -= 0.25;
-                  } else {
-                    testFlywheelRPM -= 50;
-                  }
-                }));
-    operator
-        .button(29)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  if (operator.button(27).getAsBoolean()) {
-                    testHoodAngle += 0.25;
-                  } else {
-                    testFlywheelRPM += 50;
-                  }
-                }));
+    // // Enable Dial Controled Flywheel And Hood
+    // operator
+    //     .button(15)
+    //     .toggleOnTrue(
+    //         Commands.repeatingSequence(
+    //             Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
+    //             Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
+    //     .toggleOnFalse(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(10),
+    //             flywheel.changeSetpointC(0),
+    //             tunnel.changeSetpoint(0),
+    //             floor.changeSetpoint(0)));
 
-    // Enable Dial Controled Flywheel And Hood
-    operator
-        .button(15)
-        .toggleOnTrue(
-            Commands.repeatingSequence(
-                Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
-                Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
-        .toggleOnFalse(
-            Commands.sequence(
-                hood.changeSetpointC(10),
-                flywheel.changeSetpointC(0),
-                tunnel.changeSetpoint(0),
-                floor.changeSetpoint(0)));
+    // operator
+    //     .button(25)
+    //     .onTrue(
+    //         Commands.sequence(
+    //             tunnel.changeSetpoint(12),
+    //             floor.changeSetpoint(8),
+    //             intake.changeSetpoint(6),
+    //             intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+    //             Commands.waitUntil(intake::atSetpoint),
+    //             Commands.repeatingSequence(
+    //                 intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+    //                 Commands.waitSeconds(0.5),
+    //                 intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW),
+    //                 Commands.waitSeconds(0.5))))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             tunnel.changeSetpoint(0),
+    //             floor.changeSetpoint(0),
+    //             intake.changeSetpoint(0),
+    //             intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)));
 
-    operator
-        .button(25)
-        .onTrue(
-            Commands.sequence(
-                tunnel.changeSetpoint(12),
-                floor.changeSetpoint(8),
-                intake.changeSetpoint(6),
-                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
-                Commands.waitUntil(intake::atSetpoint),
-                Commands.repeatingSequence(
-                    intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
-                    Commands.waitSeconds(0.5),
-                    intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW),
-                    Commands.waitSeconds(0.5))))
-        .onFalse(
-            Commands.sequence(
-                tunnel.changeSetpoint(0),
-                floor.changeSetpoint(0),
-                intake.changeSetpoint(0),
-                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)));
+    // operator
+    //     .button(20)
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
+    //             .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
 
-    operator
-        .button(20)
-        .onTrue(
-            intake
-                .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
-                .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
-
-    operator
-        .button(24)
-        .onTrue(
-            intake
-                .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
-                .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
+    // operator
+    //     .button(24)
+    //     .onTrue(
+    //         intake
+    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
+    //             .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
 
     // operator
     //     .button(6)
@@ -309,67 +300,8 @@ public class Robot extends LoggedRobot {
     //     .onTrue(climber.changePedalSetpoint(-2))
     //     .onFalse(climber.changeClimbSetpoint(0));
 
-    // -- Test Bindings --
-
-    // driver.a().onTrue(floor.changeSetpoint(12));
-    // driver.a().onFalse(floor.changeSetpoint(0));
-
-    // driver.b().onTrue(tunnel.changeSetpoint(12));
-    // driver.b().onFalse(tunnel.changeSetpoint(0));
-
-    // driver
-    //     .x()
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
-    //             .andThen(intake.changeSetpoint(12)));
-    // driver
-    //     .x()
-    //     .onFalse(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
-    //             .andThen(intake.changeSetpoint(12))
-    //             .andThen(Commands.waitSeconds(2))
-    //             .andThen(intake.changeSetpoint(0)));
-    // driver
-    //     .y()
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW)
-    //             .andThen(intake.changeSetpoint(12)));
-    // driver
-    //     .y()
-    //     .onFalse(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)
-    //             .andThen(intake.changeSetpoint(12))
-    //             .andThen(Commands.waitSeconds(2))
-    //             .andThen(intake.changeSetpoint(0)));
-
-    // // driver.leftBumper().onTrue(flywheel.sysIdRoutine());
-    // driver.leftBumper().onTrue(flywheel.changeSetpointC(2000));
-    // driver.leftBumper().onFalse(flywheel.changeSetpointC(0));
-
-    // driver.rightBumper().onTrue(hood.changeSetpointC(35));
-    // driver.rightBumper().onFalse(hood.changeSetpointC(0));
-
-    // driver
-    //     .rightTrigger()
-    //     .onTrue(
-    //         Commands.repeatingSequence(
-    //                 Commands.runOnce(
-    //                     () -> {
-    //                       BallLaunchHelper.spawnWithLaunchCharacteristics(
-    //                           fuelSim,
-    //                           flywheel.getVelocity(),
-    //                           hood.getPosition(),
-    //                           turret.getPosition(),
-    //                           drivebase.getPose(),
-    //                           drivebase.getVelocityRobotRelative());
-    //                     }),
-    //                 Commands.waitSeconds(4 / GlobalConstants.mainLoopFrequency))
-    //             .until(() -> !driver.rightTrigger().getAsBoolean()));
-
+    //#endregion
+    
     // REAL BINDINGS
 
     // driver.leftTrigger().onTrue(superstructure.shootingOn());
@@ -407,18 +339,6 @@ public class Robot extends LoggedRobot {
 
     CommandScheduler.getInstance().run();
     GamePieceSimulation.getInstance().update();
-    // Logger.recordOutput(
-    //     "Black1Transform",
-    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black1.robotToCamera));
-    // Logger.recordOutput(
-    //     "Black2Transform",
-    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black2.robotToCamera));
-    // Logger.recordOutput(
-    //     "White1Transform",
-    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White1.robotToCamera));
-    // Logger.recordOutput(
-    //     "White2Transform",
-    //     new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
 
     // Publishes all code from the SmartDashboard to the keypad screen
     SmartDashboard.putBoolean("RobotEnabled", isEnabled());

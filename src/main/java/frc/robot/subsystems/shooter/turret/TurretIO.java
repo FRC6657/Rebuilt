@@ -40,4 +40,6 @@ public interface TurretIO {
   public default boolean atSetpoint() {
     return false;
   }
+
+  public default void toggleControl() {}
 }

@@ -130,7 +130,7 @@ public class DrivebaseConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withInverted(InvertedValue.CounterClockwise_Positive)
-                  .withNeutralMode(NeutralModeValue.Coast))
+                  .withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kDriveRotorToMeters))
           .withSlot0(new Slot0Configs().withKV(12d / kMaxLinearSpeed).withKS(0).withKP(2.25));
 
@@ -145,7 +145,7 @@ public class DrivebaseConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withInverted(InvertedValue.Clockwise_Positive)
-                  .withNeutralMode(NeutralModeValue.Coast))
+                  .withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kTurnRatio))
           .withSlot0(new Slot0Configs().withKS(0.27).withKP(25).withKD(0.7))
           .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true));
