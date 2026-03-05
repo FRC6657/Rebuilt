@@ -68,7 +68,9 @@ public class GlobalConstants {
     M5(24),
     Zero(25),
     Period(26),
-    Enter(27);
+    Enter(27),
+    KnobLeft(28),
+    KnobRight(29);
 
     public int id;
 
