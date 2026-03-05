@@ -387,7 +387,7 @@ public class Superstructure {
   }
 
   public Command FloorOff() {
-    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
+    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.Off));
   }
 
   // public Command flywheelShoot() {
