@@ -129,9 +129,7 @@ public class Superstructure {
   }
 
   Command stopShooting() {
-    return Commands.parallel(
-        Commands.sequence(FloorBackward(), Commands.waitSeconds(1.5), FloorOff()),
-        Commands.sequence(tunnelBackward(), Commands.waitSeconds(0.75), tunnelOff()));
+    return Commands.parallel(FloorOff(), tunnelOff());
   }
 
   /**
