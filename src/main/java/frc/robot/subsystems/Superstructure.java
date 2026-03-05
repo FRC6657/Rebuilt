@@ -3,17 +3,15 @@ package frc.robot.subsystems;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-// import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -56,20 +54,14 @@ public class Superstructure {
   Tunnel tunnel;
   Climber climber;
 
-  @AutoLogOutput(key = "RobotStates/isShooting")
-  public boolean isShooting = false;
+  @AutoLogOutput(key = "RobotStates/Shooting")
+  public boolean shooting = false;
 
-  @AutoLogOutput(key = "RobotStates/isTracking")
-  public boolean isTracking = false;
+  @AutoLogOutput(key = "RobotStates/Tracking")
+  public boolean tracking = false;
 
-  @AutoLogOutput(key = "RobotStates/manualOverride")
-  public boolean manualOverride = false;
-
-  @AutoLogOutput(key = "RobotStates/manualOverride")
-  public boolean manualTurret = true;
-
-  public Trigger shootingEnabled = new Trigger(() -> isShooting);
-  public Trigger trackingEnabled = new Trigger(() -> isTracking);
+  public Trigger isShooting = new Trigger(() -> shooting);
+  public Trigger isTracking = new Trigger(() -> tracking);
 
   private final GamePieceSimulation fuelSim;
 
@@ -102,34 +94,37 @@ public class Superstructure {
 
     fuelSim = GamePieceSimulation.getInstance();
 
-    shootingEnabled.onTrue(
-        Commands.parallel(startShooting(), Commands.runOnce(() -> isTracking = true)));
-    shootingEnabled.onFalse(stopShooting());
+    // #region Triggers
 
-    trackingEnabled.whileTrue(softTracking());
-    trackingEnabled.onFalse(turret.restingSetpoint());
+    isShooting.onTrue(RunIndexer());
+    isShooting.onFalse(StopIndexer());
 
-    shootingEnabled.whileTrue(
+    isTracking.onTrue(RunTracking());
+    isTracking.onFalse(FixedShot());
+
+    isShooting.whileTrue(
         Commands.repeatingSequence(
             Commands.runOnce(
                 () -> {
-                  BallLaunchHelper.spawnWithLaunchCharacteristics(
-                      fuelSim,
-                      flywheel.getVelocity(),
-                      hood.getPosition(),
-                      turret.getPosition(),
-                      drivebase.getPose(),
-                      drivebase.getVelocityRobotRelative());
+                  if (RobotBase.isSimulation()) {
+                    BallLaunchHelper.spawnWithLaunchCharacteristics(
+                        fuelSim,
+                        flywheel.getVelocity(),
+                        hood.getPosition(),
+                        -turret.getPosition(),
+                        drivebase.getPose(),
+                        drivebase.getVelocityRobotRelative());
+                  }
                 }),
             Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
   }
 
-  Command startShooting() {
-    return Commands.parallel(FloorOn(), tunnelForward());
+  Command RunIndexer() {
+    return Commands.parallel(FloorForward(), TunnelForward());
   }
 
-  Command stopShooting() {
-    return Commands.parallel(FloorOff(), tunnelOff());
+  Command StopIndexer() {
+    return Commands.parallel(FloorOff(), TunnelOff());
   }
 
   /**
@@ -164,32 +159,25 @@ public class Superstructure {
     };
   }
 
-  public Command toggleShooting() {
-    return Commands.runOnce(() -> isShooting = !isShooting);
+  // #region State Toggles
+  public Command ToggleShooting() {
+    return Commands.runOnce(() -> shooting = !shooting);
   }
 
-  public Command shootingOn() {
-    return Commands.runOnce(() -> isShooting = true);
+  public Command EnableShooting() {
+    return Commands.runOnce(() -> shooting = true);
   }
 
-  public Command shootingOff() {
-    return Commands.runOnce(() -> isShooting = false);
+  public Command DisableShooting() {
+    return Commands.runOnce(() -> shooting = false);
   }
 
-  public Command trackingOn() {
-    return Commands.runOnce(() -> isTracking = true);
+  public Command EnableTracking() {
+    return Commands.runOnce(() -> tracking = true);
   }
 
-  public Command trackingOff() {
-    return Commands.parallel(Commands.runOnce(() -> isTracking = false), shootingOff());
-  }
-
-  public Command ManualOverrideToggle() {
-    return Commands.runOnce(() -> manualOverride = !manualOverride);
-  }
-
-  public Command OverrideTargetToggle() {
-    return Commands.runOnce(() -> manualTurret = !manualTurret);
+  public Command DisableTracking() {
+    return Commands.runOnce(() -> tracking = false);
   }
 
   /**
@@ -209,9 +197,9 @@ public class Superstructure {
   }
 
   @AutoLogOutput(key = "TurretTarget")
-  public Translation2d turretTarget(Pose2d robotPose) {
+  public Translation2d getTurretTarget(Pose2d robotPose) {
     robotPose = AllianceFlipUtil.apply(robotPose);
-    if (robotPose.getX() < Units.inchesToMeters(150)) { // TODO: find proper values
+    if (robotPose.getX() < Units.inchesToMeters(150)) {
       return new Translation2d(
           GamePieceConstants.BLUE_TOWER_CENTER.getX(), GamePieceConstants.BLUE_TOWER_CENTER.getY());
     } else {
@@ -250,13 +238,6 @@ public class Superstructure {
         .times(-1);
   }
 
-  /** Schedules a turret tracking command that aims the turret at the turret target. */
-  public void runTurretTest() {
-    Rotation2d targetAngle = getGlobalTargetHeading(turretTarget);
-    CommandScheduler.getInstance()
-        .schedule(turret.changeSetpoint(() -> getRelativeTurretHeading(targetAngle).getDegrees()));
-  }
-
   /**
    * Creates a command that logs a message to AdvantageKit.
    *
@@ -267,9 +248,7 @@ public class Superstructure {
     return Commands.runOnce(() -> Logger.recordOutput("Command Log", message));
   }
 
-  // public Command shoot() {
-  //  return Commands.sequence(logMessage("Shoot"), flywheel.changeSetpointC(12));
-  // }
+  // #region Helper Sequences
 
   public Command HomeRobot() {
     return Commands.sequence(
@@ -283,17 +262,7 @@ public class Superstructure {
         hood.changeSetpointC(0));
   }
 
-  public Command moveTurret(double magnitude) {
-    return Commands.either(
-        Commands.either(
-            turret.changeSetpoint(turret.getSetpoint() + 10 * magnitude), // in degrees
-            hood.changeSetpointC(hood.getPosition() + 2 * magnitude), // in degrees
-            () -> manualTurret),
-        Commands.none(),
-        () -> manualOverride);
-  }
-
-  public Command intakeFuel() {
+  public Command ExtendIntake() {
     return Commands.sequence(
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
@@ -301,7 +270,7 @@ public class Superstructure {
         intake.changeSetpoint(Roller.FORWARD));
   }
 
-  public Command intakeRetract() {
+  public Command RetractIntake() {
     return Commands.sequence(
         logMessage("Intake Retract"),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
@@ -310,105 +279,58 @@ public class Superstructure {
         intake.changeSetpoint(Roller.Off));
   }
 
-  public Command driveInClimber() {
-    return Commands.sequence(
-        logMessage("Drive-in"),
-        climber.changeSetpoints(
-            ClimberConstants.DRIVEIN_SETPOINT, ClimberConstants.Pedal.PEDAL_MIN_ANGLE));
-  }
-
-  public Command bringDownClimber() {
+  public Command ClimberDown() {
     return Commands.sequence(
         logMessage("Bring-Down"),
-        climber.changeSetpoints(
-            ClimberConstants.LOW_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE));
+        climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false));
   }
 
-  public Command bringUpClimber() {
+  public Command ClimberUp() {
     return Commands.sequence(
         logMessage("Bring-Up"),
-        climber.changeSetpoints(
-            ClimberConstants.HOOK_SETPOINT, ClimberConstants.Pedal.PEDAL_MAX_ANGLE));
+        climber
+            .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
+            .andThen(climber.changePedalSetpoint(90)));
   }
 
-  public Command fullClimb() {
+  public Command TunnelForward() {
     return Commands.sequence(
-        logMessage("Full Climb"),
-        driveInClimber(),
-        Commands.waitSeconds(2.0),
-        bringDownClimber(),
-        Commands.waitSeconds(3.0),
-        bringUpClimber(),
-        Commands.waitSeconds(3.0),
-        bringDownClimber(),
-        Commands.waitSeconds(3.0),
-        bringUpClimber(),
-        Commands.waitSeconds(3.0),
-        bringDownClimber());
+        logMessage("Tunnel Forward"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
   }
 
-  public Command firstRungAutoClimb(double prepSeconds) {
+  public Command TunnelReverse() {
     return Commands.sequence(
-        logMessage("First-rung climb auto"),
-        trackingOff(),
-        driveInClimber(),
-        Commands.waitSeconds(prepSeconds),
-        Commands.race(
-            drivebase.driveTeleop(() -> new ChassisSpeeds(0.2, 0.0, 0.0), () -> false),
-            Commands.waitSeconds(0.5)),
-        bringDownClimber());
+        logMessage("Tunnel Reverse"), tunnel.changeSetpoint(TunnelConstants.REVERSE));
   }
 
-  public Command tunnelLaunch() {
-    return Commands.sequence(
-        logMessage("Tunnel Launch"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
-  }
-
-  public Command tunnelForward() {
-    return Commands.sequence(
-        logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.FORWARD));
-  }
-
-  public Command tunnelOff() {
+  public Command TunnelOff() {
     return Commands.sequence(logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.OFF));
   }
 
-  public Command tunnelBackward() {
+  public Command FloorForward() {
     return Commands.sequence(
-        logMessage("Tunnel Off"), tunnel.changeSetpoint(TunnelConstants.REVERSE));
+        logMessage("Floor Forward"), floor.changeSetpoint(FloorConstants.FORWARD));
   }
 
-  public Command FloorOn() {
-    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
-  }
-
-  public Command FloorBackward() {
-    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.REVERSE));
+  public Command FloorReverse() {
+    return Commands.sequence(
+        logMessage("Floor Reverse"), floor.changeSetpoint(FloorConstants.REVERSE));
   }
 
   public Command FloorOff() {
-    return Commands.sequence(logMessage("Floor On"), floor.changeSetpoint(FloorConstants.FORWARD));
+    return Commands.sequence(logMessage("Floor Off"), floor.changeSetpoint(FloorConstants.Off));
   }
 
-  // public Command flywheelShoot() {
-  //   return Commands.sequence(logMessage("Flywheel Shoot"), flywheel.changeSetpointC(60));
-  // }
-
-  // public Command flywheelOff() {
-  //   return Commands.sequence(logMessage("Flywheel Off"), flywheel.changeSetpointC(0));
-  // }
-
-  public Command softTracking() {
+  public Command RunTracking() {
     return Commands.run(
         () -> {
-          // isShooting = true;
           var calc = LaunchCalculator.getInstance();
 
           calc.setEstimatedPose(drivebase.getPose());
           calc.setFieldVelocity(drivebase.getVelocityFieldRelative());
           calc.clearLaunchingParameters();
 
-          var params = calc.getParameters(turretTarget(drivebase.getPose()));
+          var params = calc.getParameters(getTurretTarget(drivebase.getPose()));
 
           flywheel.changeSetpoint(
               Units.radiansPerSecondToRotationsPerMinute(params.flywheelSpeed()));
@@ -421,32 +343,75 @@ public class Superstructure {
         },
         turret,
         hood,
-        flywheel)
-    // .finallyDo(() -> isShooting = false);
-    ;
+        flywheel);
   }
+
+  public Command FixedShot() {
+    return Commands.sequence(
+        flywheel.changeSetpointC(2000), hood.changeSetpointC(10), turret.changeSetpoint(90));
+  }
+
+  // #region Autos
 
   public AutoRoutine TaxiShoot(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("TaxiShoot");
 
     final AutoTrajectory Start = routine.trajectory("TaxiShoot", 0);
 
-    Start.done().onTrue(shootingOn());
-    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), trackingOn(), Start.cmd()));
+    Start.done().onTrue(EnableShooting());
+    routine
+        .active()
+        .onTrue(Commands.sequence(Start.resetOdometry(), EnableTracking(), Start.cmd()));
 
     return routine;
   }
 
-  public AutoRoutine ClimbOnly(AutoFactory factory) {
-    final AutoRoutine routine = factory.newRoutine("ClimbOnly");
+  public AutoRoutine OneCycle(AutoFactory factory) {
+    final AutoRoutine routine = factory.newRoutine("OneCycle");
 
-    final AutoTrajectory Start = routine.trajectory("ClimbOnly", 0);
+    final AutoTrajectory path1 = routine.trajectory("OneCycle", 0);
+    final AutoTrajectory path2 = routine.trajectory("OneCycle", 1);
+    final AutoTrajectory path3 = routine.trajectory("OneCycle", 2);
 
-    Start.done().onTrue(firstRungAutoClimb(2));
-    routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+    path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
+    path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
+    path3.done().onTrue(EnableShooting());
+
+    routine
+        .active()
+        .onTrue(Commands.sequence(path1.resetOdometry(), path1.cmd(), path2.cmd(), path3.cmd()));
 
     return routine;
   }
+
+  public AutoRoutine OneCycleDepot(AutoFactory factory) {
+    final AutoRoutine routine = factory.newRoutine("OneCycleDepot");
+
+    final AutoTrajectory path1 = routine.trajectory("OneCycleDepot", 0);
+    final AutoTrajectory path2 = routine.trajectory("OneCycleDepot", 1);
+    final AutoTrajectory path3 = routine.trajectory("OneCycleDepot", 2);
+
+    path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
+    path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
+    path3.done().onTrue(EnableShooting());
+
+    routine
+        .active()
+        .onTrue(Commands.sequence(path1.resetOdometry(), path1.cmd(), path2.cmd(), path3.cmd()));
+
+    return routine;
+  }
+
+  // public AutoRoutine ClimbOnly(AutoFactory factory) {
+  //   final AutoRoutine routine = factory.newRoutine("ClimbOnly");
+
+  //   final AutoTrajectory Start = routine.trajectory("ClimbOnly", 0);
+
+  //   Start.done().onTrue(firstRungAutoClimb(2));
+  //   routine.active().onTrue(Commands.sequence(Start.resetOdometry(), Start.cmd()));
+
+  //   return routine;
+  // }
 
   public AutoRoutine GreedyAuto(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("GreedyAuto");
@@ -457,28 +422,37 @@ public class Superstructure {
     final AutoTrajectory crossover2 = routine.trajectory("crossover2", 3);
     final AutoTrajectory end = routine.trajectory("end", 4);
 
-    start.atTimeBeforeEnd(0.4).onTrue(Commands.sequence(shootingOn(),Commands.waitSeconds(2.5),new ScheduleCommand(crossover1.cmd()),trackingOff()));
+    start
+        .atTimeBeforeEnd(0.4)
+        .onTrue(
+            Commands.sequence(
+                EnableShooting(),
+                Commands.waitSeconds(2.5),
+                new ScheduleCommand(crossover1.cmd()),
+                DisableTracking()));
 
-    crossover1.done().onTrue(Commands.parallel(intakeFuel(), new ScheduleCommand(intake.cmd())));
+    crossover1.done().onTrue(Commands.parallel(ExtendIntake(), new ScheduleCommand(intake.cmd())));
 
-    intake.done().onTrue(Commands.parallel(intakeRetract(), new ScheduleCommand(crossover2.cmd())));
+    intake.done().onTrue(Commands.parallel(RetractIntake(), new ScheduleCommand(crossover2.cmd())));
 
-    crossover2.done().onTrue(Commands.parallel(shootingOn(), new ScheduleCommand(end.cmd())));
-
-    return routine;
-  }
-
-  public AutoRoutine FireClimb(AutoFactory factory) {
-    final AutoRoutine routine = factory.newRoutine("Fire Climb");
-
-    final AutoTrajectory start = routine.trajectory("Start",0);
-    final AutoTrajectory shoot = routine.trajectory("Shoot", 1);
-    final AutoTrajectory climb = routine.trajectory("Climb",2);
-
-    start.atTimeBeforeEnd(0.3).onTrue(Commands.sequence(shootingOn(), Commands.waitSeconds(8), new ScheduleCommand(shoot.cmd()), trackingOff()));
-
-    shoot.done().onTrue(Commands.parallel(firstRungAutoClimb(2), new ScheduleCommand(climb.cmd())));
+    crossover2.done().onTrue(Commands.parallel(EnableShooting(), new ScheduleCommand(end.cmd())));
 
     return routine;
   }
+
+  // public AutoRoutine FireClimb(AutoFactory factory) {
+  //   final AutoRoutine routine = factory.newRoutine("Fire Climb");
+
+  //   final AutoTrajectory start = routine.trajectory("Start",0);
+  //   final AutoTrajectory shoot = routine.trajectory("Shoot", 1);
+  //   final AutoTrajectory climb = routine.trajectory("Climb",2);
+
+  //   start.atTimeBeforeEnd(0.3).onTrue(Commands.sequence(EnableShooting(),
+  // Commands.waitSeconds(8), new ScheduleCommand(shoot.cmd()), DisableTracking()));
+
+  //   shoot.done().onTrue(Commands.parallel(firstRungAutoClimb(2), new
+  // ScheduleCommand(climb.cmd())));
+
+  //   return routine;
+  // }
 }

@@ -13,14 +13,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -49,7 +45,6 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO_Real;
 import frc.robot.subsystems.shooter.hood.HoodIO_Sim;
 import frc.robot.subsystems.shooter.turret.Turret;
-import frc.robot.subsystems.shooter.turret.TurretConstants;
 import frc.robot.subsystems.shooter.turret.TurretIO_Real;
 import frc.robot.subsystems.shooter.turret.TurretIO_Sim;
 import frc.robot.subsystems.vision.ApriltagCameraIO;
@@ -57,9 +52,8 @@ import frc.robot.subsystems.vision.ApriltagCameraIO_Real;
 import frc.robot.subsystems.vision.ApriltagCameraIO_Sim;
 import frc.robot.subsystems.vision.ApriltagCameras;
 import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.util.CommandKeypad;
 import frc.robot.util.LocalADStarAK;
-import frc.robot.util.geometry.AllianceFlipUtil;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -72,7 +66,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
 
   private CommandXboxController driver = new CommandXboxController(0);
-  private CommandGenericHID operator = new CommandGenericHID(1);
+  private CommandKeypad operator = new CommandKeypad(1);
 
   private final Drivebase drivebase;
   private final Turret turret;
@@ -83,12 +77,6 @@ public class Robot extends LoggedRobot {
   private final Tunnel tunnel;
   private final Climber climber;
   private final Superstructure superstructure;
-
-  @AutoLogOutput(key = "TestValues/Angle")
-  private double testHoodAngle = 10;
-
-  @AutoLogOutput(key = "TestValues/RPM")
-  private double testFlywheelRPM = 2000;
 
   private final ApriltagCameras cameras;
 
@@ -162,7 +150,8 @@ public class Robot extends LoggedRobot {
 
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
     autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
-    autoChooser.addOption("ClimbOnly", superstructure.ClimbOnly(autoFactory).cmd());
+    autoChooser.addOption("OneCycle", superstructure.OneCycle(autoFactory).cmd());
+    autoChooser.addOption("OneCycleDepot", superstructure.OneCycleDepot(autoFactory).cmd());
   }
 
   public static boolean replay = false;
@@ -195,194 +184,50 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * 0.5,
+                        * (superstructure.shooting ? 0.2 : 0.5),
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * 0.5,
+                        * (superstructure.shooting ? 0.2 : 0.5),
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * 0.375),
-            () -> superstructure.isShooting));
+                        * (superstructure.shooting ? 0.2 : 0.375)),
+            () -> superstructure.shooting));
 
-    // Turret Tuning Bindings
-    // operator.button(29).onTrue(turret.changeSetpoint(180));
-    // operator.button(28).onTrue(turret.changeSetpoint(90));
+    driver.rightTrigger().onTrue(superstructure.EnableShooting());
+    driver.rightTrigger().onFalse(superstructure.DisableShooting());
+    driver.leftTrigger().onTrue(superstructure.ToggleShooting());
 
-    // #region Sanger
-    // // RPM and Hood Trim
-    // operator
-    //     .button(28)
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               if (operator.button(27).getAsBoolean()) {
-    //                 testHoodAngle -= 0.25;
-    //               } else {
-    //                 testFlywheelRPM -= 50;
-    //               }
-    //             }));
-    // operator
-    //     .button(29)
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               if (operator.button(27).getAsBoolean()) {
-    //                 testHoodAngle += 0.25;
-    //               } else {
-    //                 testFlywheelRPM += 50;
-    //               }
-    //             }));
-
-    // // Enable Dial Controled Flywheel And Hood
-    // operator
-    //     .button(15)
-    //     .toggleOnTrue(
-    //         Commands.repeatingSequence(
-    //             Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
-    //             Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
-    //     .toggleOnFalse(
-    //         Commands.sequence(
-    //             hood.changeSetpointC(10),
-    //             flywheel.changeSetpointC(0),
-    //             tunnel.changeSetpoint(0),
-    //             floor.changeSetpoint(0)));
-
-    // operator
-    //     .button(25)
-    //     .onTrue(
-    //         Commands.sequence(
-    //             tunnel.changeSetpoint(12),
-    //             floor.changeSetpoint(8),
-    //             intake.changeSetpoint(6),
-    //             intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
-    //             Commands.waitUntil(intake::atSetpoint),
-    //             Commands.repeatingSequence(
-    //                 intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
-    //                 Commands.waitSeconds(0.5),
-    //                 intake.changeSetpoint(ExtensionSetpoint.EXTENDED_SLOW),
-    //                 Commands.waitSeconds(0.5))))
-    //     .onFalse(
-    //         Commands.sequence(
-    //             tunnel.changeSetpoint(0),
-    //             floor.changeSetpoint(0),
-    //             intake.changeSetpoint(0),
-    //             intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)));
-
-    // operator
-    //     .button(20)
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.EXTENDED_FAST)
-    //             .andThen(intake.changeSetpoint(IntakeConstants.Roller.FORWARD)));
-
-    // operator
-    //     .button(24)
-    //     .onTrue(
-    //         intake
-    //             .changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)
-    //             .andThen(intake.changeSetpoint(IntakeConstants.Roller.IDLE)));
-
-    // operator
-    //     .button(6)
-    //     .onTrue(climber.changeClimbSetpoint(12))
-    //     .onFalse(climber.changeClimbSetpoint(0));
-
-    // operator
-    //     .button(11)
-    //     .onTrue(climber.changeClimbSetpoint(-12))
-    //     .onFalse(climber.changeClimbSetpoint(0));
-
-    // operator
-    //     .button(16)
-    //     .onTrue(climber.changePedalSetpoint(2))
-    //     .onFalse(climber.changeClimbSetpoint(0));
-    // operator
-    //     .button(20)
-    //     .onTrue(climber.changePedalSetpoint(-2))
-    //     .onFalse(climber.changeClimbSetpoint(0));
-
-    // #endregion
-
-    // REAL BINDINGS
-
-    driver.rightTrigger().onTrue(superstructure.shootingOn());
-    driver.rightTrigger().onFalse(superstructure.shootingOff());
-    // driver.y().onTrue(superstructure.toggleShooting());
-    operator.button(16).onTrue(superstructure.toggleShooting());
-    operator.button(15).onTrue(superstructure.trackingOn());
-    operator.button(14).onTrue(superstructure.trackingOff());
+    operator.m3().onTrue(superstructure.ToggleShooting());
+    operator.plus().onTrue(superstructure.EnableTracking());
+    operator.enter().onTrue(superstructure.DisableTracking());
 
     driver.x().onTrue(superstructure.HomeRobot());
-    operator.button(opButtons.KnobPush.id).onTrue(superstructure.HomeRobot());
+    operator.knob_press().onTrue(superstructure.HomeRobot());
 
-    operator.button(opButtons.Circle.id).onTrue(superstructure.intakeFuel());
-    operator.button(opButtons.Triangle.id).onTrue(superstructure.intakeRetract());
+    operator.circle().onTrue(superstructure.ExtendIntake());
+    operator.triangle().onTrue(superstructure.RetractIntake());
 
-    // operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
-    // operator
-    //     .button(opButtons.FullClimb.id)
-    //     .onFalse(superstructure.logMessage("fullClimb Sequence Aborted"));
-    // operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
-    // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
-    // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
+    // operator.m1().onTrue(superstructure.ClimberUp());
+    // operator.m2().onTrue(superstructure.ClimberDown());
 
     operator
-        .button(opButtons.M4.id)
-        .onTrue(climber.changeClimbSetpoint(2))
-        .onFalse(climber.changeClimbSetpoint(0));
+        .numClr()
+        .onTrue(climber.changeHookSetpoint(1, true))
+        .onFalse(climber.changeHookSetpoint(0, true));
     operator
-        .button(opButtons.M5.id)
-        .onTrue(climber.changeClimbSetpoint(-2))
-        .onFalse(climber.changeClimbSetpoint(0));
-
-    // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
-    // operator
-    //     .button(opButtons.OverrideTargetToggle.id)
-    //     .onTrue(superstructure.OverrideTargetToggle());
-    // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
-    // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
+        .num7()
+        .onTrue(climber.changeHookSetpoint(-1, true))
+        .onFalse(climber.changeHookSetpoint(0, true));
 
     Logger.start();
   }
 
   @Override
   public void robotPeriodic() {
-
     CommandScheduler.getInstance().run();
-    GamePieceSimulation.getInstance().update();
-
-    // Publishes all code from the SmartDashboard to the keypad screen
-    SmartDashboard.putBoolean("RobotEnabled", isEnabled());
-    SmartDashboard.putBoolean("Autonomous", isAutonomous());
-    SmartDashboard.putBoolean("Teleop", isTeleop());
-    SmartDashboard.putBoolean("Test", isTest());
-    SmartDashboard.putBoolean("Disabled", isDisabled());
-    SmartDashboard.putBoolean("isShooting", superstructure.isShooting);
-    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
-    SmartDashboard.putBoolean("isTracking", superstructure.isTracking);
-    SmartDashboard.putBoolean("isOverridden", superstructure.manualOverride);
-
-    // Helpful combined string
-    String mode = "PASSIVE";
-    if (isEnabled()) {
-      if (isAutonomous()) {
-        mode = "AUTO   ";
-      } else if (isTeleop()) {
-        mode = "TELEOP ";
-      } else if (isTest()) {
-        mode = "TEST   ";
-      }
+    if (RobotBase.isSimulation()) {
+      GamePieceSimulation.getInstance().update();
     }
-    SmartDashboard.putString("RobotMode", mode);
-
-    Logger.recordOutput(
-        "TurretDistance",
-        AllianceFlipUtil.apply(superstructure.turretTarget(drivebase.getPose()))
-            .getDistance(
-                drivebase.getPose().transformBy(TurretConstants.robotToTurret).getTranslation()));
-
-    Logger.recordOutput(
-        "TurretPose", drivebase.getPose().transformBy(TurretConstants.robotToTurret));
   }
 
   @Override
@@ -395,6 +240,13 @@ public class Robot extends LoggedRobot {
     if (autoChooser.get() != null) {
       autoChooser.get().cancel();
     }
-    superstructure.shootingOff();
+    // Force State
+    CommandScheduler.getInstance()
+        .schedule(
+            Commands.sequence(
+                superstructure.DisableTracking(),
+                superstructure.EnableTracking(),
+                superstructure.EnableShooting(),
+                superstructure.DisableShooting()));
   }
 }

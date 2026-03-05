@@ -13,9 +13,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 public class ClimberConstants {
 
   public static final DCMotor CLIMBER_MOTOR = DCMotor.getFalcon500(2);
-  public static final double GEAR_RATIO = 1; // Calculate Later
 
-  public static final double SPROCKET_PD = 1; // Get from Recalc
+  public static final double GEAR_RATIO = 40;
+  public static final double SPROCKET_PD = 1.8037;
 
   public static final double CONVERSION_FACTOR = (Math.PI * SPROCKET_PD);
 
@@ -35,10 +35,6 @@ public class ClimberConstants {
                   .withInverted(InvertedValue.CounterClockwise_Positive)
                   .withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
-          .withMotionMagic(
-              new MotionMagicConfigs()
-                  .withMotionMagicCruiseVelocity(100 / CONVERSION_FACTOR)
-                  .withMotionMagicAcceleration(200 / CONVERSION_FACTOR))
           .withSlot0(new Slot0Configs().withKP(10))
           .withCurrentLimits(
               new CurrentLimitsConfigs()

@@ -84,7 +84,7 @@ public class ClimberIO_Sim implements ClimberIO {
   }
 
   @Override
-  public void changeClimberSetpoint(double newClimberSetpoint) {
+  public void changeHookSetpoint(double newClimberSetpoint, boolean useRawVoltage) {
     var inches =
         MathUtil.clamp(
             newClimberSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);

@@ -60,8 +60,6 @@ public class FlywheelIO_Real implements FlywheelIO {
       leader.setControl(setpoint);
     }
 
-    // leader.setControl(voltage);
-
     follower.setControl(
         new Follower(GlobalConstants.CAN.Shooter_Leader.id, MotorAlignmentValue.Opposed));
 
@@ -80,7 +78,6 @@ public class FlywheelIO_Real implements FlywheelIO {
   @Override
   public void changeSetpoint(double setpoint) {
     this.setpoint.Velocity = (setpoint / 60d); // Convert RPM to rotations per second
-    // this.voltage.Output = setpoint;
   }
 
   @Override

@@ -79,8 +79,7 @@ public class TurretIO_Sim implements TurretIO {
     }
 
     // Add initial offset and convert degrees to motor rotations
-    this.setpoint.Position =
-        (clampedInput + TurretConstants.ORIGIN_POSITION) / TurretConstants.CONVERSION_FACTOR;
+    this.setpoint.Position = clampedInput / TurretConstants.CONVERSION_FACTOR;
     this.setpoint.FeedForward = 0;
   }
 

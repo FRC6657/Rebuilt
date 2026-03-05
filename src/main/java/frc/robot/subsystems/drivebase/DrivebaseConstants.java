@@ -116,14 +116,14 @@ public class DrivebaseConstants {
   public static final double kMaxAzimuthSpeed =
       (kTurnMotor.freeSpeedRadPerSec) * (1d / kTurnRatio) * 0.9;
 
-  public static double kDriveStatorLimit = 80; // Amps
+  public static double kDriveStatorLimit = 60; // Amps
 
   // Motor Configurations
   public static TalonFXConfiguration driveConfig =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(60)
+                  .withSupplyCurrentLimit(40)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimit(kDriveStatorLimit)
                   .withStatorCurrentLimitEnable(true))

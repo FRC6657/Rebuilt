@@ -19,18 +19,10 @@ public class Climber extends SubsystemBase {
     this.io = io;
   }
 
-  public Command changeSetpoints(double newClimberSetpoint, double newPedalSetpoint) {
+  public Command changeHookSetpoint(double setpoint, boolean useRawVoltage) {
     return runOnce(
         () -> {
-          io.changeClimberSetpoint(newClimberSetpoint);
-          io.changePedalSetpoint(newPedalSetpoint);
-        });
-  }
-
-  public Command changeClimbSetpoint(double setpoint) {
-    return runOnce(
-        () -> {
-          io.changeClimberSetpoint(setpoint);
+          io.changeHookSetpoint(setpoint, useRawVoltage);
         });
   }
 

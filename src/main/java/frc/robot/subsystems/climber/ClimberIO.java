@@ -27,7 +27,7 @@ public interface ClimberIO {
 
   public default void updateInputs(ClimberIOInputs inputs) {}
 
-  public default void changeClimberSetpoint(double newClimberSetpoint) {}
+  public default void changeHookSetpoint(double setpoint, boolean useRawVoltage) {}
 
-  public default void changePedalSetpoint(double newPedalSetpoint) {}
+  public default void changePedalSetpoint(double setpoint) {}
 }
