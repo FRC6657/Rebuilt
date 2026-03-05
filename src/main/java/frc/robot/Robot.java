@@ -327,6 +327,15 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
+    operator
+        .button(20)
+        .onTrue(climber.changeClimbSetpoint(6))
+        .onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(24)
+        .onTrue(climber.changeClimbSetpoint(-6))
+        .onFalse(climber.changeClimbSetpoint(0));
+
     // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
     // operator
     //     .button(opButtons.OverrideTargetToggle.id)
