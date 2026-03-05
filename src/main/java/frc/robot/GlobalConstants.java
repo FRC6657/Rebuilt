@@ -55,8 +55,22 @@ public class GlobalConstants {
     M2(11),
     Seven(12),
     Eight(13),
+    Nine(14),
+    Plus(15),
+    M3(16),
+    Four(17),
+    Five(18),
+    Six(19),
     M4(20),
-    M5(24);
+    One(21),
+    Two(22),
+    Three(23),
+    M5(24),
+    Zero(25),
+    Period(26),
+    Enter(27),
+    KnobLeft(28),
+    KnobRight(29);
 
     public int id;
 

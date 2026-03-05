@@ -8,8 +8,6 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -308,8 +306,8 @@ public class Robot extends LoggedRobot {
 
     // REAL BINDINGS
 
-    driver.leftTrigger().onTrue(superstructure.shootingOn());
-    driver.leftTrigger().onFalse(superstructure.shootingOff());
+    driver.rightTrigger().onTrue(superstructure.shootingOn());
+    driver.rightTrigger().onFalse(superstructure.shootingOff());
     // driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
     operator.button(15).onTrue(superstructure.trackingOn());
@@ -344,11 +342,7 @@ public class Robot extends LoggedRobot {
     //     .onTrue(superstructure.OverrideTargetToggle());
     // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
     // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
-    operator
-        .button(opButtons.Eight.id)
-        .onTrue(
-            Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 5, new Rotation2d()))));
-    driver.a().onTrue(superstructure.softTracking());
+
     Logger.start();
   }
 
