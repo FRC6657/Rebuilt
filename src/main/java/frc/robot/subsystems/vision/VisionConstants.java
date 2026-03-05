@@ -55,7 +55,7 @@ public class VisionConstants {
   // Camera definitions (transforms are placeholders - update with real CAD values)
   public static CameraInfo Black1 =
       new CameraInfo(
-          "6657-9281-4",
+          "6657-9291-4", // intentional typo
           new Transform3d(
               new Translation3d(0.253248, -0.331830, 0.229592),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(240))),
