@@ -43,17 +43,20 @@ public class GlobalConstants {
   }
 
   public static enum opButtons {
-    HomeRobot(1),
-    Intake(2),
-    StopIntake(3),
-    FullClimb(5),
-    ManualClimberInit(6),
-    ManualClimberDown(7),
-    ManualClimberUp(8),
-    ManualOverride(9),
-    OverrideTargetToggle(10),
-    OverrideIncrease(11),
-    OverrideDecrease(12);
+    KnobPush(1),
+    Circle(2),
+    Triangle(3),
+    Cross(5),
+    M1(6),
+    NumClr(7),
+    Slash(8),
+    Star(9),
+    Minus(10),
+    M2(11),
+    Seven(12),
+    Eight(13),
+    M4(20),
+    M5(24);
 
     public int id;
 

@@ -315,10 +315,10 @@ public class Robot extends LoggedRobot {
     operator.button(14).onTrue(superstructure.trackingOff());
 
     driver.x().onTrue(superstructure.HomeRobot());
-    operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
+    operator.button(opButtons.KnobPush.id).onTrue(superstructure.HomeRobot());
 
-    operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
-    operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
+    operator.button(opButtons.Circle.id).onTrue(superstructure.intakeFuel());
+    operator.button(opButtons.Triangle.id).onTrue(superstructure.intakeRetract());
 
     // operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
     // operator
@@ -329,11 +329,11 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
 
     operator
-        .button(20)
+        .button(opButtons.M4.id)
         .onTrue(climber.changeClimbSetpoint(2))
         .onFalse(climber.changeClimbSetpoint(0));
     operator
-        .button(24)
+        .button(opButtons.M5.id)
         .onTrue(climber.changeClimbSetpoint(-2))
         .onFalse(climber.changeClimbSetpoint(0));
 
@@ -344,7 +344,7 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.OverrideIncrease.id).onTrue(superstructure.moveTurret(1));
     // operator.button(opButtons.OverrideDecrease.id).onTrue(superstructure.moveTurret(-1));
     operator
-        .button(13)
+        .button(opButtons.Eight.id)
         .onTrue(
             Commands.runOnce(() -> drivebase.resetPose(new Pose2d(2.441, 5, new Rotation2d()))));
     driver.a().onTrue(superstructure.softTracking());
