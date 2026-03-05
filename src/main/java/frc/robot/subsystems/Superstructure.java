@@ -459,7 +459,14 @@ public class Superstructure {
     final AutoTrajectory crossover2 = routine.trajectory("crossover2", 3);
     final AutoTrajectory end = routine.trajectory("end", 4);
 
-    start.atTimeBeforeEnd(0.4).onTrue(Commands.sequence(shootingOn(),Commands.waitSeconds(2.5),new ScheduleCommand(crossover1.cmd()),trackingOff()));
+    start
+        .atTimeBeforeEnd(0.4)
+        .onTrue(
+            Commands.sequence(
+                shootingOn(),
+                Commands.waitSeconds(2.5),
+                new ScheduleCommand(crossover1.cmd()),
+                trackingOff()));
 
     crossover1.done().onTrue(Commands.parallel(intakeFuel(), new ScheduleCommand(intake.cmd())));
 
@@ -473,11 +480,18 @@ public class Superstructure {
   public AutoRoutine FireClimb(AutoFactory factory) {
     final AutoRoutine routine = factory.newRoutine("Fire Climb");
 
-    final AutoTrajectory start = routine.trajectory("Start",0);
+    final AutoTrajectory start = routine.trajectory("Start", 0);
     final AutoTrajectory shoot = routine.trajectory("Shoot", 1);
-    final AutoTrajectory climb = routine.trajectory("Climb",2);
+    final AutoTrajectory climb = routine.trajectory("Climb", 2);
 
-    start.atTimeBeforeEnd(0.3).onTrue(Commands.sequence(shootingOn(), Commands.waitSeconds(8), new ScheduleCommand(shoot.cmd()), trackingOff()));
+    start
+        .atTimeBeforeEnd(0.3)
+        .onTrue(
+            Commands.sequence(
+                shootingOn(),
+                Commands.waitSeconds(8),
+                new ScheduleCommand(shoot.cmd()),
+                trackingOff()));
 
     shoot.done().onTrue(Commands.parallel(firstRungAutoClimb(2), new ScheduleCommand(climb.cmd())));
 

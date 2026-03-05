@@ -165,6 +165,7 @@ public class Robot extends LoggedRobot {
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
     autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
     autoChooser.addOption("ClimbOnly", superstructure.ClimbOnly(autoFactory).cmd());
+    autoChooser.addOption("FireShoot", superstructure.FireClimb(autoFactory).cmd());
   }
 
   public static boolean replay = false;
@@ -309,7 +310,7 @@ public class Robot extends LoggedRobot {
 
     driver.leftTrigger().onTrue(superstructure.shootingOn());
     driver.leftTrigger().onFalse(superstructure.shootingOff());
-    //driver.y().onTrue(superstructure.toggleShooting());
+    // driver.y().onTrue(superstructure.toggleShooting());
     operator.button(16).onTrue(superstructure.toggleShooting());
     operator.button(15).onTrue(superstructure.trackingOn());
     operator.button(14).onTrue(superstructure.trackingOff());
