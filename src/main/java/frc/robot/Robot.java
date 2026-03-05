@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.GlobalConstants.opButtons;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
@@ -306,18 +307,18 @@ public class Robot extends LoggedRobot {
 
     // REAL BINDINGS
 
-    // driver.leftTrigger().onTrue(superstructure.shootingOn());
-    // driver.leftTrigger().onFalse(superstructure.shootingOff());
-    // driver.y().onTrue(superstructure.toggleShooting());
-    // operator.button(16).onTrue(superstructure.toggleShooting());
-    // operator.button(15).onTrue(superstructure.trackingOn());
-    // operator.button(14).onTrue(superstructure.trackingOff());
+    driver.leftTrigger().onTrue(superstructure.shootingOn());
+    driver.leftTrigger().onFalse(superstructure.shootingOff());
+    //driver.y().onTrue(superstructure.toggleShooting());
+    operator.button(16).onTrue(superstructure.toggleShooting());
+    operator.button(15).onTrue(superstructure.trackingOn());
+    operator.button(14).onTrue(superstructure.trackingOff());
 
-    // driver.x().onTrue(superstructure.HomeRobot());
-    // operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
+    driver.x().onTrue(superstructure.HomeRobot());
+    operator.button(opButtons.HomeRobot.id).onTrue(superstructure.HomeRobot());
 
-    // operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
-    // operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
+    operator.button(opButtons.Intake.id).onTrue(superstructure.intakeFuel());
+    operator.button(opButtons.StopIntake.id).onTrue(superstructure.intakeRetract());
 
     // operator.button(opButtons.FullClimb.id).whileTrue(superstructure.fullClimb());
     // operator
@@ -326,6 +327,15 @@ public class Robot extends LoggedRobot {
     // operator.button(opButtons.ManualClimberInit.id).onTrue(superstructure.driveInClimber());
     // operator.button(opButtons.ManualClimberDown.id).onTrue(superstructure.bringDownClimber());
     // operator.button(opButtons.ManualClimberUp.id).onTrue(superstructure.bringUpClimber());
+
+    operator
+        .button(20)
+        .onTrue(climber.changeClimbSetpoint(2))
+        .onFalse(climber.changeClimbSetpoint(0));
+    operator
+        .button(24)
+        .onTrue(climber.changeClimbSetpoint(-2))
+        .onFalse(climber.changeClimbSetpoint(0));
 
     // operator.button(opButtons.ManualOverride.id).onTrue(superstructure.ManualOverrideToggle());
     // operator

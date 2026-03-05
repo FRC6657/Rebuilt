@@ -246,7 +246,10 @@ public class Superstructure {
    * @return the turret-relative heading in degrees
    */
   public Rotation2d getRelativeTurretHeading(Rotation2d globalHeading) {
-    return globalHeading.minus(drivebase.getPose().getRotation()).minus(Rotation2d.kCW_90deg).times(-1);
+    return globalHeading
+        .minus(drivebase.getPose().getRotation())
+        .minus(Rotation2d.kCW_90deg)
+        .times(-1);
   }
 
   /** Schedules a turret tracking command that aims the turret at the turret target. */
