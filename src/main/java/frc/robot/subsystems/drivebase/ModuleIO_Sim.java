@@ -1,8 +1,10 @@
 package frc.robot.subsystems.drivebase;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -14,6 +16,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.ModuleConstants;
 
+/**
+ * Simulated swerve module implementation using DCMotorSim physics models. The drive motor uses
+ * TalonFX sim state for CTRE velocity PID, while the turn motor uses a WPILib PID controller with
+ * continuous wrapping.
+ */
 public class ModuleIO_Sim implements ModuleIO {
 
   private final ModuleConstants constants;
@@ -38,7 +45,11 @@ public class ModuleIO_Sim implements ModuleIO {
     this.constants = constants;
 
     drive = new TalonFX(constants.driveID());
-    drive.getConfigurator().apply(DrivebaseConstants.driveConfig);
+    drive
+        .getConfigurator()
+        .apply(
+            DrivebaseConstants.driveConfig.withMotorOutput(
+                new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)));
 
     turnPID.enableContinuousInput(-0.5, 0.5);
 

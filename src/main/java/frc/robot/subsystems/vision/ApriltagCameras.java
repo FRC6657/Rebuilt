@@ -17,6 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Vision subsystem that manages multiple AprilTag cameras. Each cycle it reads pose observations
+ * from all cameras, filters out invalid estimates, computes confidence-weighted standard
+ * deviations, and passes accepted poses to a consumer (typically the drivebase pose estimator).
+ */
 public class ApriltagCameras extends SubsystemBase {
 
   private final VisionConsumer consumer;
@@ -24,6 +29,10 @@ public class ApriltagCameras extends SubsystemBase {
   private final ApriltagCameraIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
+  /**
+   * @param consumer callback that receives accepted vision pose measurements
+   * @param io one or more camera IO implementations
+   */
   public ApriltagCameras(VisionConsumer consumer, ApriltagCameraIO... io) {
     this.consumer = consumer;
     this.io = io;
@@ -155,8 +164,14 @@ public class ApriltagCameras extends SubsystemBase {
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
   }
 
+  /** Functional interface for consuming accepted vision pose measurements. */
   @FunctionalInterface
   public static interface VisionConsumer {
+    /**
+     * @param visionRobotPoseMeters the estimated robot pose from vision
+     * @param timestampSeconds the FPGA timestamp of the observation
+     * @param visionMeasurementStdDevs the [x, y, theta] standard deviations
+     */
     public void accept(
         Pose2d visionRobotPoseMeters,
         double timestampSeconds,

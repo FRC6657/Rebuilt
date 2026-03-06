@@ -18,26 +18,32 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.GlobalConstants;
 
+/**
+ * Constants for the swerve drivebase including CAN IDs, physical dimensions, gear ratios, speed
+ * limits, motor configs, and PID controllers.
+ */
 public class DrivebaseConstants {
 
+  /** High-frequency odometry sampling rate in Hz (separate from the main loop). */
   public static int kOdometryFrequency = 150; // Hz
 
-  // Drivebase CAN IDs
+  /** CAN IDs for all drivebase devices (drive, turn, encoder motors and gyro). */
   public static enum CAN {
-    FR_D(1),
-    FL_D(2),
-    BR_D(3),
-    BL_D(4),
-    FR_T(5),
-    FL_T(6),
-    BR_T(7),
-    BL_T(8),
-    FR_E(9),
-    FL_E(10),
-    BR_E(11),
-    BL_E(12),
-    Gyro(13);
+    FR_D(GlobalConstants.CAN.Swerve_FR_D.id),
+    FL_D(GlobalConstants.CAN.Swerve_FL_D.id),
+    BR_D(GlobalConstants.CAN.Swerve_BR_D.id),
+    BL_D(GlobalConstants.CAN.Swerve_BL_D.id),
+    FR_T(GlobalConstants.CAN.Swerve_FR_T.id),
+    FL_T(GlobalConstants.CAN.Swerve_FL_T.id),
+    BR_T(GlobalConstants.CAN.Swerve_BR_T.id),
+    BL_T(GlobalConstants.CAN.Swerve_BL_T.id),
+    FR_E(GlobalConstants.CAN.Swerve_FR_E.id),
+    FL_E(GlobalConstants.CAN.Swerve_FL_E.id),
+    BR_E(GlobalConstants.CAN.Swerve_BR_E.id),
+    BL_E(GlobalConstants.CAN.Swerve_BL_E.id),
+    Gyro(GlobalConstants.CAN.Swerve_Gyro.id);
 
     public int id;
 
@@ -47,8 +53,8 @@ public class DrivebaseConstants {
   }
 
   // Physical Characteristics
-  public static final double kFrameWidth = Units.inchesToMeters(29); // +- Y Direction
-  public static final double kFrameLength = Units.inchesToMeters(29); // +- X Direction
+  public static final double kFrameWidth = Units.inchesToMeters(27); // +- Y Direction
+  public static final double kFrameLength = Units.inchesToMeters(27); // +- X Direction
   public static final double kMK4iTW_Offset = Units.inchesToMeters(2.625);
 
   public static final double kTrackWidthX = (kFrameLength - kMK4iTW_Offset * 2);
@@ -72,7 +78,7 @@ public class DrivebaseConstants {
   public static final ModuleConstants kBackRightModuleConstants =
       new ModuleConstants("Back Right", CAN.BR_D.id, CAN.BR_T.id, CAN.BR_E.id);
 
-  // Enum representation of the MK4i Ratio Options
+  /** MK4i swerve module drive gear ratio options (output/input). */
   public static enum MK4i_Ratio {
     L1(19d / 25d),
     L2(17d / 27d),
@@ -95,12 +101,14 @@ public class DrivebaseConstants {
   public static final double kTurnRatio = (150d / 7d);
   public static final double kDriveRotorToMeters = kDriveRatio / (kDriveWheelDiameter * Math.PI);
 
-  public static final double kMaxLinearSpeed =
-      (Units.radiansPerSecondToRotationsPerMinute(kDriveMotor.freeSpeedRadPerSec) / 60d)
-          * 1d
-          / kDriveRatio
-          * (kDriveWheelDiameter * Math.PI)
-          * 0.8; // Meters Per Second
+  //   public static final double kMaxLinearSpeed =
+  //       (Units.radiansPerSecondToRotationsPerMinute(kDriveMotor.freeSpeedRadPerSec) / 60d)
+  //           * (1d / kDriveRatio)
+  //           * (kDriveWheelDiameter * Math.PI)
+  //           * 0.8; // Meters Per Second
+
+  public static final double kMaxLinearSpeed = Units.feetToMeters(15.5);
+
   public static final double kMaxLinearAcceleration =
       8; // Meters per second per second (rough underestimate of the traction limit)
   public static final double kMaxAngularSpeed =
@@ -108,21 +116,21 @@ public class DrivebaseConstants {
   public static final double kMaxAzimuthSpeed =
       (kTurnMotor.freeSpeedRadPerSec) * (1d / kTurnRatio) * 0.9;
 
-  public static double kDriveStatorLimit = 80; // Amps
+  public static double kDriveStatorLimit = 60; // Amps
 
   // Motor Configurations
   public static TalonFXConfiguration driveConfig =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(60)
+                  .withSupplyCurrentLimit(40)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimit(kDriveStatorLimit)
                   .withStatorCurrentLimitEnable(true))
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withInverted(InvertedValue.Clockwise_Positive)
-                  .withNeutralMode(NeutralModeValue.Coast))
+                  .withInverted(InvertedValue.CounterClockwise_Positive)
+                  .withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kDriveRotorToMeters))
           .withSlot0(new Slot0Configs().withKV(12d / kMaxLinearSpeed).withKS(0).withKP(2.25));
 

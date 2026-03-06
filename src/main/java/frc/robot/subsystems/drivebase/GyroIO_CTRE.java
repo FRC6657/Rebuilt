@@ -12,11 +12,15 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.CAN;
 import java.util.Queue;
 
+/**
+ * CTRE Pigeon2 gyroscope implementation. Registers yaw for high-frequency odometry sampling via the
+ * PhoenixOdometryThread.
+ */
 public class GyroIO_CTRE implements GyroIO {
 
-  private final Pigeon2 gyro; // Gryo
-  private final StatusSignal<Angle> yaw; // Yaw
-  private final StatusSignal<AngularVelocity> yawVelocity; // Pitch
+  private final Pigeon2 gyro;
+  private final StatusSignal<Angle> yaw;
+  private final StatusSignal<AngularVelocity> yawVelocity;
 
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> yawTimestampQueue;

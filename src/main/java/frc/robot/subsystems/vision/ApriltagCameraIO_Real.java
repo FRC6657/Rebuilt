@@ -9,11 +9,18 @@ import java.util.List;
 import java.util.Set;
 import org.photonvision.PhotonCamera;
 
+/**
+ * Real hardware implementation of an AprilTag camera using PhotonVision. Processes both multi-tag
+ * and single-tag results into robot pose estimates.
+ */
 public class ApriltagCameraIO_Real implements ApriltagCameraIO {
 
   PhotonCamera camera;
   CameraInfo cameraInfo;
 
+  /**
+   * @param cameraInfo the camera configuration (name, transform, FOV, resolution)
+   */
   public ApriltagCameraIO_Real(CameraInfo cameraInfo) {
     this.cameraInfo = cameraInfo;
     camera = new PhotonCamera(cameraInfo.cameraName);

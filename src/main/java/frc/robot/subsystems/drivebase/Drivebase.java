@@ -23,13 +23,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Swerve drivebase subsystem managing four MK4i swerve modules, a gyro, and pose estimation.
+ * Supports teleop driving, trajectory following (Choreo/PathPlanner), vision-assisted localization.
+ */
 public class Drivebase extends SubsystemBase {
 
   private final GyroIO gyroIO;
@@ -42,6 +48,7 @@ public class Drivebase extends SubsystemBase {
   private final SwerveSetpointGenerator setpointGenerator;
   private SwerveSetpoint previousSetpoint;
 
+  /** Lock shared with the odometry thread to synchronize sensor reads. */
   static final Lock odometryLock = new ReentrantLock();
 
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
@@ -52,6 +59,13 @@ public class Drivebase extends SubsystemBase {
         new SwerveModulePosition()
       };
 
+  /**
+   * Constructs the drivebase with the given gyro and module IOs. Initializes kinematics, pose
+   * estimation, setpoint generation, and starts the odometry thread.
+   *
+   * @param gyroIO the gyroscope hardware IO
+   * @param moduleIOs array of 4 module IOs [FL, FR, BL, BR]
+   */
   public Drivebase(GyroIO gyroIO, ModuleIO[] moduleIOs) {
 
     this.modules = new Module[moduleIOs.length];
@@ -138,8 +152,9 @@ public class Drivebase extends SubsystemBase {
     return speeds;
   }
 
+  /** Runs the drivetrain at the given robot-relative speeds in closed-loop mode. */
   public void drive(ChassisSpeeds speeds) {
-    drive(speeds, false);
+    drive(speeds, false, false);
   }
 
   /**
@@ -147,7 +162,19 @@ public class Drivebase extends SubsystemBase {
    *
    * @param speeds The desired robot relative speeds
    */
-  public void drive(ChassisSpeeds speeds, boolean openLoop) {
+  public void drive(ChassisSpeeds speeds, boolean openLoop, boolean isShooting) {
+
+    if (isShooting) {
+      // Adjust translational velocities so the robot rotates around the turret center
+      // instead of the robot center, then let the setpoint generator handle smoothing.
+      double cx = TurretConstants.TURRET_CENTER.getX();
+      double cy = TurretConstants.TURRET_CENTER.getY();
+      speeds =
+          new ChassisSpeeds(
+              speeds.vxMetersPerSecond + speeds.omegaRadiansPerSecond * cy,
+              speeds.vyMetersPerSecond - speeds.omegaRadiansPerSecond * cx,
+              speeds.omegaRadiansPerSecond);
+    }
 
     previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
 
@@ -191,7 +218,7 @@ public class Drivebase extends SubsystemBase {
    * @param speeds The desired field relative speeds
    * @return The command to run the drivetrain for teleop with field relative speeds
    */
-  public Command driveTeleop(Supplier<ChassisSpeeds> speeds) {
+  public Command driveTeleop(Supplier<ChassisSpeeds> speeds, BooleanSupplier isShooting) {
     return this.run(
         () -> {
           var speed =
@@ -200,7 +227,7 @@ public class Drivebase extends SubsystemBase {
                   DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
                       ? getPose().getRotation()
                       : getPose().getRotation().minus(Rotation2d.fromDegrees(180)));
-          this.drive(speed, false);
+          this.drive(speed, true, isShooting.getAsBoolean());
         });
   }
 
@@ -208,6 +235,11 @@ public class Drivebase extends SubsystemBase {
   PIDController choreoYController = DrivebaseConstants.kChoreoYController;
   PIDController choreoThetaController = DrivebaseConstants.kChoreoThetaController;
 
+  /**
+   * Follows a Choreo trajectory sample using feedforward + PID feedback on X, Y, and theta.
+   *
+   * @param sample the desired trajectory state at the current timestamp
+   */
   public void followTrajectory(SwerveSample sample) {
 
     Logger.recordOutput("Choreo/DesiredPose", sample.getPose());
@@ -231,6 +263,13 @@ public class Drivebase extends SubsystemBase {
     drive(out);
   }
 
+  /**
+   * Adds a vision-based pose measurement to the pose estimator (real/replay only).
+   *
+   * @param visionPose the estimated robot pose from vision
+   * @param timestamp the FPGA timestamp of the observation
+   * @param stdDevs the standard deviations [x, y, theta] for this measurement
+   */
   public void addVisionMeasurement(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {
     if (RobotBase.isReal() || Robot.replay) {
       poseEstimator.addVisionMeasurement(visionPose, timestamp, stdDevs);
@@ -292,9 +331,15 @@ public class Drivebase extends SubsystemBase {
                 }));
   }
 
+  /**
+   * Periodic function called each robot loop iteration. Updates gyro and module inputs under the
+   * odometry lock, then processes high-frequency odometry samples (real/replay) or integrates
+   * simulated heading (sim).
+   */
   @Override
   public void periodic() {
 
+    // Acquire lock to safely read sensors shared with the odometry thread
     odometryLock.lock();
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Swerve/Gyro", gyroInputs);
@@ -302,7 +347,9 @@ public class Drivebase extends SubsystemBase {
       module.updateInputs();
     }
     odometryLock.unlock();
+
     if (RobotBase.isReal() || Robot.replay) {
+      // Process each high-frequency odometry sample collected since last periodic
       double[] sampleTimestamps = modules[0].getOdometryTimestamps();
       for (int i = 0; i < sampleTimestamps.length; i++) {
         SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
@@ -324,6 +371,7 @@ public class Drivebase extends SubsystemBase {
         }
       }
     } else {
+      // In simulation, integrate chassis angular velocity to derive heading
       var simHeading = getPose().getRotation();
       var gyroDelta =
           new Rotation2d(

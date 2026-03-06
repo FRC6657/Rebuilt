@@ -14,12 +14,15 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.drivebase.DrivebaseConstants.ModuleConstants;
 import java.util.Queue;
 
+/**
+ * Real hardware implementation of a swerve module using TalonFX drive/turn motors and a Canandmag
+ * absolute encoder. Registers drive/turn positions for high-frequency odometry sampling.
+ */
 public class ModuleIO_Real implements ModuleIO {
 
-  // Module Specific Constants
   private final ModuleConstants constants;
 
-  // Module Hardware
+  // Module hardware
   private final TalonFX drive;
   private final TalonFX turn;
   private final Canandmag encoder;
@@ -89,6 +92,22 @@ public class ModuleIO_Real implements ModuleIO {
     // Optimize Bus Utilization
     drive.optimizeBusUtilization();
     turn.optimizeBusUtilization();
+
+    // if (constants.encoderID() == 12) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(1.4733885467641583)));
+    // } else if (constants.encoderID() == 11) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(4.6644520807632635)));
+    // } else if (constants.encoderID() == 10) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(4.6383744073692075)));
+    // } else if (constants.encoderID() == 9) {
+    //   encoder.setSettings(
+    //       new CanandmagSettings().setZeroOffset(Units.radiansToRotations(1.564660403643354)));
+    // }
+
+    encoder.setSettings(new CanandmagSettings().setInvertDirection(true));
 
     // Seed relative encoder
     turn.setPosition(encoder.getAbsPosition());
