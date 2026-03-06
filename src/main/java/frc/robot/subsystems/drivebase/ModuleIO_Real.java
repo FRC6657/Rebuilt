@@ -73,6 +73,8 @@ public class ModuleIO_Real implements ModuleIO {
     turnAppliedVolts = turn.getMotorVoltage();
     turnCurrent = turn.getStatorCurrent();
 
+    encoder.setSettings(new CanandmagSettings().setInvertDirection(true));
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         DrivebaseConstants.kOdometryFrequency, drivePosition, turnPosition);
 
