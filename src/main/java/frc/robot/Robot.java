@@ -162,7 +162,7 @@ public class Robot extends LoggedRobot {
 
     Pathfinding.setPathfinder(new LocalADStarAK());
 
-    Logger.recordMetadata("Arborbotics", "RobotName");
+    Logger.recordMetadata("Arborbotics", "PortH");
 
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter());
