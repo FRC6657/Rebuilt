@@ -59,11 +59,7 @@ public class ClimberConstants {
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
             .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
-            .withMotionMagic(
-                new MotionMagicConfigs()
-                    .withMotionMagicCruiseVelocity(360d / 360d)
-                    .withMotionMagicAcceleration(1080d / 360d))
-            .withSlot0(new Slot0Configs().withKP(40))
+            .withSlot0(new Slot0Configs().withKP(10))
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
                     .withSupplyCurrentLimit(40)

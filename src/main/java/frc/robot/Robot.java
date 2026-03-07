@@ -213,17 +213,20 @@ public class Robot extends LoggedRobot {
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
 
-    operator.m4().onTrue(superstructure.ClimberUp());
-    operator.m5().onTrue(superstructure.ClimberDown());
+    // operator.m4().onTrue(superstructure.ClimberUp());
+    // operator.m5().onTrue(superstructure.ClimberDown());
 
-    operator
-        .numClr()
-        .onTrue(climber.changeHookSetpoint(1, true))
-        .onFalse(climber.changeHookSetpoint(0, true));
-    operator
-        .num7()
-        .onTrue(climber.changeHookSetpoint(-1, true))
-        .onFalse(climber.changeHookSetpoint(0, true));
+    // operator
+    //     .numClr()
+    //     .onTrue(climber.changeHookSetpoint(2, true))
+    //     .onFalse(climber.changeHookSetpoint(0, true));
+    // operator
+    //     .num7()
+    //     .onTrue(climber.changeHookSetpoint(-12, true))
+    //     .onFalse(climber.changeHookSetpoint(0, true));
+
+    // operator.forwardSlash().onTrue(climber.changePedalSetpoint(90));
+    // operator.num8().onTrue(climber.changePedalSetpoint(0));
 
     // #region Debug Controls
 
