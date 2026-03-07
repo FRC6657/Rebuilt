@@ -14,7 +14,7 @@ public class ClimberConstants {
 
   public static final DCMotor CLIMBER_MOTOR = DCMotor.getFalcon500(2);
 
-  public static final double GEAR_RATIO = 40;
+  public static final double GEAR_RATIO = 20;
   public static final double SPROCKET_PD = 1.8037;
 
   public static final double CONVERSION_FACTOR = (Math.PI * SPROCKET_PD);
@@ -46,7 +46,7 @@ public class ClimberConstants {
   public class Pedal {
 
     public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
-    public static final double PEDAL_GEAR_RATIO = 1; // Find later bois
+    public static final double PEDAL_GEAR_RATIO = 20; // Find later bois
 
     public static final double PEDAL_MIN_ANGLE = 0.0;
     public static final double PEDAL_MAX_ANGLE = 120.0;

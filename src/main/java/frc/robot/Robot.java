@@ -82,8 +82,8 @@ public class Robot extends LoggedRobot {
 
   private final AutoFactory autoFactory;
 
-  //private double testHoodAngle = 10;
-  //private double testFlywheelRPM = 2000;
+  // private double testHoodAngle = 10;
+  // private double testFlywheelRPM = 2000;
 
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
@@ -213,8 +213,8 @@ public class Robot extends LoggedRobot {
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
 
-    // operator.m1().onTrue(superstructure.ClimberUp());
-    // operator.m2().onTrue(superstructure.ClimberDown());
+    operator.m4().onTrue(superstructure.ClimberUp());
+    operator.m5().onTrue(superstructure.ClimberDown());
 
     operator
         .numClr()

@@ -375,7 +375,7 @@ public class Superstructure {
 
     path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
     path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
-    path3.done().onTrue(EnableShooting());
+    path3.done().onTrue(EnableShooting().andThen(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)));
 
     routine
         .active()
