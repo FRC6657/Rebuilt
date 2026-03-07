@@ -8,7 +8,6 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -83,6 +82,9 @@ public class Robot extends LoggedRobot {
 
   private final AutoFactory autoFactory;
 
+  //private double testHoodAngle = 10;
+  //private double testFlywheelRPM = 2000;
+
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
@@ -149,6 +151,7 @@ public class Robot extends LoggedRobot {
         () -> false,
         drivebase);
 
+    // #region Autos
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
     autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
     autoChooser.addOption("OneCycle", superstructure.OneCycle(autoFactory).cmd());
@@ -179,6 +182,8 @@ public class Robot extends LoggedRobot {
       }
     }
 
+    // #region Driver Controls
+
     drivebase.setDefaultCommand(
         drivebase.driveTeleop(
             () ->
@@ -202,8 +207,8 @@ public class Robot extends LoggedRobot {
     operator.plus().onTrue(superstructure.EnableTracking());
     operator.enter().onTrue(superstructure.DisableTracking());
 
-    driver.x().onTrue(superstructure.HomeRobot());
-    operator.knob_press().onTrue(superstructure.HomeRobot());
+    // driver.x().onTrue(superstructure.HomeRobot());
+    // operator.knob_press().onTrue(superstructure.HomeRobot());
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
@@ -220,9 +225,47 @@ public class Robot extends LoggedRobot {
         .onTrue(climber.changeHookSetpoint(-1, true))
         .onFalse(climber.changeHookSetpoint(0, true));
 
-    Logger.start();
+    // #region Debug Controls
 
-    driver.x().onTrue(Commands.runOnce(() -> drivebase.resetPose(new Pose2d()), drivebase));
+    // RPM and Hood Trim
+    // operator
+    //     .knob_left()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle -= 0.25;
+    //               } else {
+    //                 testFlywheelRPM -= 50;
+    //               }
+    //             }));
+    // operator
+    //     .knob_right()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle += 0.25;
+    //               } else {
+    //                 testFlywheelRPM += 50;
+    //               }
+    //             }));
+
+    // // Enable Dial Controled Flywheel And Hood
+    // driver
+    //     .a()
+    //     .toggleOnTrue(
+    //         Commands.repeatingSequence(
+    //             Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
+    //             Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
+    //     .toggleOnFalse(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(10),
+    //             flywheel.changeSetpointC(0),
+    //             tunnel.changeSetpoint(0),
+    //             floor.changeSetpoint(0)));
+
+    Logger.start();
   }
 
   @Override
@@ -243,13 +286,13 @@ public class Robot extends LoggedRobot {
     if (autoChooser.get() != null) {
       autoChooser.get().cancel();
     }
-    // Force State
-    CommandScheduler.getInstance()
-        .schedule(
-            Commands.sequence(
-                superstructure.DisableTracking(),
-                superstructure.EnableTracking(),
-                superstructure.EnableShooting(),
-                superstructure.DisableShooting()));
+    // // Force State
+    // CommandScheduler.getInstance()
+    //     .schedule(
+    //         Commands.sequence(
+    //             superstructure.DisableTracking(),
+    //             superstructure.EnableTracking(),
+    //             superstructure.EnableShooting(),
+    //             superstructure.DisableShooting()));
   }
 }
