@@ -272,11 +272,7 @@ public class Superstructure {
 
   public Command RetractIntake() {
     return Commands.sequence(
-        logMessage("Intake Retract"),
-        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-        Commands.waitSeconds(0.5),
-        intake.changeSetpoint(ExtensionSetpoint.Off),
-        intake.changeSetpoint(Roller.Off));
+        logMessage("Intake Retract"), intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
   }
 
   public Command ClimberDown() {
@@ -375,7 +371,9 @@ public class Superstructure {
 
     path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
     path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
-    path3.done().onTrue(EnableShooting().andThen(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)));
+    path3
+        .done()
+        .onTrue(EnableShooting().andThen(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)));
 
     routine
         .active()
