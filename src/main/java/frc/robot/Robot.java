@@ -207,8 +207,8 @@ public class Robot extends LoggedRobot {
     operator.plus().onTrue(superstructure.EnableTracking());
     operator.enter().onTrue(superstructure.DisableTracking());
 
-    // driver.x().onTrue(superstructure.HomeRobot());
-    // operator.knob_press().onTrue(superstructure.HomeRobot());
+    driver.x().onTrue(superstructure.HomeRobot());
+    operator.knob_press().onTrue(superstructure.HomeRobot());
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
