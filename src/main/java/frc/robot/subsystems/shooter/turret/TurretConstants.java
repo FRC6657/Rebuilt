@@ -43,7 +43,8 @@ public class TurretConstants {
 
   public static final TalonFXConfiguration CONFIG =
       new TalonFXConfiguration()
-          .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
+          //   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
+          .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withSlot0(new Slot0Configs().withKP(KP).withKD(KD))
           .withCurrentLimits(

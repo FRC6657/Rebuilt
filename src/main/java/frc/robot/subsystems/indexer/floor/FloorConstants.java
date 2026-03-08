@@ -29,8 +29,8 @@ public class FloorConstants {
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(30)
-                  .withStatorCurrentLimit(30)
+                  .withSupplyCurrentLimit(60)
+                  .withStatorCurrentLimit(60)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
 }
