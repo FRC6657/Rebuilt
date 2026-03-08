@@ -46,7 +46,7 @@ public class TurretIO_Real implements TurretIO {
   @Override
   public void updateInputs(TurretIOInputs inputs) {
 
-    turretMotor.setControl(positionVoltage);
+    // turretMotor.setControl(positionVoltage);
 
     inputs.temp = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorCurrent = turretMotor.getStatorCurrent().getValueAsDouble();
