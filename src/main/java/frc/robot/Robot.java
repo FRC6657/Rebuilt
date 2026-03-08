@@ -190,13 +190,13 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.7),
+                        * (superstructure.shooting ? 0.2 : 0.9),
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.7),
+                        * (superstructure.shooting ? 0.2 : 0.9),
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * (superstructure.shooting ? 0.2 : 0.375)),
+                        * (superstructure.shooting ? 0.2 : 0.6)),
             () -> superstructure.shooting));
 
     driver.rightTrigger().onTrue(superstructure.EnableShooting());
@@ -212,21 +212,25 @@ public class Robot extends LoggedRobot {
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
+    operator
+        .x()
+        .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
+        .onFalse(superstructure.DisableShooting());
 
-    // operator.m4().onTrue(superstructure.ClimberUp());
-    // operator.m5().onTrue(superstructure.ClimberDown());
+    operator.m4().onTrue(superstructure.ClimberUp());
+    operator.m5().onTrue(superstructure.ClimberDown());
 
-    // operator
-    //     .numClr()
-    //     .onTrue(climber.changeHookSetpoint(2, true))
-    //     .onFalse(climber.changeHookSetpoint(0, true));
-    // operator
-    //     .num7()
-    //     .onTrue(climber.changeHookSetpoint(-12, true))
-    //     .onFalse(climber.changeHookSetpoint(0, true));
+    operator
+        .numClr()
+        .onTrue(climber.changeHookSetpoint(2, true))
+        .onFalse(climber.changeHookSetpoint(0, true));
+    operator
+        .num7()
+        .onTrue(climber.changeHookSetpoint(-2, true))
+        .onFalse(climber.changeHookSetpoint(0, true));
 
-    // operator.forwardSlash().onTrue(climber.changePedalSetpoint(90));
-    // operator.num8().onTrue(climber.changePedalSetpoint(0));
+    operator.forwardSlash().onTrue(climber.changePedalSetpoint(70));
+    operator.num8().onTrue(climber.changePedalSetpoint(0));
 
     // #region Debug Controls
 
@@ -290,12 +294,12 @@ public class Robot extends LoggedRobot {
       autoChooser.get().cancel();
     }
     // // Force State
-    // CommandScheduler.getInstance()
-    //     .schedule(
-    //         Commands.sequence(
-    //             superstructure.DisableTracking(),
-    //             superstructure.EnableTracking(),
-    //             superstructure.EnableShooting(),
-    //             superstructure.DisableShooting()));
+    CommandScheduler.getInstance()
+        .schedule(
+            Commands.sequence(
+                superstructure.DisableTracking(),
+                superstructure.EnableTracking(),
+                superstructure.EnableShooting(),
+                superstructure.DisableShooting()));
   }
 }

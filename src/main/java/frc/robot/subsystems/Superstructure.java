@@ -259,6 +259,7 @@ public class Superstructure {
         turret.changeSetpoint(0),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
+        climber.changePedalSetpoint(0),
         hood.changeSetpointC(0));
   }
 
@@ -278,6 +279,10 @@ public class Superstructure {
   public Command ClimberDown() {
     return Commands.sequence(
         logMessage("Bring-Down"),
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        turret.changeSetpoint(120),
+        hood.changeSetpointC(10),
+        flywheel.changeSetpointC(0),
         climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false));
   }
 
@@ -286,7 +291,7 @@ public class Superstructure {
         logMessage("Bring-Up"),
         climber
             .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
-            .andThen(climber.changePedalSetpoint(90)));
+            .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
   }
 
   public Command TunnelForward() {
