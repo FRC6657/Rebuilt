@@ -276,14 +276,13 @@ public class Superstructure {
         logMessage("Intake Retract"), intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
   }
 
-  public Command Dump(){
+  public Command Dump() {
     return Commands.sequence(
-      intake.changeSetpoint(Roller.FORWARD),
-      intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-      flywheel.changeSetpointC(-1000),
-      TunnelReverse(),
-      FloorReverse()
-    );
+        intake.changeSetpoint(Roller.FORWARD),
+        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+        flywheel.changeSetpointC(-1000),
+        TunnelReverse(),
+        FloorReverse());
   }
 
   public Command ClimberDown() {
