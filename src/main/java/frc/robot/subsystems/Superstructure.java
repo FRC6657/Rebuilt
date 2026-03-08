@@ -280,6 +280,7 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Bring-Down"),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        intake.changeSetpoint(0),
         turret.changeSetpoint(120),
         hood.changeSetpointC(10),
         flywheel.changeSetpointC(0),
