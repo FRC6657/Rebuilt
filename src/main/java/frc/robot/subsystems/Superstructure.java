@@ -19,8 +19,6 @@ import frc.robot.GlobalConstants;
 import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.simulation.GamePieceSimulation;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants;
@@ -52,7 +50,8 @@ public class Superstructure {
   Floor floor;
   Intake intake;
   Tunnel tunnel;
-  Climber climber;
+
+  // Climber climber;
 
   @AutoLogOutput(key = "RobotStates/Shooting")
   public boolean shooting = false;
@@ -81,8 +80,7 @@ public class Superstructure {
       Flywheel shoot,
       Intake intake,
       Floor floor,
-      Tunnel tunnel,
-      Climber climber) {
+      Tunnel tunnel) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
@@ -90,7 +88,7 @@ public class Superstructure {
     this.floor = floor;
     this.intake = intake;
     this.tunnel = tunnel;
-    this.climber = climber;
+    // this.climber = climber;
 
     fuelSim = GamePieceSimulation.getInstance();
 
@@ -260,7 +258,7 @@ public class Superstructure {
         DisableShooting(),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
-        climber.changePedalSetpoint(0),
+        // climber.changePedalSetpoint(0),
         hood.changeSetpointC(0));
   }
 
@@ -292,18 +290,18 @@ public class Superstructure {
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(0),
         turret.changeSetpoint(120),
+        // climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false)
         hood.changeSetpointC(10),
-        flywheel.changeSetpointC(0),
-        climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false));
+        flywheel.changeSetpointC(0));
   }
 
-  public Command ClimberUp() {
-    return Commands.sequence(
-        logMessage("Bring-Up"),
-        climber
-            .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
-            .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
-  }
+  // public Command ClimberUp() {
+  //   return Commands.sequence(
+  //       logMessage("Bring-Up"),
+  //       climber
+  //           .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
+  //           .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
+  // }
 
   public Command TunnelForward() {
     return Commands.sequence(
