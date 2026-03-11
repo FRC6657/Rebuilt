@@ -28,8 +28,8 @@ public class TunnelConstants {
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(20)
-                  .withStatorCurrentLimit(40)
+                  .withSupplyCurrentLimit(60)
+                  .withStatorCurrentLimit(60)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
 

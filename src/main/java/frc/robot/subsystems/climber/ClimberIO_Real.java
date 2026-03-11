@@ -58,7 +58,9 @@ public class ClimberIO_Real implements ClimberIO {
 
     pedalMotor.optimizeBusUtilization();
 
-    hookMotor.setPosition(ClimberConstants.MAX_HEIGHT / 360.0);
+    hookMotor.setPosition(ClimberConstants.MAX_HEIGHT / ClimberConstants.CONVERSION_FACTOR);
+    // hookMotor.setPosition(0);
+    pedalMotor.setPosition(0);
   }
 
   @Override

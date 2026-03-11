@@ -19,8 +19,6 @@ import frc.robot.GlobalConstants;
 import frc.robot.simulation.BallLaunchHelper;
 import frc.robot.simulation.GamePieceConstants;
 import frc.robot.simulation.GamePieceSimulation;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberConstants;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.indexer.floor.Floor;
 import frc.robot.subsystems.indexer.floor.FloorConstants;
@@ -52,7 +50,8 @@ public class Superstructure {
   Floor floor;
   Intake intake;
   Tunnel tunnel;
-  Climber climber;
+
+  // Climber climber;
 
   @AutoLogOutput(key = "RobotStates/Shooting")
   public boolean shooting = false;
@@ -81,8 +80,7 @@ public class Superstructure {
       Flywheel shoot,
       Intake intake,
       Floor floor,
-      Tunnel tunnel,
-      Climber climber) {
+      Tunnel tunnel) {
     this.drivebase = drivebase;
     this.turret = turret;
     this.hood = hood;
@@ -90,7 +88,7 @@ public class Superstructure {
     this.floor = floor;
     this.intake = intake;
     this.tunnel = tunnel;
-    this.climber = climber;
+    // this.climber = climber;
 
     fuelSim = GamePieceSimulation.getInstance();
 
@@ -256,9 +254,11 @@ public class Superstructure {
         flywheel.changeSetpointC(0),
         tunnel.changeSetpoint(TunnelConstants.OFF),
         floor.changeSetpoint(FloorConstants.Off),
-        turret.changeSetpoint(0),
+        DisableTracking(),
+        DisableShooting(),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
+        // climber.changePedalSetpoint(0),
         hood.changeSetpointC(0));
   }
 
@@ -266,32 +266,41 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        Commands.waitSeconds(0.5),
         intake.changeSetpoint(Roller.FORWARD));
   }
 
   public Command RetractIntake() {
     return Commands.sequence(
-        logMessage("Intake Retract"),
-        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-        Commands.waitSeconds(0.5),
-        intake.changeSetpoint(ExtensionSetpoint.Off),
-        intake.changeSetpoint(Roller.Off));
+        logMessage("Intake Retract"), intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+  }
+
+  public Command Dump() {
+    return Commands.sequence(
+        intake.changeSetpoint(Roller.FORWARD),
+        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+        flywheel.changeSetpointC(-1000),
+        TunnelReverse(),
+        FloorReverse());
   }
 
   public Command ClimberDown() {
     return Commands.sequence(
         logMessage("Bring-Down"),
-        climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false));
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        intake.changeSetpoint(0),
+        turret.changeSetpoint(120),
+        // climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false)
+        hood.changeSetpointC(10),
+        flywheel.changeSetpointC(0));
   }
 
-  public Command ClimberUp() {
-    return Commands.sequence(
-        logMessage("Bring-Up"),
-        climber
-            .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
-            .andThen(climber.changePedalSetpoint(90)));
-  }
+  // public Command ClimberUp() {
+  //   return Commands.sequence(
+  //       logMessage("Bring-Up"),
+  //       climber
+  //           .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
+  //           .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
+  // }
 
   public Command TunnelForward() {
     return Commands.sequence(
@@ -375,7 +384,9 @@ public class Superstructure {
 
     path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
     path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
-    path3.done().onTrue(EnableShooting());
+    path3
+        .done()
+        .onTrue(EnableShooting().andThen(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)));
 
     routine
         .active()
@@ -393,7 +404,9 @@ public class Superstructure {
 
     path1.atTimeBeforeEnd(1).onTrue(ExtendIntake());
     path3.atTimeBeforeEnd(0.5).onTrue(EnableTracking());
-    path3.done().onTrue(EnableShooting());
+    path3
+        .done()
+        .onTrue(EnableShooting().andThen(intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW)));
 
     routine
         .active()

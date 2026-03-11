@@ -5,10 +5,10 @@
 package frc.robot;
 
 import choreo.auto.AutoFactory;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -20,9 +20,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.simulation.GamePieceSimulation;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO_Real;
-import frc.robot.subsystems.climber.ClimberIO_Sim;
 import frc.robot.subsystems.drivebase.Drivebase;
 import frc.robot.subsystems.drivebase.DrivebaseConstants;
 import frc.robot.subsystems.drivebase.GyroIO;
@@ -76,17 +73,24 @@ public class Robot extends LoggedRobot {
   private final Intake intake;
   private final Floor floor;
   private final Tunnel tunnel;
-  private final Climber climber;
+  // private final Climber climber;
   private final Superstructure superstructure;
 
   private final ApriltagCameras cameras;
 
   private final AutoFactory autoFactory;
 
+  // private double testHoodAngle = 10;
+  // private double testFlywheelRPM = 2000;
+
+  private TalonFX climb;
+
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
   public Robot() {
+
+    climb = new TalonFX(23);
 
     DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -113,10 +117,9 @@ public class Robot extends LoggedRobot {
     intake = new Intake(RobotBase.isReal() ? new IntakeIO_Real() : new IntakeIO_Sim());
     floor = new Floor(RobotBase.isReal() ? new FloorIO_Real() : new FloorIO_Sim());
     tunnel = new Tunnel(RobotBase.isReal() ? new TunnelIO_Real() : new TunnelIO_Sim());
-    climber = new Climber(RobotBase.isReal() ? new ClimberIO_Real() : new ClimberIO_Sim());
+    // climber = new Climber(RobotBase.isReal() ? new ClimberIO_Real() : new ClimberIO_Sim());
 
-    superstructure =
-        new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel, climber);
+    superstructure = new Superstructure(drivebase, turret, hood, flywheel, intake, floor, tunnel);
 
     cameras =
         new ApriltagCameras(
@@ -149,6 +152,7 @@ public class Robot extends LoggedRobot {
         () -> false,
         drivebase);
 
+    // #region Autos
     autoChooser.addDefaultOption("Do Nothing", Commands.none());
     autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
     autoChooser.addOption("OneCycle", superstructure.OneCycle(autoFactory).cmd());
@@ -162,7 +166,7 @@ public class Robot extends LoggedRobot {
 
     Pathfinding.setPathfinder(new LocalADStarAK());
 
-    Logger.recordMetadata("Arborbotics", "RobotName");
+    Logger.recordMetadata("Arborbotics", "PortH");
 
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter());
@@ -179,19 +183,21 @@ public class Robot extends LoggedRobot {
       }
     }
 
+    // #region Driver Controls
+
     drivebase.setDefaultCommand(
         drivebase.driveTeleop(
             () ->
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.5),
+                        * (superstructure.shooting ? 0.2 : 0.9),
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.5),
+                        * (superstructure.shooting ? 0.2 : 0.9),
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * (superstructure.shooting ? 0.2 : 0.375)),
+                        * (superstructure.shooting ? 0.2 : 0.6)),
             () -> superstructure.shooting));
 
     driver.rightTrigger().onTrue(superstructure.EnableShooting());
@@ -207,22 +213,53 @@ public class Robot extends LoggedRobot {
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
-
-    // operator.m1().onTrue(superstructure.ClimberUp());
-    // operator.m2().onTrue(superstructure.ClimberDown());
-
+    operator.square().onTrue(superstructure.Dump());
     operator
-        .numClr()
-        .onTrue(climber.changeHookSetpoint(1, true))
-        .onFalse(climber.changeHookSetpoint(0, true));
-    operator
-        .num7()
-        .onTrue(climber.changeHookSetpoint(-1, true))
-        .onFalse(climber.changeHookSetpoint(0, true));
+        .x()
+        .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
+        .onFalse(superstructure.DisableShooting());
+
+    // #region Debug Controls
+
+    // RPM and Hood Trim
+    // operator
+    //     .knob_left()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle -= 0.25;
+    //               } else {
+    //                 testFlywheelRPM -= 50;
+    //               }
+    //             }));
+    // operator
+    //     .knob_right()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle += 0.25;
+    //               } else {
+    //                 testFlywheelRPM += 50;
+    //               }
+    //             }));
+
+    // // Enable Dial Controled Flywheel And Hood
+    // driver
+    //     .a()
+    //     .toggleOnTrue(
+    //         Commands.repeatingSequence(
+    //             Commands.runOnce(() -> hood.changeSetpoint(testHoodAngle)),
+    //             Commands.runOnce(() -> flywheel.changeSetpoint(testFlywheelRPM))))
+    //     .toggleOnFalse(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(10),
+    //             flywheel.changeSetpointC(0),
+    //             tunnel.changeSetpoint(0),
+    //             floor.changeSetpoint(0)));
 
     Logger.start();
-
-    driver.x().onTrue(Commands.runOnce(() -> drivebase.resetPose(new Pose2d()), drivebase));
   }
 
   @Override
@@ -243,7 +280,7 @@ public class Robot extends LoggedRobot {
     if (autoChooser.get() != null) {
       autoChooser.get().cancel();
     }
-    // Force State
+    // // Force State
     CommandScheduler.getInstance()
         .schedule(
             Commands.sequence(
