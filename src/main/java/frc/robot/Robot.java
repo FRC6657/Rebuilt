@@ -5,6 +5,7 @@
 package frc.robot;
 
 import choreo.auto.AutoFactory;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
@@ -82,10 +83,14 @@ public class Robot extends LoggedRobot {
   // private double testHoodAngle = 10;
   // private double testFlywheelRPM = 2000;
 
+  private TalonFX climb;
+
   private LoggedDashboardChooser<Command> autoChooser =
       new LoggedDashboardChooser<>("Auto Chooser");
 
   public Robot() {
+
+    climb = new TalonFX(23);
 
     DriverStation.silenceJoystickConnectionWarning(true);
 

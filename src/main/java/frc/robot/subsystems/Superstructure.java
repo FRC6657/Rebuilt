@@ -266,7 +266,6 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        Commands.waitSeconds(0.1),
         intake.changeSetpoint(Roller.FORWARD));
   }
 
