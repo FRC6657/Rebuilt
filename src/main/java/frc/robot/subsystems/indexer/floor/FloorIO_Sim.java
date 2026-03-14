@@ -45,12 +45,14 @@ public class FloorIO_Sim implements FloorIO {
     motorOneSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorOneSim.getMotorVoltage());
     motorModel.update(1 / GlobalConstants.mainLoopFrequency);
-    motorOneSim.setRawRotorPosition(motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
+    motorOneSim.setRawRotorPosition(
+        motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
     motorOneSim.setRotorVelocity(motorModel.getAngularVelocity().times(FloorConstants.GEAR_RATIO));
 
     var motorTwoSim = motorTwo.getSimState();
     motorTwoSim.setSupplyVoltage(12);
-    motorTwoSim.setRawRotorPosition(motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
+    motorTwoSim.setRawRotorPosition(
+        motorModel.getAngularPosition().times(FloorConstants.GEAR_RATIO));
     motorTwoSim.setRotorVelocity(motorModel.getAngularVelocity().times(FloorConstants.GEAR_RATIO));
 
     // Log Data

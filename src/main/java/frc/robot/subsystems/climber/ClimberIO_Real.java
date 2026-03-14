@@ -16,7 +16,7 @@ public class ClimberIO_Real implements ClimberIO {
   private VoltageOut hookVoltage = new VoltageOut(0);
 
   private PositionVoltage hookPositionVoltage = new PositionVoltage(0);
-  
+
   private boolean hookUseRawVoltage = true;
 
   public ClimberIO_Real() {

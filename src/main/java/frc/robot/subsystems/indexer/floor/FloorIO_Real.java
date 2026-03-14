@@ -1,9 +1,9 @@
 package frc.robot.subsystems.indexer.floor;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.controls.Follower;
 import frc.robot.GlobalConstants;
 
 /** Real hardware implementation of the floor indexer using a TalonFX with voltage control. */
@@ -18,7 +18,8 @@ public class FloorIO_Real implements FloorIO {
     motorOne.getConfigurator().apply(FloorConstants.CONFIG);
     motorTwo.getConfigurator().apply(FloorConstants.CONFIG);
 
-    motorTwo.setControl(new Follower(GlobalConstants.CAN.Floor_One.id, MotorAlignmentValue.Aligned));
+    motorTwo.setControl(
+        new Follower(GlobalConstants.CAN.Floor_One.id, MotorAlignmentValue.Aligned));
 
     // Temp status signals
     var motorOneTemp = motorOne.getDeviceTemp();
