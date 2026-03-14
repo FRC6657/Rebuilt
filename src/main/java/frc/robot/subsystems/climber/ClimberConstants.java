@@ -41,40 +41,4 @@ public class ClimberConstants {
                   .withStatorCurrentLimit(60)
                   .withSupplyCurrentLimitEnable(true)
                   .withSupplyCurrentLimitEnable(true));
-
-  public class Pedal {
-
-    public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
-    public static final double PEDAL_GEAR_RATIO = 20; // Find later bois
-
-    public static final double PEDAL_MIN_ANGLE = 0.0;
-    public static final double PEDAL_MAX_ANGLE = 70.0;
-    public static final double ANGLE_TOLERANCE = 2.0;
-
-    public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
-        new TalonFXConfiguration()
-            .withMotorOutput(
-                new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake))
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
-            .withSlot0(new Slot0Configs().withKP(20))
-            .withCurrentLimits(
-                new CurrentLimitsConfigs()
-                    .withSupplyCurrentLimit(40)
-                    .withStatorCurrentLimit(60)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimitEnable(true));
-
-    public static enum PedalSetpoint {
-      PEDAL_HOME(0.0),
-      COUNTER_PHASE(90.0);
-
-      public final double degrees;
-
-      private PedalSetpoint(double degrees) {
-        this.degrees = degrees;
-      }
-    }
-  }
 }

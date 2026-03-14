@@ -4,42 +4,38 @@
 
 package frc.robot.subsystems.climber;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  // private ClimberIO io;
+  private ClimberIO io;
 
-  // private ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
+  private ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
-  // public Climber(ClimberIO io) {
-  //   this.io = io;
-  // }
+  public Climber(ClimberIO io) {
+    this.io = io;
+  }
 
-  // public Command changeHookSetpoint(double setpoint, boolean useRawVoltage) {
-  //   return runOnce(
-  //       () -> {
-  //         io.changeHookSetpoint(setpoint, useRawVoltage);
-  //       });
-  // }
+  public Command changeHookSetpoint(double setpoint, boolean useRawVoltage) {
+    return runOnce(
+        () -> {
+          io.changeHookSetpoint(setpoint, useRawVoltage);
+        });
+  }
 
-  // public Command changePedalSetpoint(double setpoint) {
-  //   return runOnce(
-  //       () -> {
-  //         io.changePedalSetpoint(setpoint);
-  //       });
-  // }
+  @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
+  public boolean atSetpoint() {
+    return Math.abs(inputs.climberSetpoint - inputs.climberMotorPosition)
+        < ClimberConstants.HEIGHT_TOLERANCE;
+  }
 
-  // @AutoLogOutput(key = "MechanismStates/ClimberAtSetpoint")
-  // public boolean atSetpoint() {
-  //   return Math.abs(inputs.climberSetpoint - inputs.climberMotorPosition)
-  //       < ClimberConstants.HEIGHT_TOLERANCE;
-  // }
-
-  // @Override
-  // public void periodic() {
-  //   // This method will be called once per scheduler run
-  //   io.updateInputs(inputs);
-  //   Logger.processInputs("Climber/", inputs);
-  // }
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    io.updateInputs(inputs);
+    Logger.processInputs("Climber/", inputs);
+  }
 }

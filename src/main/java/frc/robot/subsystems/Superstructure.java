@@ -258,7 +258,6 @@ public class Superstructure {
         DisableShooting(),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
-        // climber.changePedalSetpoint(0),
         hood.changeSetpointC(0));
   }
 
@@ -299,7 +298,7 @@ public class Superstructure {
   //       logMessage("Bring-Up"),
   //       climber
   //           .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
-  //           .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
+  //   );
   // }
 
   public Command TunnelForward() {
