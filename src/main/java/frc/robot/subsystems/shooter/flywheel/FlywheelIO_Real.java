@@ -19,8 +19,6 @@ public class FlywheelIO_Real implements FlywheelIO {
 
   private VelocityVoltage setpoint = new VelocityVoltage(0);
 
-
-
   public FlywheelIO_Real() {
 
     leaderMotor.getConfigurator().apply(FlywheelConstants.CONFIG);

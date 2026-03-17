@@ -33,8 +33,12 @@ public class FlywheelIO_Sim implements FlywheelIO {
         new CurrentLimitsConfigs()
             .withStatorCurrentLimitEnable(false)
             .withSupplyCurrentLimitEnable(false);
-    leaderMotor.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
-    followerMotor.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
+    leaderMotor
+        .getConfigurator()
+        .apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
+    followerMotor
+        .getConfigurator()
+        .apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
 
     var velocity = leaderMotor.getVelocity();
     var acceleration = leaderMotor.getAcceleration();
