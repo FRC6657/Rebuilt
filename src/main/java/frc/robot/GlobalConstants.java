@@ -46,6 +46,7 @@ public class GlobalConstants {
     KnobPush(1),
     Circle(2),
     Triangle(3),
+    Square(4),
     Cross(5),
     M1(6),
     NumClr(7),
