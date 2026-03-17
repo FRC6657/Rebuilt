@@ -7,16 +7,16 @@ import frc.robot.GlobalConstants;
 /** Real hardware implementation of the tunnel indexer using a TalonFX with voltage control. */
 public class TunnelIO_Real implements TunnelIO {
 
-  TalonFX motor = new TalonFX(GlobalConstants.CAN.Tunnel.id);
+  TalonFX tunnelMotor = new TalonFX(GlobalConstants.CAN.Tunnel.id);
   VoltageOut setpoint = new VoltageOut(0);
 
   public TunnelIO_Real() {
 
-    motor.getConfigurator().apply(TunnelConstants.CONFIG);
+    tunnelMotor.getConfigurator().apply(TunnelConstants.CONFIG);
 
-    var temp = motor.getDeviceTemp();
-    var voltage = motor.getMotorVoltage();
-    var statorCurrent = motor.getSupplyCurrent();
+    var temp = tunnelMotor.getDeviceTemp();
+    var voltage = tunnelMotor.getMotorVoltage();
+    var statorCurrent = tunnelMotor.getSupplyCurrent();
 
     temp.setUpdateFrequency(GlobalConstants.mainLoopFrequency / 4d);
     voltage.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
@@ -27,12 +27,12 @@ public class TunnelIO_Real implements TunnelIO {
   public void updateInputs(TunnelIOInputs inputs) {
 
     // Control Motor
-    motor.setControl(setpoint);
+    tunnelMotor.setControl(setpoint);
 
     // Log Data
-    inputs.temp = motor.getDeviceTemp().getValueAsDouble();
-    inputs.statorCurrent = motor.getStatorCurrent().getValueAsDouble();
-    inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
+    inputs.temp = tunnelMotor.getDeviceTemp().getValueAsDouble();
+    inputs.statorCurrent = tunnelMotor.getStatorCurrent().getValueAsDouble();
+    inputs.voltage = tunnelMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override

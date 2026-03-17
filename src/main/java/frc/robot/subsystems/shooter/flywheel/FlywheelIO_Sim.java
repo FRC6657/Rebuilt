@@ -16,8 +16,8 @@ import frc.robot.GlobalConstants;
  * velocity PID; the follower mirrors via Follower control.
  */
 public class FlywheelIO_Sim implements FlywheelIO {
-  private TalonFX leader = new TalonFX(GlobalConstants.CAN.Shooter_Leader.id);
-  private TalonFX follower = new TalonFX(GlobalConstants.CAN.Shooter_Follower.id);
+  private TalonFX leaderMotor = new TalonFX(GlobalConstants.CAN.Shooter_Leader.id);
+  private TalonFX followerMotor = new TalonFX(GlobalConstants.CAN.Shooter_Follower.id);
 
   private VelocityVoltage setpoint = new VelocityVoltage(0);
 
@@ -33,19 +33,19 @@ public class FlywheelIO_Sim implements FlywheelIO {
         new CurrentLimitsConfigs()
             .withStatorCurrentLimitEnable(false)
             .withSupplyCurrentLimitEnable(false);
-    leader.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
-    follower.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
+    leaderMotor.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
+    followerMotor.getConfigurator().apply(FlywheelConstants.CONFIG.withCurrentLimits(simCurrentLimits));
 
-    var velocity = leader.getVelocity();
-    var acceleration = leader.getAcceleration();
+    var velocity = leaderMotor.getVelocity();
+    var acceleration = leaderMotor.getAcceleration();
 
-    var leaderTemp = leader.getDeviceTemp();
-    var leaderVoltage = leader.getMotorVoltage();
-    var leaderStatorCurrent = leader.getSupplyCurrent();
+    var leaderTemp = leaderMotor.getDeviceTemp();
+    var leaderVoltage = leaderMotor.getMotorVoltage();
+    var leaderStatorCurrent = leaderMotor.getSupplyCurrent();
 
-    var followerTemp = follower.getDeviceTemp();
-    var followerVoltage = follower.getMotorVoltage();
-    var followerStatorCurrent = follower.getSupplyCurrent();
+    var followerTemp = followerMotor.getDeviceTemp();
+    var followerVoltage = followerMotor.getMotorVoltage();
+    var followerStatorCurrent = followerMotor.getSupplyCurrent();
 
     velocity.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     acceleration.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
@@ -57,23 +57,23 @@ public class FlywheelIO_Sim implements FlywheelIO {
     leaderStatorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     followerStatorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
-    leader.optimizeBusUtilization();
-    follower.optimizeBusUtilization();
+    leaderMotor.optimizeBusUtilization();
+    followerMotor.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
 
     if (setpoint.Velocity == 0) {
-      leader.setControl(new VoltageOut(0));
+      leaderMotor.setControl(new VoltageOut(0));
     } else {
-      leader.setControl(setpoint);
+      leaderMotor.setControl(setpoint);
     }
 
-    follower.setControl(
+    followerMotor.setControl(
         new Follower(GlobalConstants.CAN.Shooter_Leader.id, MotorAlignmentValue.Opposed));
 
-    var motorSim = leader.getSimState();
+    var motorSim = leaderMotor.getSimState();
     motorSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorSim.getMotorVoltage());
     motorModel.update(1 / GlobalConstants.mainLoopFrequency);
@@ -82,21 +82,21 @@ public class FlywheelIO_Sim implements FlywheelIO {
     motorSim.setRawRotorPosition(angularPosition);
     motorSim.setRotorVelocity(angularVelocity);
 
-    var followerSim = follower.getSimState();
+    var followerSim = followerMotor.getSimState();
     followerSim.setSupplyVoltage(12);
     followerSim.setRawRotorPosition(angularPosition);
     followerSim.setRotorVelocity(angularVelocity);
 
-    inputs.velocity = leader.getVelocity().getValueAsDouble() * 60d;
-    inputs.acceleration = leader.getAcceleration().getValueAsDouble() * 60d;
+    inputs.velocity = leaderMotor.getVelocity().getValueAsDouble() * 60d;
+    inputs.acceleration = leaderMotor.getAcceleration().getValueAsDouble() * 60d;
 
-    inputs.leaderTemp = leader.getDeviceTemp().getValueAsDouble();
-    inputs.leaderVoltage = leader.getMotorVoltage().getValueAsDouble();
-    inputs.leaderStatorCurrent = leader.getStatorCurrent().getValueAsDouble();
+    inputs.leaderTemp = leaderMotor.getDeviceTemp().getValueAsDouble();
+    inputs.leaderVoltage = leaderMotor.getMotorVoltage().getValueAsDouble();
+    inputs.leaderStatorCurrent = leaderMotor.getStatorCurrent().getValueAsDouble();
 
-    inputs.followerTemp = follower.getDeviceTemp().getValueAsDouble();
-    inputs.followerVoltage = follower.getMotorVoltage().getValueAsDouble();
-    inputs.followerStatorCurrent = follower.getStatorCurrent().getValueAsDouble();
+    inputs.followerTemp = followerMotor.getDeviceTemp().getValueAsDouble();
+    inputs.followerVoltage = followerMotor.getMotorVoltage().getValueAsDouble();
+    inputs.followerStatorCurrent = followerMotor.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
@@ -108,7 +108,7 @@ public class FlywheelIO_Sim implements FlywheelIO {
   public boolean atSetpoint() {
     return MathUtil.isNear(
         setpoint.Velocity * 60d,
-        leader.getVelocity().getValueAsDouble() * 60d,
+        leaderMotor.getVelocity().getValueAsDouble() * 60d,
         FlywheelConstants.VELOCITY_TOLERANCE);
   }
 }

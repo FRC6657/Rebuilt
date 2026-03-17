@@ -18,8 +18,7 @@ public class ClimberConstants {
 
   public static final double CONVERSION_FACTOR = (Math.PI * SPROCKET_PD);
 
-  // TODO Figure Out Units
-  public static final double MIN_HEIGHT = 0.0;
+  public static final double MIN_HEIGHT = 0.0; // inches
   public static final double MAX_HEIGHT = 17; // inches
   public static final double LOW_SETPOINT = MIN_HEIGHT;
   public static final double HOOK_SETPOINT = MAX_HEIGHT - 12.0;

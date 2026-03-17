@@ -14,7 +14,7 @@ import frc.robot.GlobalConstants;
 /** Simulated tunnel indexer implementation using a DCMotorSim physics model. */
 public class TunnelIO_Sim implements TunnelIO {
 
-  private TalonFX motor = new TalonFX(GlobalConstants.CAN.Tunnel.id);
+  private TalonFX tunnelMotor = new TalonFX(GlobalConstants.CAN.Tunnel.id);
   private VoltageOut setpoint = new VoltageOut(0);
 
   private DCMotorSim motorModel =
@@ -24,7 +24,7 @@ public class TunnelIO_Sim implements TunnelIO {
           TunnelConstants.MOTOR);
 
   public TunnelIO_Sim() {
-    motor
+    tunnelMotor
         .getConfigurator()
         .apply(
             TunnelConstants.CONFIG.withCurrentLimits(
@@ -37,10 +37,10 @@ public class TunnelIO_Sim implements TunnelIO {
   public void updateInputs(TunnelIOInputs inputs) {
 
     // Control the motor
-    motor.setControl(setpoint);
+    tunnelMotor.setControl(setpoint);
 
     // Sim Stuff
-    var motorSim = motor.getSimState();
+    var motorSim = tunnelMotor.getSimState();
     motorSim.setSupplyVoltage(12);
     motorModel.setInputVoltage(motorSim.getMotorVoltage());
     motorModel.update(1 / GlobalConstants.mainLoopFrequency);
@@ -49,8 +49,8 @@ public class TunnelIO_Sim implements TunnelIO {
 
     // Log Data
     inputs.temp = -1; // Sim has no temps
-    inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.statorCurrent = motor.getStatorCurrent().getValueAsDouble();
+    inputs.voltage = tunnelMotor.getMotorVoltage().getValueAsDouble();
+    inputs.statorCurrent = tunnelMotor.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
