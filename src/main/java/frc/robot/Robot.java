@@ -209,7 +209,7 @@ public class Robot extends LoggedRobot {
     operator.triangle().onTrue(superstructure.RetractIntake());
     operator.square().onTrue(superstructure.Dump());
     operator
-        .x()
+        .cross()
         .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
         .onFalse(superstructure.DisableShooting());
 
