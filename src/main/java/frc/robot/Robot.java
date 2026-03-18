@@ -274,7 +274,10 @@ public class Robot extends LoggedRobot {
     if (autoChooser.get() != null) {
       autoChooser.get().cancel();
     }
-    // // Force State
+
+    superstructure.intakeIn = false;
+
+    // Force State
     CommandScheduler.getInstance()
         .schedule(
             Commands.sequence(

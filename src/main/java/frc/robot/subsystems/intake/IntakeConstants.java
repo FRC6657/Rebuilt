@@ -23,7 +23,10 @@ public class IntakeConstants {
 
     public static final double MIN_SETPOINT = 0; // in (fully retracted)
     public static final double MAX_SETPOINT = 13.0; // in (fully extended)
+    public static final double SHUFFLE_SETPOINT = 5.0; // in (partially extended)
     public static final double POSITION_TOLERANCE = 0.25; // in
+
+    public static final double SHUFFLE_PERIOD = 1.2;
 
     /** Overall gear reduction from motor to output. */
     public static final double GEAR_RATIO = (5d / 1d) * (50d / 28d);
@@ -54,6 +57,8 @@ public class IntakeConstants {
       RETRACTED_FAST(MIN_SETPOINT, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
       EXTENDED_FAST(MAX_SETPOINT, 160, 320),
+      SHUFFLE_IN(MIN_SETPOINT, 10, 80),
+      SHUFFLE_OUT(SHUFFLE_SETPOINT, 10, 80),
       Off(MIN_SETPOINT, 0, 0);
 
       public final double position;

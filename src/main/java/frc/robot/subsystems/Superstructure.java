@@ -25,6 +25,7 @@ import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants.Extension;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeConstants.Roller;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -59,8 +60,12 @@ public class Superstructure {
   @AutoLogOutput(key = "RobotStates/Tracking")
   public boolean tracking = false;
 
+  @AutoLogOutput(key = "RobotStates/Intake In")
+  public boolean intakeIn = false;
+
   public Trigger isShooting = new Trigger(() -> shooting);
   public Trigger isTracking = new Trigger(() -> tracking);
+  public Trigger isSwallowing = new Trigger(() -> intakeIn && shooting);
 
   private final GamePieceSimulation fuelSim;
 
@@ -115,6 +120,19 @@ public class Superstructure {
                   }
                 }),
             Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
+
+    isSwallowing.whileTrue(
+      Commands.repeatingSequence(
+        Commands.runOnce(
+          () -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT)
+        ),
+        Commands.waitSeconds(Extension.SHUFFLE_PERIOD),
+        Commands.runOnce(
+          () -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN)
+        ),
+        Commands.waitSeconds(Extension.SHUFFLE_PERIOD)
+      )
+    );
   }
 
   Command RunIndexer() {
@@ -257,6 +275,7 @@ public class Superstructure {
         DisableTracking(),
         DisableShooting(),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        Commands.runOnce(() -> intakeIn = true),
         intake.changeSetpoint(Roller.Off),
         hood.changeSetpointC(0));
   }
@@ -265,18 +284,23 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+        Commands.runOnce(() -> intakeIn = false),
         intake.changeSetpoint(Roller.FORWARD));
   }
 
   public Command RetractIntake() {
     return Commands.sequence(
-        logMessage("Intake Retract"), intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+        logMessage("Intake Retract"),
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        Commands.runOnce(() -> intakeIn = true)
+      );
   }
 
   public Command Dump() {
     return Commands.sequence(
         intake.changeSetpoint(Roller.FORWARD),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
+        Commands.runOnce(() -> intakeIn = false),
         flywheel.changeSetpointC(-1000),
         TunnelReverse(),
         FloorReverse());
@@ -286,6 +310,7 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Bring-Down"),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        Commands.runOnce(() -> intakeIn = true),
         intake.changeSetpoint(0),
         turret.changeSetpoint(120),
         // climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false)
