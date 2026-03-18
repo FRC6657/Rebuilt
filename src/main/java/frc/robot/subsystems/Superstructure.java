@@ -122,17 +122,11 @@ public class Superstructure {
             Commands.waitSeconds(4.0 / GlobalConstants.mainLoopFrequency)));
 
     isSwallowing.whileTrue(
-      Commands.repeatingSequence(
-        Commands.runOnce(
-          () -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT)
-        ),
-        Commands.waitSeconds(Extension.SHUFFLE_PERIOD),
-        Commands.runOnce(
-          () -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN)
-        ),
-        Commands.waitSeconds(Extension.SHUFFLE_PERIOD)
-      )
-    );
+        Commands.repeatingSequence(
+            Commands.runOnce(() -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT)),
+            Commands.waitSeconds(Extension.SHUFFLE_PERIOD),
+            Commands.runOnce(() -> intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN)),
+            Commands.waitSeconds(Extension.SHUFFLE_PERIOD)));
   }
 
   Command RunIndexer() {
@@ -292,8 +286,7 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Intake Retract"),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-        Commands.runOnce(() -> intakeIn = true)
-      );
+        Commands.runOnce(() -> intakeIn = true));
   }
 
   public Command Dump() {

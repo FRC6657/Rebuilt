@@ -34,6 +34,7 @@ import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Real;
 import frc.robot.subsystems.indexer.tunnel.TunnelIO_Sim;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeIO_Real;
 import frc.robot.subsystems.intake.IntakeIO_Sim;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -212,6 +213,12 @@ public class Robot extends LoggedRobot {
         .cross()
         .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
         .onFalse(superstructure.DisableShooting());
+    operator
+        .minus()
+        .onTrue(
+            Commands.parallel(
+                Commands.runOnce(() -> intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)),
+                Commands.runOnce(() -> superstructure.intakeIn = false)));
 
     // #region Debug Controls
 
