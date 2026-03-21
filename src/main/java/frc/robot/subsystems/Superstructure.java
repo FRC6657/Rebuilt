@@ -448,7 +448,7 @@ public class Superstructure {
 
     final AutoTrajectory start = routine.trajectory("Start", 0);
     final AutoTrajectory crossover1 = routine.trajectory("crossover1", 1);
-    final AutoTrajectory intake = routine.trajectory("intake", 2);
+    final AutoTrajectory intakeTime = routine.trajectory("intake", 2);
     final AutoTrajectory crossover2 = routine.trajectory("crossover2", 3);
     final AutoTrajectory end = routine.trajectory("end", 4);
 
@@ -456,16 +456,29 @@ public class Superstructure {
         .atTimeBeforeEnd(0.4)
         .onTrue(
             Commands.sequence(
+                EnableTracking(),
                 EnableShooting(),
-                Commands.waitSeconds(2.5),
+                Commands.waitSeconds(3.5),
                 new ScheduleCommand(crossover1.cmd()),
-                DisableTracking()));
+                DisableShooting()));
 
-    crossover1.done().onTrue(Commands.parallel(ExtendIntake(), new ScheduleCommand(intake.cmd())));
+    crossover1
+        .done()
+        .onTrue(Commands.parallel(ExtendIntake(), new ScheduleCommand(intakeTime.cmd())));
 
-    intake.done().onTrue(Commands.parallel(RetractIntake(), new ScheduleCommand(crossover2.cmd())));
+    intakeTime
+        .done()
+        .onTrue(Commands.parallel(Commands.none(), new ScheduleCommand(crossover2.cmd())));
 
     crossover2.done().onTrue(Commands.parallel(EnableShooting(), new ScheduleCommand(end.cmd())));
+
+    end.done()
+        .onTrue(
+            Commands.sequence(
+                Commands.waitSeconds(0.2),
+                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+                Commands.waitSeconds(3.5),
+                RetractIntake()));
 
     return routine;
   }

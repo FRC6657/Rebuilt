@@ -152,6 +152,7 @@ public class Robot extends LoggedRobot {
     autoChooser.addOption("TaxiShoot", superstructure.TaxiShoot(autoFactory).cmd());
     autoChooser.addOption("OneCycle", superstructure.OneCycle(autoFactory).cmd());
     autoChooser.addOption("OneCycleDepot", superstructure.OneCycleDepot(autoFactory).cmd());
+    autoChooser.addOption("Greedy", superstructure.GreedyAuto(autoFactory).cmd());
   }
 
   public static boolean replay = false;
