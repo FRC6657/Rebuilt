@@ -29,7 +29,7 @@ public class TunnelConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withSupplyCurrentLimit(60)
-                  .withStatorCurrentLimit(60)
+                  .withStatorCurrentLimit(80)
                   .withSupplyCurrentLimitEnable(true)
                   .withStatorCurrentLimitEnable(true));
 
