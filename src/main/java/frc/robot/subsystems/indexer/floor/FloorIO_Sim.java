@@ -14,8 +14,8 @@ import frc.robot.GlobalConstants;
 /** Simulated floor indexer implementation using a DCMotorSim physics model. */
 public class FloorIO_Sim implements FloorIO {
 
-  private TalonFX motorOne = new TalonFX(GlobalConstants.CAN.Floor_One.id);
-  private TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Floor_Two.id);
+  private TalonFX motorOne = new TalonFX(GlobalConstants.CAN.Floor.id);
+  private TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Ceiling_Wall.id);
   private VoltageOut setpoint = new VoltageOut(0);
 
   private DCMotorSim motorModel =

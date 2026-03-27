@@ -9,8 +9,8 @@ import frc.robot.GlobalConstants;
 /** Real hardware implementation of the floor indexer using a TalonFX with voltage control. */
 public class FloorIO_Real implements FloorIO {
 
-  TalonFX motorOne = new TalonFX(GlobalConstants.CAN.Floor_One.id);
-  TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Floor_Two.id);
+  TalonFX motorOne = new TalonFX(GlobalConstants.CAN.Floor.id);
+  TalonFX motorTwo = new TalonFX(GlobalConstants.CAN.Ceiling_Wall.id);
   VoltageOut setpoint = new VoltageOut(0);
 
   public FloorIO_Real() {
@@ -19,7 +19,7 @@ public class FloorIO_Real implements FloorIO {
     motorTwo.getConfigurator().apply(FloorConstants.CONFIG);
 
     motorTwo.setControl(
-        new Follower(GlobalConstants.CAN.Floor_One.id, MotorAlignmentValue.Opposed));
+        new Follower(GlobalConstants.CAN.Floor.id, MotorAlignmentValue.Opposed));
 
     // Temp status signals
     var motorOneTemp = motorOne.getDeviceTemp();
