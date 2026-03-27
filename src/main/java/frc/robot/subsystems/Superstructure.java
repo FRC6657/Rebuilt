@@ -376,6 +376,11 @@ public class Superstructure {
     return Commands.sequence(
         flywheel.changeSetpointC(2000), hood.changeSetpointC(10), turret.changeSetpoint(90));
   }
+  
+  public Command PitFixedShot() {
+    return Commands.sequence(
+        flywheel.changeSetpointC(750), hood.changeSetpointC(10), turret.changeSetpoint(180));
+  }
 
   // #region Autos
 
