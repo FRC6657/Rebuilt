@@ -18,8 +18,7 @@ public class FloorIO_Real implements FloorIO {
     motorOne.getConfigurator().apply(FloorConstants.CONFIG);
     motorTwo.getConfigurator().apply(FloorConstants.CONFIG);
 
-    motorTwo.setControl(
-        new Follower(GlobalConstants.CAN.Floor.id, MotorAlignmentValue.Opposed));
+    motorTwo.setControl(new Follower(GlobalConstants.CAN.Floor.id, MotorAlignmentValue.Opposed));
 
     // Temp status signals
     var motorOneTemp = motorOne.getDeviceTemp();

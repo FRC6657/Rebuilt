@@ -29,7 +29,7 @@ public class IntakeConstants {
     public static final double SHUFFLE_PERIOD = 1.2;
 
     /** Overall gear reduction from motor to output. */
-    public static final double GEAR_RATIO = (5d / 1d) * (36d / 28d) * (28d/15d);
+    public static final double GEAR_RATIO = (5d / 1d) * (36d / 28d) * (28d / 15d);
 
     /** Linear inches of travel per output shaft rotation (circumference of drive pulley). */
     public static final double CONVERSION_FACTOR = Math.PI; // Linear Inches Per Rotation
@@ -53,13 +53,13 @@ public class IntakeConstants {
 
     /** Predefined extension setpoints with position, velocity, and acceleration profiles. */
     public static enum ExtensionSetpoint {
-      RETRACTED_SLOW(MIN_SETPOINT+1, 5, 40),
-      RETRACTED_FAST(MIN_SETPOINT+1, 80, 160),
+      RETRACTED_SLOW(MIN_SETPOINT + 1, 5, 40),
+      RETRACTED_FAST(MIN_SETPOINT + 1, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
       EXTENDED_FAST(MAX_SETPOINT, 160, 320),
-      SHUFFLE_IN(MIN_SETPOINT+1, 10, 80),
+      SHUFFLE_IN(MIN_SETPOINT + 1, 10, 80),
       SHUFFLE_OUT(SHUFFLE_SETPOINT, 10, 80),
-      Off(MIN_SETPOINT+1, 0, 0);
+      Off(MIN_SETPOINT + 1, 0, 0);
 
       public final double position;
       public final double velocity;
