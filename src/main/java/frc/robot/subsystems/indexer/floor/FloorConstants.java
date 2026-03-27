@@ -12,7 +12,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 public class FloorConstants {
 
   public static final double Off = 0.0; // No power
-  public static final double FORWARD = 12; // 6V forward (move game pieces toward tunnel)
+  public static final double FORWARD = 6; // 6V forward (move game pieces toward tunnel)
   public static final double REVERSE = -6; // 6V reverse (eject game pieces)
 
   public final double voltage = 0.0;
