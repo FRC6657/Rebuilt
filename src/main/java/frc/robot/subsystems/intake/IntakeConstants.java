@@ -57,8 +57,8 @@ public class IntakeConstants {
       RETRACTED_FAST(MIN_SETPOINT + 1, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
       EXTENDED_FAST(MAX_SETPOINT, 160, 320),
-      SHUFFLE_IN(MIN_SETPOINT + 1, 10, 80),
-      SHUFFLE_OUT(SHUFFLE_SETPOINT, 10, 80),
+      SHUFFLE_IN(MIN_SETPOINT + 1, 80, 160),
+      SHUFFLE_OUT(SHUFFLE_SETPOINT, 80, 160),
       Off(MIN_SETPOINT + 1, 0, 0);
 
       public final double position;
