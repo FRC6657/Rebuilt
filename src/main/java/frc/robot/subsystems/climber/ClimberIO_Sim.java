@@ -14,7 +14,6 @@ import frc.robot.GlobalConstants;
 public class ClimberIO_Sim implements ClimberIO {
 
   private TalonFX motor = new TalonFX(GlobalConstants.CAN.Climber.id);
-  private TalonFX pedalMotor = new TalonFX(GlobalConstants.CAN.Pedal.id);
 
   private MotionMagicVoltage setpoint = new MotionMagicVoltage(0);
 
@@ -24,16 +23,9 @@ public class ClimberIO_Sim implements ClimberIO {
               ClimberConstants.CLIMBER_MOTOR, 0.001, ClimberConstants.GEAR_RATIO),
           ClimberConstants.CLIMBER_MOTOR);
 
-  private DCMotorSim pedalMotorModel =
-      new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(
-              ClimberConstants.Pedal.PEDAL_MOTOR, 0.001, ClimberConstants.Pedal.PEDAL_GEAR_RATIO),
-          ClimberConstants.Pedal.PEDAL_MOTOR);
-
   /** Creates a new ClimberIO_Sim. */
   public ClimberIO_Sim() {
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIGURATION);
-    pedalMotor.getConfigurator().apply(ClimberConstants.Pedal.PEDAL_MOTOR_CONFIGURATION);
   }
 
   @Override
@@ -62,25 +54,6 @@ public class ClimberIO_Sim implements ClimberIO {
     inputs.climberMotorAcceleration =
         motor.getAcceleration().getValueAsDouble() * ClimberConstants.CONVERSION_FACTOR;
     inputs.climberSetpoint = setpoint.Position * ClimberConstants.CONVERSION_FACTOR;
-
-    // Pedal
-    pedalMotor.setControl(setpoint);
-
-    var pedalMotorSim = pedalMotor.getSimState();
-    pedalMotorSim.setSupplyVoltage(12);
-    pedalMotorModel.setInputVoltage(pedalMotorSim.getMotorVoltage());
-    pedalMotorModel.update(0.02);
-    pedalMotorSim.setRawRotorPosition(
-        pedalMotorModel.getAngularPosition().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
-    pedalMotorSim.setRotorVelocity(
-        pedalMotorModel.getAngularVelocity().times(ClimberConstants.Pedal.PEDAL_GEAR_RATIO));
-
-    inputs.pedalMotorVoltage = pedalMotor.getMotorVoltage().getValueAsDouble();
-    inputs.pedalMotorCurrent = pedalMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.pedalMotorPosition = pedalMotor.getPosition().getValueAsDouble() * 360;
-    inputs.pedalMotorVelocity = pedalMotor.getVelocity().getValueAsDouble();
-    inputs.pedalMotorAcceleration = pedalMotor.getAcceleration().getValueAsDouble() * 360;
-    inputs.pedalSetpoint = setpoint.Position * 360;
   }
 
   @Override
@@ -89,15 +62,5 @@ public class ClimberIO_Sim implements ClimberIO {
         MathUtil.clamp(
             newClimberSetpoint, ClimberConstants.MIN_HEIGHT, ClimberConstants.MAX_HEIGHT);
     setpoint.Position = inches / ClimberConstants.CONVERSION_FACTOR;
-  }
-
-  @Override
-  public void changePedalSetpoint(double newPedalSetpoint) {
-    var degrees =
-        MathUtil.clamp(
-            newPedalSetpoint,
-            ClimberConstants.Pedal.PEDAL_MIN_ANGLE,
-            ClimberConstants.Pedal.PEDAL_MAX_ANGLE);
-    setpoint.Position = degrees / 360.0;
   }
 }

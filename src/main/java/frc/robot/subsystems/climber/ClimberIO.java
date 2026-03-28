@@ -16,18 +16,9 @@ public interface ClimberIO {
     public double climberMotorVelocity = 0.0;
     public double climberMotorAcceleration = 0.0;
     public double climberSetpoint = 0.0;
-
-    public double pedalMotorVoltage = 0.0;
-    public double pedalMotorCurrent = 0.0;
-    public double pedalMotorPosition = 0.0;
-    public double pedalMotorVelocity = 0.0;
-    public double pedalMotorAcceleration = 0.0;
-    public double pedalSetpoint = 0.0;
   }
 
   public default void updateInputs(ClimberIOInputs inputs) {}
 
   public default void changeHookSetpoint(double setpoint, boolean useRawVoltage) {}
-
-  public default void changePedalSetpoint(double setpoint) {}
 }

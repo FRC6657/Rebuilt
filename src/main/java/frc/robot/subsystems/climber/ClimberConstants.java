@@ -18,8 +18,7 @@ public class ClimberConstants {
 
   public static final double CONVERSION_FACTOR = (Math.PI * SPROCKET_PD);
 
-  // TODO Figure Out Units
-  public static final double MIN_HEIGHT = 0.0;
+  public static final double MIN_HEIGHT = 0.0; // inches
   public static final double MAX_HEIGHT = 17; // inches
   public static final double LOW_SETPOINT = MIN_HEIGHT;
   public static final double HOOK_SETPOINT = MAX_HEIGHT - 12.0;
@@ -41,40 +40,4 @@ public class ClimberConstants {
                   .withStatorCurrentLimit(60)
                   .withSupplyCurrentLimitEnable(true)
                   .withSupplyCurrentLimitEnable(true));
-
-  public class Pedal {
-
-    public static final DCMotor PEDAL_MOTOR = DCMotor.getFalcon500(2);
-    public static final double PEDAL_GEAR_RATIO = 20; // Find later bois
-
-    public static final double PEDAL_MIN_ANGLE = 0.0;
-    public static final double PEDAL_MAX_ANGLE = 70.0;
-    public static final double ANGLE_TOLERANCE = 2.0;
-
-    public static final TalonFXConfiguration PEDAL_MOTOR_CONFIGURATION =
-        new TalonFXConfiguration()
-            .withMotorOutput(
-                new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake))
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(PEDAL_GEAR_RATIO))
-            .withSlot0(new Slot0Configs().withKP(20))
-            .withCurrentLimits(
-                new CurrentLimitsConfigs()
-                    .withSupplyCurrentLimit(40)
-                    .withStatorCurrentLimit(60)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimitEnable(true));
-
-    public static enum PedalSetpoint {
-      PEDAL_HOME(0.0),
-      COUNTER_PHASE(90.0);
-
-      public final double degrees;
-
-      private PedalSetpoint(double degrees) {
-        this.degrees = degrees;
-      }
-    }
-  }
 }

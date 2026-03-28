@@ -27,7 +27,7 @@ public class GlobalConstants {
     Intake_Wheels(20),
     Tunnel(21),
     Climber(22),
-    Pedal(23);
+    Ceiling_Wall(23);
 
     public int id;
 
@@ -46,6 +46,7 @@ public class GlobalConstants {
     KnobPush(1),
     Circle(2),
     Triangle(3),
+    Square(4),
     Cross(5),
     M1(6),
     NumClr(7),

@@ -25,6 +25,7 @@ import frc.robot.subsystems.indexer.floor.FloorConstants;
 import frc.robot.subsystems.indexer.tunnel.Tunnel;
 import frc.robot.subsystems.indexer.tunnel.TunnelConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeConstants.Extension.ExtensionSetpoint;
 import frc.robot.subsystems.intake.IntakeConstants.Roller;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -51,8 +52,6 @@ public class Superstructure {
   Intake intake;
   Tunnel tunnel;
 
-  // Climber climber;
-
   @AutoLogOutput(key = "RobotStates/Shooting")
   public boolean shooting = false;
 
@@ -61,6 +60,8 @@ public class Superstructure {
 
   public Trigger isShooting = new Trigger(() -> shooting);
   public Trigger isTracking = new Trigger(() -> tracking);
+
+  private boolean intakeIn = true;
 
   private final GamePieceSimulation fuelSim;
 
@@ -88,7 +89,6 @@ public class Superstructure {
     this.floor = floor;
     this.intake = intake;
     this.tunnel = tunnel;
-    // this.climber = climber;
 
     fuelSim = GamePieceSimulation.getInstance();
 
@@ -118,11 +118,24 @@ public class Superstructure {
   }
 
   Command RunIndexer() {
-    return Commands.parallel(FloorForward(), TunnelForward());
+    return Commands.parallel(
+        Commands.repeatingSequence(
+            FloorForward(), Commands.waitSeconds(3), FloorReverse(), Commands.waitSeconds(0.125)),
+        Commands.either(
+            Commands.repeatingSequence(
+                intake.changeSetpoint(IntakeConstants.Roller.SHUFFLE),
+                intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT),
+                Commands.waitUntil(intake::atSetpoint),
+                intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN),
+                Commands.waitUntil(intake::atSetpoint)
+              ),
+            Commands.none(),
+            () -> intakeIn),
+        TunnelForward());
   }
 
   Command StopIndexer() {
-    return Commands.parallel(FloorOff(), TunnelOff());
+    return Commands.parallel(FloorOff(), TunnelOff(), intake.changeSetpoint(0));
   }
 
   /**
@@ -258,7 +271,6 @@ public class Superstructure {
         DisableShooting(),
         intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
         intake.changeSetpoint(Roller.Off),
-        // climber.changePedalSetpoint(0),
         hood.changeSetpointC(0));
   }
 
@@ -266,12 +278,15 @@ public class Superstructure {
     return Commands.sequence(
         logMessage("Fuel Intake"),
         intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        intake.changeSetpoint(Roller.FORWARD));
+        intake.changeSetpoint(Roller.FORWARD),
+        Commands.runOnce(() -> this.intakeIn = false));
   }
 
   public Command RetractIntake() {
     return Commands.sequence(
-        logMessage("Intake Retract"), intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST));
+        logMessage("Intake Retract"),
+        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
+        Commands.runOnce(() -> this.intakeIn = true));
   }
 
   public Command Dump() {
@@ -282,25 +297,6 @@ public class Superstructure {
         TunnelReverse(),
         FloorReverse());
   }
-
-  public Command ClimberDown() {
-    return Commands.sequence(
-        logMessage("Bring-Down"),
-        intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST),
-        intake.changeSetpoint(0),
-        turret.changeSetpoint(120),
-        // climber.changeHookSetpoint(ClimberConstants.HOOK_SETPOINT, false)
-        hood.changeSetpointC(10),
-        flywheel.changeSetpointC(0));
-  }
-
-  // public Command ClimberUp() {
-  //   return Commands.sequence(
-  //       logMessage("Bring-Up"),
-  //       climber
-  //           .changeHookSetpoint(ClimberConstants.MAX_HEIGHT, false)
-  //           .andThen(climber.changePedalSetpoint(ClimberConstants.Pedal.PEDAL_MAX_ANGLE)));
-  // }
 
   public Command TunnelForward() {
     return Commands.sequence(
@@ -358,6 +354,11 @@ public class Superstructure {
   public Command FixedShot() {
     return Commands.sequence(
         flywheel.changeSetpointC(2000), hood.changeSetpointC(10), turret.changeSetpoint(90));
+  }
+
+  public Command PitFixedShot() {
+    return Commands.sequence(
+        flywheel.changeSetpointC(750), hood.changeSetpointC(10), turret.changeSetpoint(270));
   }
 
   // #region Autos
@@ -431,7 +432,7 @@ public class Superstructure {
 
     final AutoTrajectory start = routine.trajectory("Start", 0);
     final AutoTrajectory crossover1 = routine.trajectory("crossover1", 1);
-    final AutoTrajectory intake = routine.trajectory("intake", 2);
+    final AutoTrajectory intakeTime = routine.trajectory("intake", 2);
     final AutoTrajectory crossover2 = routine.trajectory("crossover2", 3);
     final AutoTrajectory end = routine.trajectory("end", 4);
 
@@ -439,16 +440,29 @@ public class Superstructure {
         .atTimeBeforeEnd(0.4)
         .onTrue(
             Commands.sequence(
+                EnableTracking(),
                 EnableShooting(),
-                Commands.waitSeconds(2.5),
+                Commands.waitSeconds(3.5),
                 new ScheduleCommand(crossover1.cmd()),
-                DisableTracking()));
+                DisableShooting()));
 
-    crossover1.done().onTrue(Commands.parallel(ExtendIntake(), new ScheduleCommand(intake.cmd())));
+    crossover1
+        .done()
+        .onTrue(Commands.parallel(ExtendIntake(), new ScheduleCommand(intakeTime.cmd())));
 
-    intake.done().onTrue(Commands.parallel(RetractIntake(), new ScheduleCommand(crossover2.cmd())));
+    intakeTime
+        .done()
+        .onTrue(Commands.parallel(Commands.none(), new ScheduleCommand(crossover2.cmd())));
 
     crossover2.done().onTrue(Commands.parallel(EnableShooting(), new ScheduleCommand(end.cmd())));
+
+    end.done()
+        .onTrue(
+            Commands.sequence(
+                Commands.waitSeconds(0.2),
+                intake.changeSetpoint(ExtensionSetpoint.RETRACTED_SLOW),
+                Commands.waitSeconds(3.5),
+                RetractIntake()));
 
     return routine;
   }

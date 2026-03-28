@@ -22,11 +22,14 @@ public class IntakeConstants {
     public static final double INITIAL_SETPOINT = 0; // in
 
     public static final double MIN_SETPOINT = 0; // in (fully retracted)
-    public static final double MAX_SETPOINT = 13.0; // in (fully extended)
-    public static final double POSITION_TOLERANCE = 0.25; // in
+    public static final double MAX_SETPOINT = 12.375; // in (fully extended)
+    public static final double SHUFFLE_SETPOINT = 5.0; // in (partially extended)
+    public static final double POSITION_TOLERANCE = 0.5; // in
+
+    public static final double SHUFFLE_PERIOD = 1.5;
 
     /** Overall gear reduction from motor to output. */
-    public static final double GEAR_RATIO = (5d / 1d) * (50d / 28d);
+    public static final double GEAR_RATIO = (5d / 1d) * (36d / 28d) * (28d / 15d);
 
     /** Linear inches of travel per output shaft rotation (circumference of drive pulley). */
     public static final double CONVERSION_FACTOR = Math.PI; // Linear Inches Per Rotation
@@ -50,11 +53,13 @@ public class IntakeConstants {
 
     /** Predefined extension setpoints with position, velocity, and acceleration profiles. */
     public static enum ExtensionSetpoint {
-      RETRACTED_SLOW(MIN_SETPOINT, 5, 40),
-      RETRACTED_FAST(MIN_SETPOINT, 80, 160),
+      RETRACTED_SLOW(MIN_SETPOINT + 1, 5, 40),
+      RETRACTED_FAST(MIN_SETPOINT + 1, 80, 160),
       EXTENDED_SLOW(MAX_SETPOINT, 5, 40),
       EXTENDED_FAST(MAX_SETPOINT, 160, 320),
-      Off(MIN_SETPOINT, 0, 0);
+      SHUFFLE_IN(MIN_SETPOINT + 1, 80, 160),
+      SHUFFLE_OUT(SHUFFLE_SETPOINT, 80, 160),
+      Off(MIN_SETPOINT + 1, 0, 0);
 
       public final double position;
       public final double velocity;
@@ -92,7 +97,6 @@ public class IntakeConstants {
 
     public static final double FORWARD = 12;
     public static final double REVERSE = -12; // 6V reverse (eject)
-    public static final double IDLE = 6;
-    public static final double VOLTAGE = 0.0;
+    public static final double SHUFFLE = 4;
   }
 }

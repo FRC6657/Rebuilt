@@ -70,11 +70,11 @@ public class CommandKeypad extends CommandGenericHID {
     return button(4, loop);
   }
 
-  public Trigger x() {
-    return x(CommandScheduler.getInstance().getDefaultButtonLoop());
+  public Trigger cross() {
+    return cross(CommandScheduler.getInstance().getDefaultButtonLoop());
   }
 
-  public Trigger x(EventLoop loop) {
+  public Trigger cross(EventLoop loop) {
     return button(5, loop);
   }
 

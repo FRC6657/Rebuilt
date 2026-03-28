@@ -24,7 +24,7 @@ public class VisionConstants {
   public static double angularStdDevBaseline = 1; // Radians (rotation ignored)
 
   // Per-camera standard deviation multipliers (lower = more trusted)
-  public static double[] cameraStdDevFactors = new double[] {1.0, 1.0, 10000.0, 10000.0};
+  public static double[] cameraStdDevFactors = new double[] {1.0, 1.0, 1.0, 1.0};
 
   /** The 2026 Rebuilt field AprilTag layout. */
   public static final AprilTagFieldLayout kTagLayout =
