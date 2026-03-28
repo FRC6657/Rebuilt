@@ -219,11 +219,11 @@ public class Robot extends LoggedRobot {
         .onTrue(
             Commands.parallel(
                 Commands.runOnce(() -> intake.changeSetpoint(ExtensionSetpoint.RETRACTED_FAST)),
-                Commands.runOnce(() -> superstructure.intakeIn = false)));  
+                Commands.runOnce(() -> superstructure.intakeIn = false)));
 
     // #region Debug Controls
 
-    operator.enter().onTrue(superstructure.PitFixedShot());
+    operator.num5().onTrue(superstructure.PitFixedShot());
 
     // RPM and Hood Trim
     // operator

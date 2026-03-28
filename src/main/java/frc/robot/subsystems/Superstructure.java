@@ -65,7 +65,7 @@ public class Superstructure {
 
   public Trigger isShooting = new Trigger(() -> shooting);
   public Trigger isTracking = new Trigger(() -> tracking);
-  public Trigger isSwallowing = new Trigger(() -> intakeIn && shooting);
+  public Trigger isSwallowing = new Trigger(() -> (intakeIn && shooting));
 
   private final GamePieceSimulation fuelSim;
 
@@ -130,7 +130,18 @@ public class Superstructure {
   }
 
   Command RunIndexer() {
-    return Commands.parallel(FloorForward(), TunnelForward());
+    return Commands.parallel(
+        Commands.repeatingSequence(
+            FloorForward(), Commands.waitSeconds(1), FloorReverse(), Commands.waitSeconds(0.125)),
+        Commands.either(
+            Commands.repeatingSequence(
+                intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT),
+                Commands.waitSeconds(Extension.SHUFFLE_PERIOD),
+                intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN),
+                Commands.waitSeconds(Extension.SHUFFLE_PERIOD)),
+            Commands.none(),
+            () -> intakeIn),
+        TunnelForward());
   }
 
   Command StopIndexer() {
@@ -376,10 +387,10 @@ public class Superstructure {
     return Commands.sequence(
         flywheel.changeSetpointC(2000), hood.changeSetpointC(10), turret.changeSetpoint(90));
   }
-  
+
   public Command PitFixedShot() {
     return Commands.sequence(
-        flywheel.changeSetpointC(750), hood.changeSetpointC(10), turret.changeSetpoint(180));
+        flywheel.changeSetpointC(750), hood.changeSetpointC(10), turret.changeSetpoint(270));
   }
 
   // #region Autos
