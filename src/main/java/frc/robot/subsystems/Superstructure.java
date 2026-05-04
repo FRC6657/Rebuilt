@@ -127,8 +127,7 @@ public class Superstructure {
                 intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_OUT),
                 Commands.waitUntil(intake::atSetpoint),
                 intake.changeSetpoint(ExtensionSetpoint.SHUFFLE_IN),
-                Commands.waitUntil(intake::atSetpoint)
-              ),
+                Commands.waitUntil(intake::atSetpoint)),
             Commands.none(),
             () -> intakeIn),
         TunnelForward());
