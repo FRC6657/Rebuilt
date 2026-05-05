@@ -21,6 +21,8 @@ public class TunnelIO_Real implements TunnelIO {
     temp.setUpdateFrequency(GlobalConstants.mainLoopFrequency / 4d);
     voltage.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     statorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+
+    tunnelMotor.optimizeBusUtilization();
   }
 
   @Override

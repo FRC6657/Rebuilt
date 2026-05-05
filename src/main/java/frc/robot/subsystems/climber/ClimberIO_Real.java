@@ -30,11 +30,11 @@ public class ClimberIO_Real implements ClimberIO {
     var climberMotorVelocitySignal = hookMotor.getVelocity();
     var climberMotorAccelerationSignal = hookMotor.getAcceleration();
 
-    climberMotorVoltageSignal.setUpdateFrequency(50);
-    climberMotorCurrentSignal.setUpdateFrequency(50);
-    climberMotorPositionSignal.setUpdateFrequency(50);
-    climberMotorVelocitySignal.setUpdateFrequency(50);
-    climberMotorAccelerationSignal.setUpdateFrequency(50);
+    climberMotorVoltageSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    climberMotorCurrentSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    climberMotorPositionSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    climberMotorVelocitySignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+    climberMotorAccelerationSignal.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
 
     hookMotor.optimizeBusUtilization();
 

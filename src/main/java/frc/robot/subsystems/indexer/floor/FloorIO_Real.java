@@ -35,6 +35,9 @@ public class FloorIO_Real implements FloorIO {
     motorTwoTemp.setUpdateFrequency(GlobalConstants.mainLoopFrequency / 4);
     motorTwoVoltage.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
     motorTwoStatorCurrent.setUpdateFrequency(GlobalConstants.mainLoopFrequency);
+
+    motorOne.optimizeBusUtilization();
+    motorTwo.optimizeBusUtilization();
   }
 
   @Override
