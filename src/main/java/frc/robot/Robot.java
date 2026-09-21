@@ -9,6 +9,7 @@ import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -261,6 +262,16 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
+
+    // Logger.recordOutput(
+    //     "Cam1", new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
+    // Logger.recordOutput(
+    //     "Cam2", new Pose3d(drivebase.getPose()).transformBy(VisionConstants.White1.robotToCamera));
+    // Logger.recordOutput(
+    //     "Cam3", new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black2.robotToCamera));
+    // Logger.recordOutput(
+    //     "Cam4", new Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black1.robotToCamera));
+
     CommandScheduler.getInstance().run();
     if (RobotBase.isSimulation()) {
       GamePieceSimulation.getInstance().update();

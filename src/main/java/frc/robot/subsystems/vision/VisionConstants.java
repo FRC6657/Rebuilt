@@ -47,13 +47,14 @@ public class VisionConstants {
     }
   }
 
-  // Camera definitions (transforms are placeholders - update with real CAD values)
+  // Camera definitions
+  //Facing the side of the robot with cameras the numbers in the camera names increase left to right from 1-4.
   public static CameraInfo Black1 =
       new CameraInfo(
           "6657-9291-4", // intentional typo
           new Transform3d(
-              new Translation3d(0.253248, -0.331830, 0.229592),
-              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(240))),
+              new Translation3d(0.248957, 0.320608, 0.216957),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(90))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
@@ -61,8 +62,8 @@ public class VisionConstants {
       new CameraInfo(
           "6657-9281-3",
           new Transform3d(
-              new Translation3d(0.331989, -0.254149, 0.229592),
-              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-10))),
+              new Translation3d(0.320608, 0.248957, 0.216957),
+              new Rotation3d(0, Units.degreesToRadians(-20), 0)),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
@@ -70,8 +71,8 @@ public class VisionConstants {
       new CameraInfo(
           "6657-9281-2",
           new Transform3d(
-              new Translation3d(0.253248, 0.331830, 0.229592),
-              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-240))),
+              new Translation3d(0.320608, -0.248957, 0.216957),
+              new Rotation3d(0, Units.degreesToRadians(-20), 0)),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
@@ -79,8 +80,8 @@ public class VisionConstants {
       new CameraInfo(
           "6657-9281-1",
           new Transform3d(
-              new Translation3d(0.331989, 0.254149, 0.229592),
-              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(10))),
+              new Translation3d(0.248957, -0.320608, 0.216957),
+              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-90))),
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 }
