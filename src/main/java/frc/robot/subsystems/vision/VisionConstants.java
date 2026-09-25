@@ -48,7 +48,8 @@ public class VisionConstants {
   }
 
   // Camera definitions
-  //Facing the side of the robot with cameras the numbers in the camera names increase left to right from 1-4.
+  // Facing the side of the robot with cameras the numbers in the camera names increase left to
+  // right from 1-4.
   public static CameraInfo Black1 =
       new CameraInfo(
           "6657-9291-4", // intentional typo
