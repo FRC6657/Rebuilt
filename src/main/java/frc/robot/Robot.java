@@ -122,14 +122,14 @@ public class Robot extends LoggedRobot {
                 ? new ApriltagCameraIO[] {
                   new ApriltagCameraIO_Real(VisionConstants.Black1),
                   new ApriltagCameraIO_Real(VisionConstants.Black2),
-                  new ApriltagCameraIO_Real(VisionConstants.White1),
-                  new ApriltagCameraIO_Real(VisionConstants.White2),
+                  new ApriltagCameraIO_Real(VisionConstants.Green1),
+                  new ApriltagCameraIO_Real(VisionConstants.Green2),
                 }
                 : new ApriltagCameraIO[] {
                   new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
                   new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
-                  new ApriltagCameraIO_Sim(VisionConstants.White1, drivebase::getPose),
-                  new ApriltagCameraIO_Sim(VisionConstants.White2, drivebase::getPose),
+                  new ApriltagCameraIO_Sim(VisionConstants.Green1, drivebase::getPose),
+                  new ApriltagCameraIO_Sim(VisionConstants.Green2, drivebase::getPose),
                 });
 
     autoFactory =
@@ -263,16 +263,16 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
 
     // Logger.recordOutput(
+    //     "Cam4", new
+    // Pose3d(drivebase.getPose()).transformBy(VisionConstants.Green2.robotToCamera));
+    // Logger.recordOutput(
+    //     "Cam5", new
+    // Pose3d(drivebase.getPose()).transformBy(VisionConstants.Green1.robotToCamera));
+    // Logger.recordOutput(
     //     "Cam1", new
-    // Pose3d(drivebase.getPose()).transformBy(VisionConstants.White2.robotToCamera));
-    // Logger.recordOutput(
-    //     "Cam2", new
-    // Pose3d(drivebase.getPose()).transformBy(VisionConstants.White1.robotToCamera));
-    // Logger.recordOutput(
-    //     "Cam3", new
     // Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black2.robotToCamera));
     // Logger.recordOutput(
-    //     "Cam4", new
+    //     "Cam2", new
     // Pose3d(drivebase.getPose()).transformBy(VisionConstants.Black1.robotToCamera));
 
     CommandScheduler.getInstance().run();

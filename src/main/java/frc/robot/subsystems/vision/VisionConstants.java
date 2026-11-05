@@ -68,7 +68,7 @@ public class VisionConstants {
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
-  public static CameraInfo White1 =
+  public static CameraInfo Green1 =
       new CameraInfo(
           "6657-9291-4", // intentional typo
           new Transform3d(
@@ -77,7 +77,7 @@ public class VisionConstants {
           Rotation2d.fromDegrees(80),
           new int[] {1280, 800});
 
-  public static CameraInfo White2 =
+  public static CameraInfo Green2 =
       new CameraInfo(
           "6657-9281-5",
           new Transform3d(
