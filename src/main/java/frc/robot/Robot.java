@@ -120,16 +120,16 @@ public class Robot extends LoggedRobot {
             drivebase::addVisionMeasurement,
             RobotBase.isReal() || replay
                 ? new ApriltagCameraIO[] {
-                  new ApriltagCameraIO_Real(VisionConstants.Black1),
+                  // new ApriltagCameraIO_Real(VisionConstants.Black1),
                   new ApriltagCameraIO_Real(VisionConstants.Black2),
                   new ApriltagCameraIO_Real(VisionConstants.Green1),
-                  new ApriltagCameraIO_Real(VisionConstants.Green2),
+                  // new ApriltagCameraIO_Real(VisionConstants.Green2),
                 }
                 : new ApriltagCameraIO[] {
-                  new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
+                  // new ApriltagCameraIO_Sim(VisionConstants.Black1, drivebase::getPose),
                   new ApriltagCameraIO_Sim(VisionConstants.Black2, drivebase::getPose),
                   new ApriltagCameraIO_Sim(VisionConstants.Green1, drivebase::getPose),
-                  new ApriltagCameraIO_Sim(VisionConstants.Green2, drivebase::getPose),
+                  // new ApriltagCameraIO_Sim(VisionConstants.Green2, drivebase::getPose),
                 });
 
     autoFactory =
