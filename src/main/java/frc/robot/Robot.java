@@ -186,13 +186,13 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.9),
+                        /* (superstructure.shooting ? 0.2 : 1)*/,
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.9),
+                        /* (superstructure.shooting ? 0.2 : 1)*/,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * (superstructure.shooting ? 0.2 : 0.6)),
+                        /* (superstructure.shooting ? 0.2 : 0.6)*/),
             () -> superstructure.shooting));
 
     driver.rightTrigger().onTrue(superstructure.EnableShooting());
