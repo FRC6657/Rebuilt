@@ -288,13 +288,12 @@ public class Superstructure {
         Commands.runOnce(() -> this.intakeIn = true));
   }
 
-  public Command Dump() {
+  public Command ReverseShooter() {
     return Commands.sequence(
-        intake.changeSetpoint(Roller.FORWARD),
-        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        flywheel.changeSetpointC(-1000),
+        FloorReverse(),
         TunnelReverse(),
-        FloorReverse());
+        flywheel.changeSetpointC(-1000)
+    );
   }
 
   public Command TunnelForward() {

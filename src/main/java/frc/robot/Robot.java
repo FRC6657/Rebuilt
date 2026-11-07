@@ -208,7 +208,7 @@ public class Robot extends LoggedRobot {
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
-    operator.square().onTrue(superstructure.Dump());
+    operator.square().onTrue(superstructure.ReverseShooter());
     operator
         .cross()
         .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
