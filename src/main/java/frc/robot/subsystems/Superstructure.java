@@ -289,11 +289,7 @@ public class Superstructure {
   }
 
   public Command ReverseShooter() {
-    return Commands.sequence(
-        FloorReverse(),
-        TunnelReverse(),
-        flywheel.changeSetpointC(-1000)
-    );
+    return Commands.sequence(FloorReverse(), TunnelReverse(), flywheel.changeSetpointC(-1000));
   }
 
   public Command TunnelForward() {
