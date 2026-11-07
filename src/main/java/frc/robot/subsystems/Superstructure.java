@@ -361,10 +361,7 @@ public class Superstructure {
   }
 
   public Command StopFixedShot() {
-    return Commands.sequence(
-      DisableShooting(),
-      EnableTracking()
-    );
+    return Commands.sequence(DisableShooting(), EnableTracking());
   }
 
   // #region Autos

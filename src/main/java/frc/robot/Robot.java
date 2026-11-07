@@ -215,15 +215,15 @@ public class Robot extends LoggedRobot {
         .onFalse(superstructure.DisableShooting());
 
     // #region Debug Controls
-    
-    if(!DriverStation.isFMSAttached()) {
+
+    if (!DriverStation.isFMSAttached()) {
       operator.num5().onTrue(superstructure.PitFixedShot());
     } else {
       operator.num5().onTrue(Commands.none());
     }
 
     operator.num0().onTrue(superstructure.StopFixedShot());
-    
+
     // RPM and Hood Trim
     // operator
     //     .knob_left()
