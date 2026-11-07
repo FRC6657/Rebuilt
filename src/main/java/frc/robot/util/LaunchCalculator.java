@@ -77,15 +77,15 @@ public class LaunchCalculator {
 
     // interpolated
     launchHoodAngleMap.put(1.0, Rotation2d.fromDegrees(10));
-    launchFlywheelSpeedMap.put(1.0, Units.rotationsPerMinuteToRadiansPerSecond(1750));
+    launchFlywheelSpeedMap.put(1.0, Units.rotationsPerMinuteToRadiansPerSecond(2000));
     timeOfFlightMap.put(1.0, 25d / 30);
 
     launchHoodAngleMap.put(1.527, Rotation2d.fromDegrees(10));
-    launchFlywheelSpeedMap.put(1.527, Units.rotationsPerMinuteToRadiansPerSecond(1850));
+    launchFlywheelSpeedMap.put(1.527, Units.rotationsPerMinuteToRadiansPerSecond(2000));
     timeOfFlightMap.put(1.527, 28d / 30);
 
     launchHoodAngleMap.put(2.0, Rotation2d.fromDegrees(12));
-    launchFlywheelSpeedMap.put(2.0, Units.rotationsPerMinuteToRadiansPerSecond(2000));
+    launchFlywheelSpeedMap.put(2.0, Units.rotationsPerMinuteToRadiansPerSecond(2100));
     timeOfFlightMap.put(2.0, 31d / 30);
 
     launchHoodAngleMap.put(2.5, Rotation2d.fromDegrees(15));
@@ -107,17 +107,17 @@ public class LaunchCalculator {
     timeOfFlightMap.put(3.5, 41d / 30);
 
     // interpolated
-    launchHoodAngleMap.put(4.0, Rotation2d.fromDegrees(24.2));
+    launchHoodAngleMap.put(4.0, Rotation2d.fromDegrees(20));
     launchFlywheelSpeedMap.put(4.0, Units.rotationsPerMinuteToRadiansPerSecond(2450));
     timeOfFlightMap.put(4.0, 44d / 30);
 
     // interpolated
-    launchHoodAngleMap.put(4.5, Rotation2d.fromDegrees(27.8));
+    launchHoodAngleMap.put(4.5, Rotation2d.fromDegrees(22));
     launchFlywheelSpeedMap.put(4.5, Units.rotationsPerMinuteToRadiansPerSecond(2575));
     timeOfFlightMap.put(4.5, 47d / 30);
 
     // interpolated
-    launchHoodAngleMap.put(5.0, Rotation2d.fromDegrees(31.6));
+    launchHoodAngleMap.put(5.0, Rotation2d.fromDegrees(25));
     launchFlywheelSpeedMap.put(5.0, Units.rotationsPerMinuteToRadiansPerSecond(2675));
     timeOfFlightMap.put(5.0, 50d / 30);
 
