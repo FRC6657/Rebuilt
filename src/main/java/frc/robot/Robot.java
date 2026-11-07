@@ -66,9 +66,6 @@ public class Robot extends LoggedRobot {
   private CommandXboxController driver = new CommandXboxController(0);
   private CommandKeypad operator = new CommandKeypad(1);
 
-  private double testHoodAngle;
-  private double testFlywheelRPM;
-
   private final Drivebase drivebase;
   private final Turret turret;
   private final Hood hood;
@@ -225,29 +222,29 @@ public class Robot extends LoggedRobot {
       operator.num5().onTrue(Commands.none());
     }
 
-    // RPM and Hood Trim
-    operator
-        .knob_left()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  if (operator.knob_press().getAsBoolean()) {
-                    testHoodAngle -= 0.25;
-                  } else {
-                    testFlywheelRPM -= 50;
-                  }
-                }));
-    operator
-        .knob_right()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  if (operator.knob_press().getAsBoolean()) {
-                    testHoodAngle += 0.25;
-                  } else {
-                    testFlywheelRPM += 50;
-                  }
-                }));
+    // // RPM and Hood Trim
+    // operator
+    //     .knob_left()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle -= 0.25;
+    //               } else {
+    //                 testFlywheelRPM -= 50;
+    //               }
+    //             }));
+    // operator
+    //     .knob_right()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               if (operator.knob_press().getAsBoolean()) {
+    //                 testHoodAngle += 0.25;
+    //               } else {
+    //                 testFlywheelRPM += 50;
+    //               }
+    //             }));
 
     // // Enable Dial Controled Flywheel And Hood
     // driver
@@ -268,8 +265,8 @@ public class Robot extends LoggedRobot {
     //     .a()
     //     .onTrue(
     //         Commands.sequence(
-    //             hood.changeSetpointC(27),
-    //             flywheel.changeSetpointC(2900),
+    //             hood.changeSetpointC(17),
+    //             flywheel.changeSetpointC(2450),
     //             superstructure.FloorForward(),
     //             superstructure.TunnelForward()))
     //     .onFalse(
@@ -320,6 +317,7 @@ public class Robot extends LoggedRobot {
             Commands.sequence(
                 superstructure.DisableTracking(),
                 superstructure.EnableTracking(),
+                // superstructure.DisableTracking()));
                 superstructure.EnableShooting(),
                 superstructure.DisableShooting()));
   }
