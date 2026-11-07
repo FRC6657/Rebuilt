@@ -215,8 +215,9 @@ public class Robot extends LoggedRobot {
         .onFalse(superstructure.DisableShooting());
 
     // #region Debug Controls
-
+    
     operator.num5().onTrue(superstructure.PitFixedShot());
+    operator.num0().onTrue(superstructure.StopFixedShot());
 
     // RPM and Hood Trim
     // operator
