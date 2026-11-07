@@ -66,6 +66,9 @@ public class Robot extends LoggedRobot {
   private CommandXboxController driver = new CommandXboxController(0);
   private CommandKeypad operator = new CommandKeypad(1);
 
+  private double testHoodAngle;
+  private double testFlywheelRPM;
+
   private final Drivebase drivebase;
   private final Turret turret;
   private final Hood hood;
@@ -186,13 +189,13 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        /* (superstructure.shooting ? 0.2 : 1)*/,
+                    /* (superstructure.shooting ? 0.2 : 1)*/ ,
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        /* (superstructure.shooting ? 0.2 : 1)*/,
+                    /* (superstructure.shooting ? 0.2 : 1)*/ ,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        /* (superstructure.shooting ? 0.2 : 0.6)*/),
+                    /* (superstructure.shooting ? 0.2 : 0.6)*/ ),
             () -> superstructure.shooting));
 
     driver.rightTrigger().onTrue(superstructure.EnableShooting());
@@ -223,28 +226,28 @@ public class Robot extends LoggedRobot {
     }
 
     // RPM and Hood Trim
-    // operator
-    //     .knob_left()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               if (operator.knob_press().getAsBoolean()) {
-    //                 testHoodAngle -= 0.25;
-    //               } else {
-    //                 testFlywheelRPM -= 50;
-    //               }
-    //             }));
-    // operator
-    //     .knob_right()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               if (operator.knob_press().getAsBoolean()) {
-    //                 testHoodAngle += 0.25;
-    //               } else {
-    //                 testFlywheelRPM += 50;
-    //               }
-    //             }));
+    operator
+        .knob_left()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  if (operator.knob_press().getAsBoolean()) {
+                    testHoodAngle -= 0.25;
+                  } else {
+                    testFlywheelRPM -= 50;
+                  }
+                }));
+    operator
+        .knob_right()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  if (operator.knob_press().getAsBoolean()) {
+                    testHoodAngle += 0.25;
+                  } else {
+                    testFlywheelRPM += 50;
+                  }
+                }));
 
     // // Enable Dial Controled Flywheel And Hood
     // driver
@@ -259,6 +262,22 @@ public class Robot extends LoggedRobot {
     //             flywheel.changeSetpointC(0),
     //             tunnel.changeSetpoint(0),
     //             floor.changeSetpoint(0)));
+
+    // // Run everything at once
+    // driver
+    //     .a()
+    //     .onTrue(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(27),
+    //             flywheel.changeSetpointC(2900),
+    //             superstructure.FloorForward(),
+    //             superstructure.TunnelForward()))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(10),
+    //             flywheel.changeSetpointC(0),
+    //             superstructure.FloorOff(),
+    //             superstructure.TunnelOff()));
 
     Logger.start();
   }
