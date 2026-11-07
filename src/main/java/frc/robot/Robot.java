@@ -222,8 +222,6 @@ public class Robot extends LoggedRobot {
       operator.num5().onTrue(Commands.none());
     }
 
-    operator.num0().onTrue(superstructure.StopFixedShot());
-
     // RPM and Hood Trim
     // operator
     //     .knob_left()

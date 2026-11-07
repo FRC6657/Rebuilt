@@ -360,10 +360,6 @@ public class Superstructure {
         flywheel.changeSetpointC(750), hood.changeSetpointC(10), turret.changeSetpoint(270));
   }
 
-  public Command StopFixedShot() {
-    return Commands.sequence(DisableShooting(), EnableTracking());
-  }
-
   // #region Autos
 
   public AutoRoutine TaxiShoot(AutoFactory factory) {
