@@ -134,7 +134,7 @@ public class Superstructure {
   }
 
   Command StopIndexer() {
-    return Commands.parallel(FloorOff(), TunnelOff(), intake.changeSetpoint(0));
+    return Commands.parallel(FloorOff(), TunnelOff() /*, intake.changeSetpoint(0) */);
   }
 
   /**
