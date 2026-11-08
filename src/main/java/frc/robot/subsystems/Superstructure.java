@@ -41,6 +41,7 @@ import org.littletonrobotics.junction.Logger;
  * Coordinates all robot subsystems into unified high-level commands. Acts as the central command
  * factory for multi-subsystem actions.
  */
+
 public class Superstructure {
 
   // Subsystems
@@ -134,7 +135,7 @@ public class Superstructure {
   }
 
   Command StopIndexer() {
-    return Commands.parallel(FloorOff(), TunnelOff(), intake.changeSetpoint(0));
+    return Commands.parallel(FloorOff(), TunnelOff() /*, intake.changeSetpoint(0) */);
   }
 
   /**
@@ -288,13 +289,8 @@ public class Superstructure {
         Commands.runOnce(() -> this.intakeIn = true));
   }
 
-  public Command Dump() {
-    return Commands.sequence(
-        intake.changeSetpoint(Roller.FORWARD),
-        intake.changeSetpoint(ExtensionSetpoint.EXTENDED_FAST),
-        flywheel.changeSetpointC(-1000),
-        TunnelReverse(),
-        FloorReverse());
+  public Command ReverseShooter() {
+    return Commands.sequence(FloorReverse(), TunnelReverse(), flywheel.changeSetpointC(-1000));
   }
 
   public Command TunnelForward() {

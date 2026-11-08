@@ -186,13 +186,13 @@ public class Robot extends LoggedRobot {
                 new ChassisSpeeds(
                     -MathUtil.applyDeadband(driver.getLeftY(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.9),
+                    /* (superstructure.shooting ? 0.2 : 1)*/ ,
                     -MathUtil.applyDeadband(driver.getLeftX(), 0.1)
                         * DrivebaseConstants.kMaxLinearSpeed
-                        * (superstructure.shooting ? 0.2 : 0.9),
+                    /* (superstructure.shooting ? 0.2 : 1)*/ ,
                     -MathUtil.applyDeadband(driver.getRightX(), 0.1)
                         * DrivebaseConstants.kMaxAngularSpeed
-                        * (superstructure.shooting ? 0.2 : 0.6)),
+                    /* (superstructure.shooting ? 0.2 : 0.6)*/ ),
             () -> superstructure.shooting));
 
     driver.rightTrigger().onTrue(superstructure.EnableShooting());
@@ -208,7 +208,7 @@ public class Robot extends LoggedRobot {
 
     operator.circle().onTrue(superstructure.ExtendIntake());
     operator.triangle().onTrue(superstructure.RetractIntake());
-    operator.square().onTrue(superstructure.Dump());
+    operator.square().onTrue(superstructure.ReverseShooter());
     operator
         .cross()
         .onTrue(Commands.parallel(superstructure.FloorReverse(), superstructure.TunnelForward()))
@@ -216,9 +216,13 @@ public class Robot extends LoggedRobot {
 
     // #region Debug Controls
 
-    operator.num5().onTrue(superstructure.PitFixedShot());
+    if (!DriverStation.isFMSAttached()) {
+      operator.num5().onTrue(superstructure.PitFixedShot());
+    } else {
+      operator.num5().onTrue(Commands.none());
+    }
 
-    // RPM and Hood Trim
+    // // RPM and Hood Trim
     // operator
     //     .knob_left()
     //     .onTrue(
@@ -255,6 +259,22 @@ public class Robot extends LoggedRobot {
     //             flywheel.changeSetpointC(0),
     //             tunnel.changeSetpoint(0),
     //             floor.changeSetpoint(0)));
+
+    // // Manual Hood/Flywheel calculation test
+    // driver
+    //     .a()
+    //     .onTrue(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(17),
+    //             flywheel.changeSetpointC(2450),
+    //             superstructure.FloorForward(),
+    //             superstructure.TunnelForward()))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             hood.changeSetpointC(10),
+    //             flywheel.changeSetpointC(0),
+    //             superstructure.FloorOff(),
+    //             superstructure.TunnelOff()));
 
     Logger.start();
   }
@@ -297,6 +317,7 @@ public class Robot extends LoggedRobot {
             Commands.sequence(
                 superstructure.DisableTracking(),
                 superstructure.EnableTracking(),
+                // superstructure.DisableTracking()));
                 superstructure.EnableShooting(),
                 superstructure.DisableShooting()));
   }

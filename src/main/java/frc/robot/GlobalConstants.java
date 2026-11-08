@@ -41,42 +41,4 @@ public class GlobalConstants {
   public static void disableHAL() {
     disableHAL = true;
   }
-
-  public static enum opButtons {
-    KnobPush(1),
-    Circle(2),
-    Triangle(3),
-    Square(4),
-    Cross(5),
-    M1(6),
-    NumClr(7),
-    Slash(8),
-    Star(9),
-    Minus(10),
-    M2(11),
-    Seven(12),
-    Eight(13),
-    Nine(14),
-    Plus(15),
-    M3(16),
-    Four(17),
-    Five(18),
-    Six(19),
-    M4(20),
-    One(21),
-    Two(22),
-    Three(23),
-    M5(24),
-    Zero(25),
-    Period(26),
-    Enter(27),
-    KnobLeft(28),
-    KnobRight(29);
-
-    public int id;
-
-    opButtons(int button) {
-      this.id = button;
-    }
-  }
 }

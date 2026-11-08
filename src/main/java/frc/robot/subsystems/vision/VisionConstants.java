@@ -52,7 +52,7 @@ public class VisionConstants {
   // right from 1-4.
   public static CameraInfo Black1 =
       new CameraInfo(
-          "6657-9281-1",
+          "6657-2311-1", // newer model
           new Transform3d(
               new Translation3d(0.248957, 0.320608, 0.216957),
               new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(90))),
